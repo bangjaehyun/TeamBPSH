@@ -153,8 +153,10 @@ public class EmpService {
 	public void chkAdmin() {
 		int result = dao.idCheck("admin");
 		if(result == 0) {
+			String empCode = dao.getEmpCode();
 			String pw = BCrypt.hashpw("1234", BCrypt.gensalt());
 			Emp emp = new Emp();
+			emp.setEmpCode(empCode);
 			emp.setEmpId("admin");
 			emp.setEmpPw(pw);
 			emp.setTeamCode("G1");
@@ -169,7 +171,6 @@ public class EmpService {
 			if(result > 0) {
 				result = dao.insertLeader(emp);
 				if(result > 0) {
-					String empCode = dao.selectAdminEmpCode();
 					HashMap<String, String> map = new HashMap<String, String>();
 					map.put("empCode", empCode);
 					map.put("salary", emp.getSalary());

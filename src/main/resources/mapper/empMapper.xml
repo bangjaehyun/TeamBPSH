@@ -26,6 +26,11 @@
  	    
  	</select>
  	
+ 	<select id="getEmpCode" 
+ 	resultType="string">
+	select TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_emp.NEXTVAL, 4, '0') from dual
+	</select>
+ 	
  	<select id="adminChk"
  	parameterType="string"
  	resultType="_int">
@@ -139,7 +144,7 @@
  	rank_code
  	
  	)values(
- 	TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_emp.NEXTVAL, 4, '0'),
+ 	#{empCode},
  	#{empId},
  	#{empPw},
  	#{empName},

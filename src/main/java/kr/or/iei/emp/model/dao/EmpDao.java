@@ -348,4 +348,8 @@ public class EmpDao {
 		return sqlSession.update("emp.changePw",map);
 	}
 
+	public String getEmpCode() {
+		return sqlSession.selectOne("emp.getEmpCode");
+	}
+
 }
