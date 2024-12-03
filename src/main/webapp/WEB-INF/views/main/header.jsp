@@ -40,6 +40,7 @@
             height: 50px;
         }
         .header-left{
+        	display : flex;
         	width: 300px;
         	min-width: 280px;
         }
@@ -103,6 +104,16 @@
        		border-bottom: 1px solid black;
 /*        		margin : 0 5px; */
        }
+       
+       .logoName{
+       		margin: auto 0;
+       		font-size: 20px;
+       		font-weight: bold;
+       		background: linear-gradient(to bottom, #7f01da, #eb85fd);
+  			-webkit-background-clip: text;
+  			-webkit-text-fill-color: transparent;
+  			font-style:italic; 
+       }
     </style>
 </head>
 
@@ -110,7 +121,8 @@
     <div class="header-wrap">
         <div class="header-left">
             <img onclick="toggle()" class="header-toogle"  src="/resources/images/exchange.png">
-            <a href="javascript:void(0)" class="mainPage"><img class="header-img" src="/resources/images/logo.png"></a>
+            <a href="javascript:void(0)" class="mainPage"><img class="header-img" src="/resources/images/logoImg.png"></a>
+            <span class="logoName">BHP SYSTEM</span>
         </div>
            <div class="header-right">
            	<img class="header-notification" src="/resources/images/notification.png">
