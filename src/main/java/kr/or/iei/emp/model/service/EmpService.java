@@ -80,7 +80,6 @@ public class EmpService {
 		 if(loginEmp!=null) {
 				boolean checkPw=BCrypt.checkpw(emp.getEmpPw(), loginEmp.getEmpPw());
 				if(checkPw) {
-				loginEmp.setEmpPw(emp.getEmpPw());
 					if (loginEmp.getTeamCode()!=null){
 						if (loginEmp.getTeamCode().equals("G1")) {
 							int adminChk = dao.selectAdmin(loginEmp.getEmpCode());
