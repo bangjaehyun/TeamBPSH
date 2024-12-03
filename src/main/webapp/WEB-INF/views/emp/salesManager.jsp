@@ -211,7 +211,6 @@
 	function exportExcel(){ 
 		const year = '${year}';
 		const month = '${month}';
-		const salesManager = JSON.stringify(${salesSpendingListJson}); 
 		
 		let form = $('<form>');
 		form.attr('method','get');
@@ -227,15 +226,8 @@
 		monthEl.attr('name', 'month');
 		monthEl.attr('value', month);
 		
-		let empListEl = $('<input>');
-		empListEl.attr('type', 'hidden');
-		empListEl.attr('name', 'salesManager');
-		empListEl.attr('value', salesManager);
-		
-		
 		form.append(yearEl);
 		form.append(monthEl);
-		form.append(empListEl);
 		$('body').append(form);
 		form.submit();
 	}

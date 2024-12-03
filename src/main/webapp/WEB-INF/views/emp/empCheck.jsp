@@ -146,14 +146,9 @@
 			}
 	});
 	
-
-	
-	
 	function exportExcel(){ 
 		const year = '${date.getYear()}';
 		const month = '${date.getMonthValue()}';
-		const empList = ${empListJson};
-		const empListString = JSON.stringify(empList); 
 		
 		let form = $('<form>');
 		form.attr('method','get');
@@ -169,15 +164,9 @@
 		monthEl.attr('name', 'month');
 		monthEl.attr('value', month);
 		
-		let empListEl = $('<input>');
-		empListEl.attr('type', 'hidden');
-		empListEl.attr('name', 'empList');
-		empListEl.attr('value', empListString);
-		
 		
 		form.append(yearEl);
 		form.append(monthEl);
-		form.append(empListEl);
 		$('body').append(form);
 		form.submit();
 	}

@@ -663,18 +663,17 @@ public class EmpController {
     	  ArrayList<Emp> empList = service.empCheckMonth(yearMonth);
     	  model.addAttribute("date", newDate);
     	  model.addAttribute("empList", empList);
-    	  model.addAttribute("empListJson", new Gson().toJson(empList));
     	  
     	  return "emp/empCheck";
       }
       
       //출퇴근 기록 엑셀 출력
       @GetMapping(value="empCheckExport.do")
-      public void empCheckExport(String year, String month,String empList,  HttpServletResponse response){
+      public void empCheckExport(String year, String month,  HttpServletResponse response){
 			try {
-				ObjectMapper objectMapper = new ObjectMapper();
-				ArrayList<Emp> emps = objectMapper.readValue(empList, new TypeReference<ArrayList<Emp>>() {
-				});
+				
+				ArrayList<Emp> emps = service.empCheckMonth(year+month);
+				
 
 				  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
 		    	  YearMonth yearMonthDate = YearMonth.parse(String.format("%d%02d", Integer.parseInt(year),Integer.parseInt(month)), formatter);
@@ -930,18 +929,15 @@ public class EmpController {
     	  model.addAttribute("year", newDate.getYear());
     	  model.addAttribute("month", newDate.getMonthValue());
     	  model.addAttribute("salesSpendingList", list);
-    	  model.addAttribute("salesSpendingListJson", new Gson().toJson(list));
     	  
     	  return "emp/salesManager";
       }
       
       @GetMapping(value="salesManagerExport.do")
-      public void salesManagerExport(String year, String month,String salesManager,  HttpServletResponse response){
-    	  System.out.println(salesManager);
+      public void salesManagerExport(String year, String month,  HttpServletResponse response){
 			try {
-				ObjectMapper objectMapper = new ObjectMapper();
-				SalesSpending salesSpending = objectMapper.readValue(salesManager, new TypeReference<SalesSpending>() {
-				});
+				SalesSpending salesSpending = service.selectSalesManager(year+month);
+				
 
 				// ExcelDown시작
 				Workbook workbook = new HSSFWorkbook();

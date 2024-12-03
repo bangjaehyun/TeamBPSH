@@ -137,8 +137,10 @@ select emp_name as empName,
         select p.votelist_no 
           from tbl_participation p 
          where p.emp_code = e.emp_code and vote_no = #{voteNo}
-       ) as voteListNo 
+       ) as voteListNo
   from tbl_emp e
+  where e.emp_retire = 'n' and  
+  to_date(to_char(e.emp_date, 'YYYYMMDD')) &lt;= to_date(to_char((select vote_end from tbl_vote where vote_no = #{voteNo}), 'YYYYMMDD'))
 </select>
 
 <select id="selectEmpNoList"
