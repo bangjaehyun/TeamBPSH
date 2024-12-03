@@ -5,10 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -21,6 +22,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import kr.or.iei.common.emitter.Emitter;
+import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Chat;
 
@@ -31,6 +33,10 @@ public class SocketHandler extends TextWebSocketHandler{
 	@Autowired
 	@Qualifier("empService")
 	private EmpService service;
+	
+	@Autowired
+	@Qualifier("messageSource")
+	private MessageSource exMessage;
 	
 	private ArrayList<WebSocketSession> emps;
 	public static HashMap<String, WebSocketSession> map;
@@ -52,7 +58,7 @@ public class SocketHandler extends TextWebSocketHandler{
 	//메세지를 송신 시 동작하는 메소드
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		
+			String nullEx = "";
 		try {
 			//수신 받은 메시지 형식 == Json 형식 => 파싱 처리
 			JsonElement element = JsonParser.parseString(message.getPayload());
@@ -65,6 +71,8 @@ public class SocketHandler extends TextWebSocketHandler{
 				map.put(empCode, session);
 				
 			}else if(type.equals("chat")) {
+				nullEx = jsonObj.get("empCode").getAsString();
+				
 				//메시지 송신
 				String groupNo   = jsonObj.get("groupNo").getAsString();
 				String toEmpCode   = jsonObj.get("toEmp").getAsString();
@@ -98,7 +106,23 @@ public class SocketHandler extends TextWebSocketHandler{
 				String groupCode = jsonObj.get("groupNo").getAsString();
 				empGroup.put(empCode, groupCode);
 			}
-		}catch(Exception ex) {
+		}catch(NullPointerException e) {
+			System.out.println("11111111111111");
+			System.out.println(nullEx);
+			WebSocketSession fromWs = map.get(nullEx);
+			JsonObject json = new JsonObject();
+			json.addProperty("type", "null");
+			if(fromWs != null) {				
+				try {
+					System.out.println("2222222222");
+					fromWs.sendMessage(new TextMessage(new Gson().toJson(json)));
+				} catch (IOException ex) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 	

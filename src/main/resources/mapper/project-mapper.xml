@@ -35,7 +35,7 @@
 	WHEN SYSDATE &lt; TO_DATE(p.project_start, 'YYYYMMDD') THEN 0
 	WHEN SYSDATE > TO_DATE(p.project_end, 'YYYYMMDD') THEN 100
 	ELSE ROUND(
-	((SYSDATE - TO_DATE(p.project_start, 'YYYYMMDD')) /
+	((to_date(to_char(SYSDATE, 'YYYYMMDD')) - TO_DATE(p.project_start, 'YYYYMMDD')) /
 	(TO_DATE(p.project_end, 'YYYYMMDD') - TO_DATE(p.project_start, 'YYYYMMDD'))) * 100,
 	2
 	)
@@ -285,7 +285,7 @@ SELECT
         WHEN SYSDATE < TO_DATE(p.project_start, 'YYYYMMDD') THEN 0
         WHEN SYSDATE > TO_DATE(p.project_end, 'YYYYMMDD') THEN 100
         ELSE ROUND(
-            ((SYSDATE - TO_DATE(p.project_start, 'YYYYMMDD')) / 
+            ((to_date(to_char(SYSDATE, 'YYYYMMDD')) - TO_DATE(p.project_start, 'YYYYMMDD')) / 
             (TO_DATE(p.project_end, 'YYYYMMDD') - TO_DATE(p.project_start, 'YYYYMMDD'))) * 100, 
             2
         )

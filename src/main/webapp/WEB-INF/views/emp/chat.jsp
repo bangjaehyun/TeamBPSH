@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <style>
 	*{
 		padding : 0px;
@@ -263,6 +264,8 @@
 			
 			<%-- 메시지 수신 시, 이벤트 핸들러 --%>
 			ws.onmessage = function(e){
+				console.log(e.data);
+				
 				if(JSON.parse(e.data).type == "chat"){
 					const chat = JSON.parse(e.data).data;
 					if(JSON.parse(chat).chatMsgGb == "1"){
@@ -298,6 +301,13 @@
 						error : function(){
 							console.log("ajax 오류")
 						}
+					});
+				}else if(JSON.parse(e.data).type == "null"){
+					console.log("Gdgd");
+					swal({
+						title : "확인",
+						text : "채팅 대상을 선택하여 주세요",
+						icon : "warning"
 					});
 				}
 			};
@@ -479,7 +489,6 @@
 				for(let i = 0; i < res.chatList.length; i++){
 					let chat = res.chatList[i];
 					<%--채팅 정보--%>
-					console.log(chat);
 					if(chat.chatMsgGb == "1"){
 						addFile(chat);
 					}else{
