@@ -33,7 +33,7 @@
          tbl_emp.emp_name as empName,
          tbl_document_type.document_type_name as documentTypeName,
             tbl_document_sign.sign_yn as progress,
-       (select count(*) from tbl_files where document_code = document_code) as fileCount
+       (select count(*) from tbl_files where document_code = tbl_document.document_code) as fileCount
       from tbl_document 
       join tbl_emp
       on tbl_document.emp_code = tbl_emp.emp_code
