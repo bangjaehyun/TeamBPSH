@@ -175,6 +175,12 @@
 		</form>
 	</div>
 	<script>
+	$(document).ready(function(){
+		let today = new Date();
+
+		$('#voteEnd').attr('min', today.toISOString().substring(0,10));
+	});
+	
 	function addVote(){
 		let divEl = $('<div>');
 		divEl.addClass('vote')
