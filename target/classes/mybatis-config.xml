@@ -4,4 +4,7 @@
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL"/>
 	</settings>
+	<typeAliases>
+		<typeAlias type="kr.or.iei.emp.model.vo.Emp" alias="emp"/>
+	</typeAliases>
 </configuration>

@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="emp">
- 
+ 	<select id="loginEmp"
+ 	parameterType="emp"
+ 	resultType="emp">
+ 	select emp_code as empCode,
+ 		   team_code as teamCode,
+ 		   rank_code as rankCode,
+ 		   emp_id as empId,
+ 		   emp_pw as empPw,
+ 		   emp_name as empName,
+ 		   emp_phone as empPhone,
+ 		   emp_retier as empRetier,
+ 		   emp_date as empDate
+ 	  from tbl_emp
+ 	 where emp_id = #{empId} 
+ 	   and emp_pw = #{empPw} 
+ 	</select>
+ 	
+ 	<select id="adminChk"
+ 	parameterType="string"
+ 	resultType="_int">
+ 	select count(*)
+ 	  from tbl_dept_leader
+ 	 where emp_code = #{empCode}
+ 	</select>
+ 	
 </mapper>
