@@ -102,7 +102,7 @@
 <body>
 	  <div class="container">
         <h1>회원가입</h1>
-        <form action="/" method="post" onsubmit="return joinVal()">
+        <form action="/emp/join.do" method="post" onsubmit="return joinVal()">
             <div class="inputs">
                 <label for="empId">아이디 입력</label>
                 <div class="res">
@@ -128,7 +128,7 @@
             </div>
             <div class="inputs">
                 <label for="empPhone">휴대전화 번호 입력</label>
-                <input type="text" id="phone" name="phone" placeholder="휴대전화 번호 입력(숫자만)" >
+                <input type="text" id="empPhone" name="empPhone" placeholder="휴대전화 번호 입력(숫자만)" >
                 <p id="phoneMessage" class = "input-msg"></p>
             </div>
             <button type="submit" class="btnSubmit">신청하기</button>
@@ -150,21 +150,21 @@
 	const idMessage = $('#idMessage');
 	
 	//아이디 입력
-if(userId.val().length < 1){
+if(empId.val().length < 1){
 		//비었을떄는 출력X
 	}
 	empId.on('input',function(){
 		checkObj.empId=false;
 		idMessage.removeClass("valid");
 		idMessage.removeClass("invalid");
-		const regExp = /^[a-zA-Z0-9]{6,16}$/;
+		const regExp = /^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9]{6,16}$/;
 		if(regExp.test($(this).val())){
 			idMessage.html("");
 			idMessage.addClass("valid");
 			checkObj.empId = true;
 		}else{
 			//일치하지 않을 때
-			idMessage.html("영어, 숫자 8~20글자 사이로 입력하세요.");
+			idMessage.html("영어, 숫자를 적어도 1글자 이상으로 6~16글자 사이로 입력하세요.");
 			idMessage.addClass("invalid");
 			checkObj.empId = false;
 		}
@@ -176,10 +176,30 @@ if(userId.val().length < 1){
 			alert("아이디를 먼저 작성해 주세요");
 			return false;
 		}
+		$.ajax({
+			url : "/emp/checkId.do",
+			data : {"empId" : empId.val()},
+			type : "POST",
+			
+			success : function(res){
+				if(res == 0){
+					//중복된 아이디가 없음 == 회원가입 가능
+					alert("사용가능한 아이디 입니다");
+					checkObj.checkId = true;
+				}else{
+					alert("이미 사용중인 아이디 입니다.");
+					checkObj.checkId = false;
+				}
+			},
+			error : function(){
+				console.log('ajax오류 발생');
+			}
+		});
+		});
 		
 		
 		//ajax는 나중에 적용
-	});
+
 	
 	//비밀번호 입력
 	const empPw = $('#empPw'); //비밀번호 입력 input
@@ -211,15 +231,24 @@ if(userId.val().length < 1){
 		pwMessage.removeClass('valid');
 		pwMessage.removeClass('invalid');
 		
-		if(empPwConfirm.val()==empPw.val()){
-			// 비밀번호 값 == 비밀번호 확인 값
-			pwMessage.addClass('valid');
-			pwMessage.html("");
-			checkObj.empPwConfirm = true;
-		}else{
-			pwMessage.addClass('invalid');
-			pwMessage.html('비밀번호가 일치하지 않습니다.');
-			checkObj.empPwConfirm = false;
+		
+		if (empPw.val() == empPwConfirm.val()) {
+		    // 비밀번호 값 == 비밀번호 확인 값
+		    if (empPwConfirm.val().length < 8 || empPwConfirm.val().length > 20) {
+		    pwMessage.addClass('invalid');
+		    pwMessage.html('비밀번호의 길이를 다시 확인해주세요.');
+		    checkObj.empPwConfirm = false;
+		    }
+		    else{
+		    pwMessage.addClass('valid');
+		    pwMessage.html("");
+		    checkObj.empPwConfirm = true;
+		    }
+		} else {
+		    pwMessage.addClass('invalid');
+		    pwMessage.html('비밀번호가 일치하지 않습니다.');
+		    checkObj.empPwConfirm = false;
+		
 		}
 	};
 	//이름 const regExp = /^[가-힣]{2,4}$/;
@@ -250,7 +279,7 @@ if(userId.val().length < 1){
 	empPhone.on('input',function(){
 		phoneMessage.removeClass('valid');
 		phoneMessage.removeClass('invalid');
-		const regExp = /^[0-9]{11}$/;
+		const regExp = /^010[0-9]{8}$/;
 		
 		if(regExp.test($(this).val())){
 			phoneMessage.html("");
@@ -271,7 +300,7 @@ if(userId.val().length < 1){
 	    	  if(!checkObj[key]){
 	              switch(key){//memberId or memberPw or memberName ......
 	              case"empId"            : alert("아이디 형식이 다릅니다"); break;
-           		 case"idDuplChk"		: alert("아이디 중복체크를 해주세요"); break;
+           		 case"checkId"		: alert("아이디 중복체크를 해주세요"); break;
 	              case"empPw"            : alert("비밀번호 형식이 다릅니다."); break;
 	              case"empPwConfirm"      : alert("비밀번호가 일치하지 않습니다."); break;
 	              case"empName"         : alert("올바른 이름이 아닙니다.");     break;

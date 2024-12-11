@@ -21,4 +21,14 @@ public class EmpDao {
 	public int selectAdmin(String empCode) {
 		return sqlSession.selectOne("emp.adminChk",empCode);
 	}
+
+	public int idCheck(String empId) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("emp.idCheck", empId);
+	}
+
+	public int join(Emp emp) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.join",emp);
+	}
 }
