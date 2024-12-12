@@ -11,7 +11,7 @@
  		   emp_pw as empPw,
  		   emp_name as empName,
  		   emp_phone as empPhone,
- 		   emp_retier as empRetier,
+ 		   emp_retire as empRetire,
  		   emp_date as empDate
  	  from tbl_emp
  	 where emp_id = #{empId} 

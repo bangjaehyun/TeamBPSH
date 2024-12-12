@@ -8,7 +8,7 @@ public class Emp {
 	private String empPw;
 	private String empName;
 	private String empPhone;
-	private String empRetier;
+	private String empRetire;
 	private String empDate;
 	private boolean admin;
 
@@ -18,7 +18,7 @@ public class Emp {
 	}
 
 	public Emp(String empCode, String teamCode, String rankCode, String empId, String empPw, String empName,
-			String empPhone, String empRetier, String empDate, boolean admin) {
+			String empPhone, String empRetire, String empDate, boolean admin) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
@@ -27,7 +27,7 @@ public class Emp {
 		this.empPw = empPw;
 		this.empName = empName;
 		this.empPhone = empPhone;
-		this.empRetier = empRetier;
+		this.empRetire = empRetire;
 		this.empDate = empDate;
 		this.admin = admin;
 	}
@@ -88,12 +88,12 @@ public class Emp {
 		this.empPhone = empPhone;
 	}
 
-	public String getEmpRetier() {
-		return empRetier;
+	public String getEmpRetire() {
+		return empRetire;
 	}
 
-	public void setEmpRetier(String empRetier) {
-		this.empRetier = empRetier;
+	public void setEmpRetire(String empRetire) {
+		this.empRetire = empRetire;
 	}
 
 	public String getEmpDate() {
@@ -115,9 +115,10 @@ public class Emp {
 	@Override
 	public String toString() {
 		return "Emp [empCode=" + empCode + ", teamCode=" + teamCode + ", rankCode=" + rankCode + ", empId=" + empId
-				+ ", empPw=" + empPw + ", empName=" + empName + ", empPhone=" + empPhone + ", empRetier=" + empRetier
+				+ ", empPw=" + empPw + ", empName=" + empName + ", empPhone=" + empPhone + ", empRetire=" + empRetire
 				+ ", empDate=" + empDate + ", admin=" + admin + "]";
 	}
-
 	
+	
+
 }
