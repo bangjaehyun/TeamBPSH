@@ -134,12 +134,7 @@ body {
 			    document.body.appendChild(f);
  			    f.submit();
 		}
-		window.onload = function() {
-	        var alertMessage = "${alert}";
-	        if (alertMessage) {
-	            alert(alertMessage);
-	        }
-	    };
+		
 		
 	</script>
 </body>

@@ -53,10 +53,10 @@ public class EmpController {
 		if(result>0) {
 			//추후 알림기능 추가시 여기에 작성.
 			
-			m.addAttribute("alert", "신청이 완료되어 관리자 승인시 가입이 가능합니다.");
+			
 		return "redirect:/";
 		}else {
-			m.addAttribute("alert", "신청중 문제가 발생되었습니다 관리자에게 보고해주세요.");
+			
 			return"emp/join";
 		}
 	}
