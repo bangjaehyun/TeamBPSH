@@ -27,4 +27,15 @@ public class EmpService {
 
 		return loginEmp;
 	}
+
+	public int idCheck(String empId) {
+		// TODO Auto-generated method stub
+		
+		return dao.idCheck(empId);
+	}
+
+	public int join(Emp emp) {
+		// TODO Auto-generated method stub
+		return dao.join(emp);
+	}
 }

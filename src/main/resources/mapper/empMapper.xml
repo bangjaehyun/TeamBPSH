@@ -26,4 +26,29 @@
  	 where emp_code = #{empCode}
  	</select>
  	
+ 	<select id="idCheck"
+ 	parameterType="string"
+ 	resultType="_int">
+ 	select count(*)from tbl_emp where emp_id=#{_string}
+ 	</select>
+ 	<insert id="join"
+ 	parameterType="emp"
+ 	>
+ 	insert into tbl_emp (
+ 	emp_code,
+ 	emp_id,
+ 	emp_pw,
+ 	emp_name,
+ 	emp_phone,
+ 	emp_retire
+ 	
+ 	)values(
+ 	TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_emp.NEXTVAL, 4, '0'),
+ 	#{empId},
+ 	#{empPw},
+ 	#{empName},
+ 	#{empPhone},
+ 	'n'
+ 	)
+ 	</insert>
 </mapper>
