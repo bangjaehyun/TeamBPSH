@@ -53,7 +53,7 @@ public class EmpController {
 	
 		int result=0;
 		result=service.join(emp);
-		System.out.println(result);
+		
 		if(result>0) {
 			//추후 알림기능 추가시 여기에 작성.
 			 try {
