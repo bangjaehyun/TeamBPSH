@@ -48,7 +48,7 @@ public class EmpController {
 		return result;
 	}
 	
-	@PostMapping("join.do")
+	@PostMapping(value="join.do",produces="application/json;charset=utf-8")
 	public void join(Emp emp, Model m,HttpServletResponse response) {
 	
 		int result=0;
