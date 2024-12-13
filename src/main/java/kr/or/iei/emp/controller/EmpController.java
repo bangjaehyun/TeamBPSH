@@ -28,8 +28,7 @@ public class EmpController {
 	private String login(Emp emp) {
 		Emp loginEmp = service.login(emp);
 		
-		System.out.println(loginEmp.toString());
-		return null;
+		return "main/mainPage";
 	}
 	
 	@PostMapping("joinFrm.do")
