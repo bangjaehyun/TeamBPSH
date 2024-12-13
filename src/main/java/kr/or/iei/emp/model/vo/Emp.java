@@ -4,12 +4,15 @@ public class Emp {
 	private String empCode;
 	private String teamCode;
 	private String rankCode;
+	private String deptCode;
 	private String empId;
 	private String empPw;
 	private String empName;
 	private String empPhone;
 	private String empRetire;
 	private String empDate;
+	private String rankName;
+	private String deptName;
 	private boolean admin;
 
 	public Emp() {
@@ -17,18 +20,22 @@ public class Emp {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Emp(String empCode, String teamCode, String rankCode, String empId, String empPw, String empName,
-			String empPhone, String empRetire, String empDate, boolean admin) {
+	public Emp(String empCode, String teamCode, String rankCode, String deptCode, String empId, String empPw,
+			String empName, String empPhone, String empRetire, String empDate, String rankName, String deptName,
+			boolean admin) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
 		this.rankCode = rankCode;
+		this.deptCode = deptCode;
 		this.empId = empId;
 		this.empPw = empPw;
 		this.empName = empName;
 		this.empPhone = empPhone;
 		this.empRetire = empRetire;
 		this.empDate = empDate;
+		this.rankName = rankName;
+		this.deptName = deptName;
 		this.admin = admin;
 	}
 
@@ -54,6 +61,14 @@ public class Emp {
 
 	public void setRankCode(String rankCode) {
 		this.rankCode = rankCode;
+	}
+
+	public String getDeptCode() {
+		return deptCode;
+	}
+
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
 	}
 
 	public String getEmpId() {
@@ -104,6 +119,22 @@ public class Emp {
 		this.empDate = empDate;
 	}
 
+	public String getRankName() {
+		return rankName;
+	}
+
+	public void setRankName(String rankName) {
+		this.rankName = rankName;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
 	public boolean isAdmin() {
 		return admin;
 	}
@@ -114,10 +145,15 @@ public class Emp {
 
 	@Override
 	public String toString() {
-		return "Emp [empCode=" + empCode + ", teamCode=" + teamCode + ", rankCode=" + rankCode + ", empId=" + empId
-				+ ", empPw=" + empPw + ", empName=" + empName + ", empPhone=" + empPhone + ", empRetire=" + empRetire
-				+ ", empDate=" + empDate + ", admin=" + admin + "]";
+		return "Emp [empCode=" + empCode + ", teamCode=" + teamCode + ", rankCode=" + rankCode + ", deptCode="
+				+ deptCode + ", empId=" + empId + ", empPw=" + empPw + ", empName=" + empName + ", empPhone=" + empPhone
+				+ ", empRetire=" + empRetire + ", empDate=" + empDate + ", rankName=" + rankName + ", deptName="
+				+ deptName + ", admin=" + admin + "]";
 	}
+
+	
+
+	
 	
 	
 

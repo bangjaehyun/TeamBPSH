@@ -53,44 +53,26 @@ public class EmpController {
 	@PostMapping(value="checkId.do",produces="application/json;charset=utf-8" )
 	@ResponseBody
 	public int checkId(String empId) {
-		
+		System.out.println(empId);
 		int result=0;
 		result = service.idCheck(empId);
-		
+		System.out.println(result);
 		return result;
 	}
 	
-	@PostMapping(value="join.do",produces="application/json;charset=utf-8")
-	public void join(Emp emp, Model m,HttpServletResponse response) {
-	
-		int result=0;
-		result=service.join(emp);
-		
-		if(result>0) {
-			//추후 알림기능 추가시 여기에 작성.
-			 try {
-			        response.setContentType("text/html; charset=utf-8");
-			        PrintWriter w = response.getWriter();
-			        w.write("<script>alert('가입신청이 완료되었습니다. 관리자 승인 시 로그인이 가능합니다.');location.href='/';</script>");
-			        w.flush();
-			        w.close();
-			    } catch(Exception e) {
-			        e.printStackTrace();
-			    }
-			
-		
-		}else {
-			 try {
-			        response.setContentType("text/html; charset=utf-8");
-			        PrintWriter w = response.getWriter();
-			        w.write("<script>alert('가입 신청중 오류가 발생했습니다. 관리자에게 문의해 주십시오.');location.href='/WEB-INF/views/emp/join.jsp';</script>");
-			        w.flush();
-			        w.close();
-			    } catch(Exception e) {
-			        e.printStackTrace();
-			    }
-			
-		}
+	@PostMapping(value = "join.do", produces = "application/json; charset=utf-8")
+	@ResponseBody 
+	public int join(String empId, String empPw, String empName, String empPhone) {
+	    Emp emp=new Emp();
+	    emp.setEmpId(empId);
+	    emp.setEmpPw(empPw);
+	    emp.setEmpName(empName);
+	    emp.setEmpPhone(empPhone);
+	    int result = service.join(emp);
+	   
+	    
+	    return result;
+	   
 	}
 	
 	

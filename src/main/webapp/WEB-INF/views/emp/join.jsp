@@ -1,11 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 
 <style>
 
@@ -102,10 +105,11 @@
 </head>
 <body>
 	  <div class="container">
+
         <h1>회원가입</h1>
-        <form action="/emp/join.do" method="post" onsubmit="return joinVal()">
-            <div class="inputs">
+        <form action="/emp/join.do" method="post">
                 <label for="empId">아이디 입력</label>
+            <div class="inputs">
                 <div class="res">
                 <input type="text" id="empId" name="empId" placeholder="입력한 아이디 기준으로 이메일이 생성됩니다.">
                     <button type="button" id="btnCheckId">중복확인</button> 
@@ -181,14 +185,13 @@ if(empId.val().length < 1){
 			url : "/emp/checkId.do",
 			data : {"empId" : empId.val()},
 			type : "POST",
-			
 			success : function(res){
 				if(res == 0){
 					//중복된 아이디가 없음 == 회원가입 가능
-					alert("사용가능한 아이디 입니다");
+					msg("알림", "사용 가능한 아이디입니다.", "success", "0");
 					checkObj.checkId = true;
 				}else{
-					alert("이미 사용중인 아이디 입니다.");
+					msg("알림", "이미 사용중인 아이디 입니다.", "warning", "0");
 					checkObj.checkId = false;
 				}
 			},
@@ -201,7 +204,18 @@ if(empId.val().length < 1){
 		
 		//ajax는 나중에 적용
 
-	
+	function msg(title, text, icon, callback){
+			swal({
+				title : title,
+				text : text,
+				icon : icon
+			}).then(function(){
+				if(callback != "0"){
+					location.href = "/";
+				}
+			});
+			
+		}
 	//비밀번호 입력
 	const empPw = $('#empPw'); //비밀번호 입력 input
 	const pwMessage = $('#pwMessage');
@@ -209,7 +223,7 @@ if(empId.val().length < 1){
 	empPw.on('input',function(){
 		pwMessage.removeClass('valid');
 		pwMessage.removeClass('invalid');
-		const regExp = /^[a-zA-Z0-9!@#$%^&*]{8,20}$/;
+		const regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
 		
 		if(regExp.test($(this).val())){
 			pwMessage.html("");
@@ -217,7 +231,7 @@ if(empId.val().length < 1){
 			checkObj.empPw = true;
 		}else{
 			//일치하지 않을 때
-			pwMessage.html("영어, 숫자,특수문자 포함 8~20글자 사이로 입력하세요.");
+			pwMessage.html("영어, 숫자,특수문자를 적어도 1개포함 8~20글자 사이로 입력하세요.");
 			pwMessage.addClass("invalid");
 			checkObj.empPw = false;
 		}
@@ -293,7 +307,7 @@ if(empId.val().length < 1){
 			checkObj.empPhone = false;
 		}
 	});
-	
+	<%--
 	function joinVal(){
 	      
 	      for(let key in checkObj){
@@ -316,12 +330,49 @@ if(empId.val().length < 1){
 	      
 		
 	}
+	--%>
 	
-		
-		
-	
-	
-	
+	   $('form').on('submit', function (e){
+		   e.preventDefault();   
+	   
+	   for(let key in checkObj){
+	    	  
+	    	  if(!checkObj[key]){
+	              switch(key){//memberId or memberPw or memberName ......
+	              case"empId"            : alert("아이디 형식이 다릅니다"); break;
+        		 case"checkId"		: alert("아이디 중복체크를 해주세요"); break;
+	              case"empPw"            : alert("비밀번호 형식이 다릅니다."); break;
+	              case"empPwConfirm"      : alert("비밀번호가 일치하지 않습니다."); break;
+	              case"empName"         : alert("올바른 이름이 아닙니다.");     break;
+	              case"empPhone"         : alert("전화번호 형식이 다릅니다.");  break;
+	              }
+	           
+	              return false;
+	           }
+	        }
+	  
+	   $.ajax({
+           url: "/emp/join.do", 
+           type: "post", 
+           data: {"empId":empId.val(),
+        	   	  "empPw":empPw.val(),
+        	   	  "empName":empName.val(),
+        	   	  "empPhone":empPhone.val()
+           		 }, 
+           success: function (res) {
+					if (res > 0) {
+						msg("알림", "가입신청이 완료되었으며 관리자 승인시 로그인이 가능합니다.", "success","1");
+					} else {
+						msg("알림", "오류", "error", "1");
+					}
+
+				},
+				error : function() {
+					// 오류 메시지 표시
+					console.log("ajax오류")
+				},
+			});
+		});
 	</script>
 </body>
 </html>
