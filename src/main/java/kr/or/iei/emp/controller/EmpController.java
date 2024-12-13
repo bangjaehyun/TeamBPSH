@@ -1,8 +1,10 @@
 package kr.or.iei.emp.controller;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,9 +26,20 @@ public class EmpController {
 	private EmpService service;
 	
 	
-	@PostMapping("login.do")
-	private String login(Emp emp) {
+	@PostMapping("mainPage.do")
+	private String login(Emp emp, HttpSession session) {
 		Emp loginEmp = service.login(emp);
+		if(loginEmp != null) {
+			if(loginEmp.getRankCode() != null) {
+				session.setAttribute("loginEmp", loginEmp);
+			}else {
+				//관리자 승인을 못받은 회원
+				return "redirect:/";
+			}
+		}else {
+			//회원 가입을 안한 회원
+			return "redirect:/";
+		}
 		
 		return "main/mainPage";
 	}
@@ -78,6 +91,15 @@ public class EmpController {
 			    }
 			
 		}
+	}
+	
+	
+	@PostMapping("empWait.do")
+	public String empWait(Model model) {
+		ArrayList<Emp> empWaitList = service.empWaitList();
+		
+		model.addAttribute("empWaitList", empWaitList);
+		return "main/empWait";
 	}
 	
 	

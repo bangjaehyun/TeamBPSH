@@ -51,4 +51,18 @@
  	'n'
  	)
  	</insert>
+ 	<select id="empWaitList"
+ 	resultType="emp">
+ 	select emp_code as empCode,
+ 		   team_code as teamCode,
+ 		   rank_code as rankCode,
+ 		   emp_id as empId,
+ 		   emp_pw as empPw,
+ 		   emp_name as empName,
+ 		   emp_phone as empPhone,
+ 		   emp_retire as empRetire,
+ 		   emp_date as empDate
+ 	  from tbl_emp
+ 	 where emp_code = (select * from tbl_emp_wait) 
+ 	</select>
 </mapper>

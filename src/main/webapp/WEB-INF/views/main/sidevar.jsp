@@ -27,7 +27,8 @@
 			background: #5D5C5C;
         }
         
-        .side-sub > li{
+        .side-sub > li > a{
+        	text-decoration: none;
         	color: white;
         	margin: 0px;
         }
@@ -70,6 +71,8 @@
         .div-color{
         	background: white;
         }
+        
+      
         
     </style>
 </head>
@@ -119,7 +122,7 @@
 					<p class="side-text">관리자</p>
 				</div>
 				<ul class="side-sub">
-					<li>회원관리</li>
+					<li><a href="javascript:void(0)" onclick="empWait()">회원관리</a></li>
 					<li>문서관리</li>
 					<li>매출관리</li>
 				</ul>
@@ -133,8 +136,8 @@
     		  $(this).addClass("div-color");
     		  
     		  $(this).next().css('display','block');
-    	})
-    
+    	});
+    	
     </script>
 </body>
 </html>

@@ -1,5 +1,7 @@
 package kr.or.iei.emp.model.service;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,6 @@ public class EmpService {
 
 	public Emp login(Emp emp) {
 		Emp loginEmp = dao.login(emp);
-
 		if (loginEmp != null && loginEmp.getTeamCode().equals("G1")) {
 			int adminChk = dao.selectAdmin(loginEmp.getEmpCode());
 			
@@ -37,5 +38,9 @@ public class EmpService {
 	public int join(Emp emp) {
 		// TODO Auto-generated method stub
 		return dao.join(emp);
+	}
+
+	public ArrayList<Emp> empWaitList() {
+		return (ArrayList<Emp>) dao.empWaitList();
 	}
 }

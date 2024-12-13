@@ -1,5 +1,8 @@
 package kr.or.iei.emp.model.dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,4 +34,9 @@ public class EmpDao {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("emp.join",emp);
 	}
+
+	public List<Emp> empWaitList() {
+		return sqlSession.selectList("emp.empWaitList");
+	}
+
 }
