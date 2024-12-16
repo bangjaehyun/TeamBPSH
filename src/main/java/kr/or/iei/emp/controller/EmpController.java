@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Emp;
@@ -63,9 +65,11 @@ public class EmpController {
 	@PostMapping(value = "join.do", produces = "application/json; charset=utf-8")
 	@ResponseBody 
 	public int join(String empId, String empPw, String empName, String empPhone) {
-	    Emp emp=new Emp();
+		String newEmpPw=null;
+		newEmpPw=BCrypt.hashpw(empPw, BCrypt.gensalt());
+		Emp emp=new Emp();
 	    emp.setEmpId(empId);
-	    emp.setEmpPw(empPw);
+	    emp.setEmpPw(newEmpPw);
 	    emp.setEmpName(empName);
 	    emp.setEmpPhone(empPhone);
 	    int result = service.join(emp);
