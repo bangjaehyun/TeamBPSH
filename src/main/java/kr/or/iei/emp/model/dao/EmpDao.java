@@ -3,6 +3,7 @@ package kr.or.iei.emp.model.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +19,22 @@ public class EmpDao {
 	private SqlSessionTemplate sqlSession;
 
 	public Emp login(Emp emp) {
-		return sqlSession.selectOne("emp.loginEmp",emp);
+		Emp loginEmp= sqlSession.selectOne("emp.loginEmp",emp);
+		System.out.println(loginEmp);
+		 if(loginEmp!=null) {
+			boolean checkPw=BCrypt.checkpw(emp.getEmpPw(), loginEmp.getEmpPw());
+			System.out.println(checkPw);
+			if(checkPw) {
+			loginEmp.setEmpPw(emp.getEmpPw());
+			return loginEmp;
+			
+			}else {
+				return null;
+			}
+		 }else {
+			 return null;
+		 }
+		
 	}
 
 	public int selectAdmin(String empCode) {

@@ -18,14 +18,17 @@ public class EmpService {
 
 	public Emp login(Emp emp) {
 		Emp loginEmp = dao.login(emp);
+		if (loginEmp != null &&loginEmp.getTeamCode()!=null){
 		if (loginEmp != null && loginEmp.getTeamCode().equals("G1")) {
 			int adminChk = dao.selectAdmin(loginEmp.getEmpCode());
 			
 			if (adminChk > 0) {
 				loginEmp.setAdmin(true);
 			}
+		}else {
+			
 		}
-
+		}
 		return loginEmp;
 	}
 

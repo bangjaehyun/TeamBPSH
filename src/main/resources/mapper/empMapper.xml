@@ -15,7 +15,7 @@
  		   emp_date as empDate
  	  from tbl_emp
  	 where emp_id = #{empId} 
- 	   and emp_pw = #{empPw} 
+ 	    
  	</select>
  	
  	<select id="adminChk"

@@ -30,6 +30,7 @@ public class EmpController {
 	
 	@PostMapping("mainPage.do")
 	private String login(Emp emp, HttpSession session) {
+		
 		Emp loginEmp = service.login(emp);
 		if(loginEmp != null) {
 			if(loginEmp.getRankCode() != null) {
