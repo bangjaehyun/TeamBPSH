@@ -1,11 +1,8 @@
 package kr.or.iei.emp.controller;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Locale;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -18,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Emp;
 
