@@ -5,12 +5,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
   <style>
         *{
             padding: 0px;
             margin: 0px;
         }
         .side-bar{
+        	position : relative;
+        	z-index : 9999;
             height: calc(100vh - 50px);
             width: 55px;
             background-color: #CCCCCC;
@@ -130,6 +134,29 @@
 		</ul>
     </div>
     <script>
+    function empWait(){
+    	
+    	 $.ajax({
+             url : "/emp/empWait.do",
+             type : "post",
+             success : function(res) {
+                $('.page').html(res);
+             },
+             error : function() {
+                console.log('ajax error');
+             }
+          });
+//       let f = document.createElement('form');
+//     	f.setAttribute('method', 'post');
+//     	f.setAttribute('action', '/emp/empWait.do');
+//     	document.body.appendChild(f);
+//     	f.submit();
+    }
+    $('.side-div').next().find('li').click(function(){
+    	$('.side-div').next().css('display','none');
+    })
+    
+    
     	$('.side-div').click(function(e){
     		  $('.side-div').next().css('display','none');
     		  $('.side-div').removeClass("div-color");

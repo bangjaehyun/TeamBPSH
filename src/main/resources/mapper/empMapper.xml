@@ -63,6 +63,58 @@
  		   emp_retire as empRetire,
  		   emp_date as empDate
  	  from tbl_emp
- 	 where emp_code = (select * from tbl_emp_wait) 
+ 	  where emp_code in (select * from tbl_emp_wait) 
  	</select>
+ 	
+ 	<select id="deptList"
+ 	resultType="dept">
+ 	select dept_code as deptCode,
+ 		   dept_name as deptName
+ 	  from tbl_dept  
+ 	</select>
+ 	
+ 	<select id="teamList"
+ 	resultType="team">
+ 	select team_code as teamCode,
+ 		   dept_code as deptCode,
+ 		   team_name as teamName
+ 	  from tbl_team
+ 	</select>
+ 	
+ 	<select id="rankList"
+ 	resultType="rank">
+ 	select rank_code as rankCode,
+ 		   rank_name as rankName
+ 	  from tbl_rank
+ 	</select>
+ 	
+ 	<update id="approvalEmp"
+ 	parameterType="emp">
+ 	update tbl_emp
+ 	   set team_code = #{teamCode},
+ 	       rank_code = #{rankCode}
+ 	 where emp_code = #{empCode}    
+ 	</update>
+ 	
+ 	<insert id="insertSalary"
+ 	parameterType="map">
+ 	 insert into tbl_salary
+	   (
+	   	emp_code,
+	   	salary
+	   )
+  	values
+	   (
+	   	#{empCode},
+	   	#{salary}
+	   )
+ 	
+ 	</insert>
+ 	
+ 	<delete id="deleteWait"
+ 	parameterType="string">
+ 	delete 
+ 	  from tbl_emp_wait
+ 	 where emp_code = #{empCode}
+ 	</delete>
 </mapper>

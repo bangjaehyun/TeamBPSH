@@ -6,5 +6,8 @@
 	</settings>
 	<typeAliases>
 		<typeAlias type="kr.or.iei.emp.model.vo.Emp" alias="emp"/>
+		<typeAlias type="kr.or.iei.emp.model.vo.Dept" alias="dept"/>
+		<typeAlias type="kr.or.iei.emp.model.vo.Team" alias="team"/>
+		<typeAlias type="kr.or.iei.emp.model.vo.Rank" alias="rank"/>
 	</typeAliases>
 </configuration>

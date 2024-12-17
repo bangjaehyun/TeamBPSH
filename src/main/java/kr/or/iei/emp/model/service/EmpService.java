@@ -1,13 +1,18 @@
 package kr.or.iei.emp.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.emp.model.dao.EmpDao;
+import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Rank;
+import kr.or.iei.emp.model.vo.Team;
 
 @Service("empService")
 public class EmpService {
@@ -45,5 +50,35 @@ public class EmpService {
 
 	public ArrayList<Emp> empWaitList() {
 		return (ArrayList<Emp>) dao.empWaitList();
+	}
+	
+	public ArrayList<Dept> loadDept() {
+		return (ArrayList<Dept>)dao.loadDept();
+	}
+
+	public ArrayList<Team> loadTeam() {
+		return (ArrayList<Team>)dao.loadTeam();
+	}
+
+	public ArrayList<Rank> loadRank() {
+		return (ArrayList<Rank>)dao.loadRank();
+	}
+
+	@Transactional
+	public int approval(Emp emp, int salary) {
+		int result = dao.approvalEmp(emp);
+		
+		if(result > 0) {
+			HashMap<String, String> map = new HashMap<String, String>();
+			map.put("empCode", emp.getEmpCode());
+			map.put("salary", String.valueOf(salary));
+			
+			result = dao.insertSalary(map);
+			
+			if(result > 0) {
+				result = dao.deleteWait(emp.getEmpCode());
+			}
+		}
+		return result;
 	}
 }

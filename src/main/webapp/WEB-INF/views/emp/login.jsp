@@ -5,6 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/resources/css/default.css" />
 <style>
 body {
 	padding: 0px;
@@ -103,11 +107,11 @@ body {
 			<form action="emp/mainPage.do" method="post"  class="login-wrap">
 				<div class="div-wrap">
 					<p>아이디</p>
-					<input type="text" name="empId" placeholder="아이디">
+					<input type="text" name="empId" value="admin" placeholder="아이디">
 				</div>
 				<div class="div-wrap">
 					<p>비밀번호</p>
-					<input type="password" name="empPw" placeholder="비밀번호">
+					<input type="password" name="empPw" value="1234" placeholder="비밀번호">
 				</div>
 				<div class="div-wrap">
 					<input type="submit" class="login-btn" value="로그인">
