@@ -24,18 +24,24 @@ public class EmpService {
 
 	public Emp login(Emp emp) {
 		Emp loginEmp = dao.login(emp);
-		if (loginEmp != null &&loginEmp.getTeamCode()!=null){
-		if (loginEmp != null && loginEmp.getTeamCode().equals("G1")) {
-			int adminChk = dao.selectAdmin(loginEmp.getEmpCode());
-			
-			if (adminChk > 0) {
-				loginEmp.setAdmin(true);
-			}
-		}else {
-			
-		}
-		}
-		return loginEmp;
+		 if(loginEmp!=null) {
+				boolean checkPw=BCrypt.checkpw(emp.getEmpPw(), loginEmp.getEmpPw());
+				if(checkPw) {
+				loginEmp.setEmpPw(emp.getEmpPw());
+					if (loginEmp != null &&loginEmp.getTeamCode()!=null){
+						if (loginEmp.getTeamCode().equals("G1")) {
+							int adminChk = dao.selectAdmin(loginEmp.getEmpCode());
+							
+							if (adminChk > 0) {
+								loginEmp.setAdmin(true);
+							}
+						}
+					}
+				 }
+			return loginEmp;
+		 }else {
+			 return null;
+		 }
 	}
 
 	public int idCheck(String empId) {

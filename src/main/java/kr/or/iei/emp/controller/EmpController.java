@@ -67,14 +67,12 @@ public class EmpController {
 	
 	@PostMapping(value = "join.do", produces = "application/json; charset=utf-8")
 	@ResponseBody 
-	public int join(String empId, String empPw, String empName, String empPhone) {
+	public int join(Emp emp) {
 		String newEmpPw=null;
-		newEmpPw=BCrypt.hashpw(empPw, BCrypt.gensalt());
-		Emp emp=new Emp();
-	    emp.setEmpId(empId);
+		newEmpPw=BCrypt.hashpw(emp.getEmpPw(), BCrypt.gensalt());
+		System.out.println(emp.toString());
 	    emp.setEmpPw(newEmpPw);
-	    emp.setEmpName(empName);
-	    emp.setEmpPhone(empPhone);
+	   
 	    int result = service.join(emp);
 	   
 	    

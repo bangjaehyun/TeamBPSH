@@ -22,24 +22,13 @@ public class EmpDao {
 	@Qualifier("sqlSessionTemplate")
 	private SqlSessionTemplate sqlSession;
 
+
 	public Emp login(Emp emp) {
-		Emp loginEmp= sqlSession.selectOne("emp.loginEmp",emp);
-		System.out.println(loginEmp);
-		 if(loginEmp!=null) {
-			boolean checkPw=BCrypt.checkpw(emp.getEmpPw(), loginEmp.getEmpPw());
-			System.out.println(checkPw);
-			if(checkPw) {
-			loginEmp.setEmpPw(emp.getEmpPw());
-			return loginEmp;
-			
-			}else {
-				return null;
-			}
-		 }else {
-			 return null;
-		 }
+		return sqlSession.selectOne("emp.loginEmp",emp);
 		
 	}
+		
+	
 
 	public int selectAdmin(String empCode) {
 		return sqlSession.selectOne("emp.adminChk",empCode);
