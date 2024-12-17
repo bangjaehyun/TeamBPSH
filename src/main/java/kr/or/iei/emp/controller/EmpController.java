@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,10 @@ public class EmpController {
 	@Qualifier("empService")
 	private EmpService service;
 	
+	  @Autowired
+	    @Qualifier("messageSource")
+	    private MessageSource message;
+	
 	@PostMapping("mainPage.do")
 	private String login(Emp emp, HttpSession session) {
 		
@@ -38,11 +43,11 @@ public class EmpController {
 			if(loginEmp.getRankCode() != null) {
 				session.setAttribute("loginEmp", loginEmp);
 			}else {
-				//관리자 승인을 못받은 회원
+				//愿�由ъ옄 �듅�씤�쓣 紐삳컺�� �쉶�썝
 				return "redirect:/";
 			}
 		}else {
-			//회원 가입을 안한 회원
+			//�쉶�썝 媛��엯�쓣 �븞�븳 �쉶�썝
 			return "redirect:/";
 		}
 		
@@ -91,6 +96,13 @@ public class EmpController {
 	@PostMapping("emp/approval.do")
     public String approval(Emp emp, int salary) {
         int result = service.approval(emp, salary);
+        
+        if(result < 1) {
+            CommonException ex = new CommonException("시발");
+            ex.setErrorCode("EC001");
+            ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
+            throw ex;
+        }
         
         return "main/empWait";
     }

@@ -80,7 +80,7 @@
 						</select>
 					</td>
 					<td>
-						<input type="text" name="salary" placeholder="급여">
+						<input type="number" name="salary" placeholder="급여">
 						<span>원</span>
 					</td>
 					<td>
@@ -125,7 +125,14 @@
     			  	  "salary" : salary
     			  	  },
     	   	  success : function(res){
-    	   		  $('.page').html(res);
+    	   		if( Object.prototype.toString.call(res) === "[object JSON]")
+    	   		{ 
+    	   			console.log(JSON.stringify(res));
+    	   		}
+    	   		else{ 
+    	   			console.log(res);
+    	   			$('.page').html(res);
+    	   		}
     	   	  },
     	   	  error : function(){
     	   		  console.log("ajax 오류");
