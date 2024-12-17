@@ -22,7 +22,7 @@
 	<jsp:include page="/WEB-INF/views/main/header.jsp"></jsp:include>
 	<div class="wrap">
 		<div class="side">
-			<jsp:include page="/WEB-INF/views/main/sidevar.jsp"></jsp:include>
+			<jsp:include page="/WEB-INF/views/main/sidebar.jsp"></jsp:include>
 		</div>
 		<div class="page">
 			<jsp:include page="/WEB-INF/views/main/main.jsp"></jsp:include>

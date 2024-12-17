@@ -164,6 +164,22 @@
     		  
     		  $(this).next().css('display','block');
     	});
+    
+    //3번째 li 태그 달력으로 이동
+    $('.side-li:nth-child(3)').on('click',function(){
+        $.ajax({
+            url : "/emp/calendar.do",
+            type: "post",
+            success : function(res) {
+                $('.page').html(res);
+                
+
+            }
+            , error : function() {
+                console.log('ajax 통신 오류');
+            }
+        });
+    });
     	
     </script>
 </body>
