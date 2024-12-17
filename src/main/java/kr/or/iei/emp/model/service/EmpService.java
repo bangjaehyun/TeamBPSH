@@ -3,6 +3,7 @@ package kr.or.iei.emp.model.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -80,5 +81,24 @@ public class EmpService {
 			}
 		}
 		return result;
+	}
+
+	public void chkAdmin() {
+		int result = dao.idCheck("admin");
+		if(result == 0) {
+			String pw = BCrypt.hashpw("1234", BCrypt.gensalt());
+			Emp emp = new Emp();
+			emp.setEmpId("admin");
+			emp.setEmpPw(pw);
+			emp.setTeamCode("G1");
+			emp.setRankCode("J6");
+			emp.setEmpName("배재현");
+			emp.setEmpPhone("01012341234");
+			emp.setEmpRetire("n");
+			result = dao.insertAdmin(emp);
+			if(result > 0) {
+				dao.deleteWait(emp.getDeptCode());
+			}
+		}
 	}
 }

@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import kr.or.iei.emp.model.service.EmpService;
-import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
-import kr.or.iei.emp.model.vo.Rank;
-import kr.or.iei.emp.model.vo.Team;
+
 
 @Controller("empController")
 @RequestMapping("/emp/")
@@ -32,19 +30,6 @@ public class EmpController {
 	@Qualifier("empService")
 	private EmpService service;
 	
-    @Autowired
-    private ServletContext servletContext;
-	
-    @PostConstruct
-    public void loadList() {
-        ArrayList<Dept> deptList = service.loadDept();
-        ArrayList<Team> teamList = service.loadTeam();
-        ArrayList<Rank> rankList = service.loadRank();
-        servletContext.setAttribute("deptList", deptList);
-        servletContext.setAttribute("teamList", teamList);
-        servletContext.setAttribute("rankList", rankList);
-    }    
-    
 	@PostMapping("mainPage.do")
 	private String login(Emp emp, HttpSession session) {
 		
@@ -94,7 +79,6 @@ public class EmpController {
 	   
 	    
 	    return result;
-	   
 	}
 	
 	

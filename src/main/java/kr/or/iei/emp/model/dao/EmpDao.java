@@ -83,4 +83,8 @@ public class EmpDao {
 		return sqlSession.delete("emp.deleteWait", empCode);
 	}
 
+	public int insertAdmin(Emp emp) {
+		return sqlSession.insert("emp.insertAdmin", emp);
+	}
+
 }

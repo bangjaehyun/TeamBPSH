@@ -117,4 +117,28 @@
  	  from tbl_emp_wait
  	 where emp_code = #{empCode}
  	</delete>
+ 	
+ 	<insert id="insertAdmin"
+ 	parameterType="emp">
+ 	insert into tbl_emp (
+ 	emp_code,
+ 	emp_id,
+ 	emp_pw,
+ 	emp_name,
+ 	emp_phone,
+ 	emp_retire,
+ 	team_code,
+ 	rank_code
+ 	
+ 	)values(
+ 	TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_emp.NEXTVAL, 4, '0'),
+ 	#{empId},
+ 	#{empPw},
+ 	#{empName},
+ 	#{empPhone},
+ 	#{empRetire},
+ 	#{teamCode},
+ 	#{rankCode}
+ 	)
+ 	</insert>
 </mapper>
