@@ -23,14 +23,15 @@ public class CommonExceptionHandler {
 		
 		if(isAjaxRequest(request)) {
 			//ajax - 예외 처리
-			
 			response.setContentType("application/json; charset=utf-8");
 			
 			JsonObject jsonObj = new JsonObject();
 			jsonObj.addProperty("title", "오류 발생");
 			jsonObj.addProperty("msg", ex.getUserMsg());
 			jsonObj.addProperty("icon", "error");
-			System.out.println(new Gson().toJson(jsonObj));
+			if(ex.getErrorCode().substring(0, 2).equals("MA")) {
+				jsonObj.addProperty("loc", "/");
+			}
 			return new Gson().toJson(jsonObj);
 		}else {
 			
@@ -57,7 +58,6 @@ public class CommonExceptionHandler {
 			return false;
 		}
     }
-	
 	
 	//CommonException으로 강제 예외처리한 경우 이외의 Exception 발생 시 처리 핸들러
 	@ExceptionHandler(Exception.class)

@@ -50,17 +50,16 @@
     </div>
 </header>
 <script>
-	//메인페이지로 이동 메시지
-	function mainMsg(title,msg,icon, callback){
+	function callbackMsg(title,msg,icon, callback){
 		swal({
 			title : title,
 			text : msg,
 			icon : icon
 		}).then(function(){
-			console.log(callback);
-				location.href = "/";
-		});	
+			location.href = callback;
+		});
 	}
+
 	//메시지
 	function msg(title,msg,icon, callback){
 		swal({
@@ -78,7 +77,12 @@
 	         success : function(res) {
 	        	try {
 	        		const errMsg = JSON.parse(res);
-	        		mainMsg(errMsg.title, errMsg.msg,errMsg.icon);
+	        		if(errMsg.loc == null){
+	        			msg(errMsg.title, errMsg.msg,errMsg.icon);
+	        		}else{
+	        			callbackMsg(errMsg.title, errMsg.msg,errMsg.icon, errMsg.loc);
+	        		}
+	        		
 	        	} catch (e) {
 	        		 $('.page').html(res);
 	        	}
@@ -87,16 +91,6 @@
 	            console.log('ajax error');
 	         }
 	      });
-	}
-	
-	//관리자 체크
-	function checkAdmin(){
-		if('${loginEmp.empId}' == 'admin'){
-			return true;
-		}else{
-			msg('확인','관리자 권한이 없습니다.','warning');
-			return false;
-		}
 	}
 </script>
 

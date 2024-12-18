@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.or.iei.common.annotation.AdminChk;
+import kr.or.iei.common.annotation.NoLoginChk;
 import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Emp;
@@ -29,18 +31,19 @@ public class EmpController {
 	@Qualifier("empService")
 	private EmpService service;
 	
-	  @Autowired
-	    @Qualifier("messageSource")
-	    private MessageSource message;
+	@Autowired
+	@Qualifier("messageSource")
+	private MessageSource message;
 	
 	//로그인
 	@PostMapping("mainPage.do")
-	private String login(Emp emp, HttpSession session) {
-		
+	@NoLoginChk
+	public String login(Emp emp, HttpSession session) {
 		Emp loginEmp = service.login(emp);
 		if(loginEmp != null) {
 			if(loginEmp.getRankCode() != null) {
 				session.setAttribute("loginEmp", loginEmp);
+				session.setMaxInactiveInterval(6);
 			}else {
 				//승인이 안된 사원
 				  CommonException ex = new CommonException("관리자 승인 대기중입니다.");
@@ -60,6 +63,7 @@ public class EmpController {
 	}
 	
 	@PostMapping("joinFrm.do")
+	@NoLoginChk
 	public String joinFrm() {
 		
 		return"emp/join";
@@ -67,6 +71,7 @@ public class EmpController {
 	
 	@PostMapping(value="checkId.do",produces="application/json;charset=utf-8" )
 	@ResponseBody
+	@NoLoginChk
 	public int checkId(String empId) {
 		System.out.println(empId);
 		int result=0;
@@ -77,6 +82,7 @@ public class EmpController {
 	
 	@PostMapping(value = "join.do", produces = "application/json; charset=utf-8")
 	@ResponseBody 
+	@NoLoginChk
 	public int join(Emp emp) {
 		String newEmpPw=null;
 		newEmpPw=BCrypt.hashpw(emp.getEmpPw(), BCrypt.gensalt());
@@ -90,7 +96,8 @@ public class EmpController {
 	}
 	
 	//신규 회원 관리 페이지로 변경
-	@PostMapping("empWait.do")
+	@PostMapping(value="empWait.do", produces="text/html; charset=utf-8;")
+	@AdminChk
 	public String empWait(Model model) {
 		ArrayList<Emp> empWaitList = service.empWaitList();
 		

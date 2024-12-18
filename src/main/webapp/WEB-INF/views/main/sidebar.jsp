@@ -126,18 +126,7 @@
     </div>
     <script>
     function empWait(){
-    	if(checkAdmin()){
-    	 $.ajax({
-             url : "/emp/empWait.do",
-             type : "post",
-             success : function(res) {
-                $('.page').html(res);
-             },
-             error : function() {
-                console.log('ajax error');
-             }
-          });
-    	}
+    	pageMove("/emp/empWait.do");
     }
     
   //sub메뉴클릭시 숨기기 위한 이벤트
