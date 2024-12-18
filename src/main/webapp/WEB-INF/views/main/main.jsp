@@ -16,6 +16,8 @@
 	}
 
 	#content {
+		position : relative;
+		z-index : 0;
         display: flex;
         flex-wrap: wrap;
         gap: 20px;

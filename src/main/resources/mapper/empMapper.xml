@@ -12,8 +12,10 @@
  		   emp_name as empName,
  		   emp_phone as empPhone,
  		   emp_retire as empRetire,
- 		   emp_date as empDate
+ 		   emp_date as empDate,
+ 		   dept_code as deptCode
  	  from tbl_emp
+ 	  join tbl_team using(team_code) 
  	 where emp_id = #{empId} 
  	    
  	</select>

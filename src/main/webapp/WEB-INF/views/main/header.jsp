@@ -23,6 +23,8 @@
             margin: 0px;
         }
         .header-wrap{
+        	display : flex;
+        	justify-content : space-between;
             width: 100%;
             height: 50px;
             background: linear-gradient(#99CCFF, #CCCCFF);
@@ -38,6 +40,21 @@
         .header-left{
         	width: 300px;
         }
+        .header-right{
+        	margin-right : 10px;
+        	display: flex;	
+        }
+        .header-my{
+        	margin: auto 0;
+        	height: 40px;
+        }
+         
+       .act {
+       	 visibility: visible;
+       	 height : 80px;
+       	 opacity: 1;
+       }
+       
     </style>
 </head>
 
@@ -46,10 +63,21 @@
         <div class="header-left">
             <img onclick="toggle()" class="header-toogle"  src="/resources/images/exchange.png">
             <a href="javascript:void(0)" class="mainPage"><img class="header-img" src="/resources/images/logo.png"></a>
-        </div>        
+        </div>
+           <div class="header-right">
+            <img class="header-my" src="/resources/images/person.png">
+        </div>                
     </div>
 </header>
 <script>
+	$('.header-my').on('click',function(){
+		if($('.myPage').hasClass('act')){
+			$('.myPage').removeClass('act');
+		}else{
+			$('.myPage').addClass('act');
+		}
+	})
+
 	function callbackMsg(title,msg,icon, callback){
 		swal({
 			title : title,
@@ -71,6 +99,7 @@
 	
 	//기본 페이지 이동
 	function pageMove(url){
+		$('.bgx').css('display','none');
 		$.ajax({
 	         url : url,
 	         type : "post",
@@ -92,6 +121,8 @@
 	         }
 	      });
 	}
+	
+	
 </script>
 
 </html>

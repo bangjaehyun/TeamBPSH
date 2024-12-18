@@ -43,7 +43,7 @@ public class EmpController {
 		if(loginEmp != null) {
 			if(loginEmp.getRankCode() != null) {
 				session.setAttribute("loginEmp", loginEmp);
-				session.setMaxInactiveInterval(6);
+				session.setMaxInactiveInterval(600);
 			}else {
 				//승인이 안된 사원
 				  CommonException ex = new CommonException("관리자 승인 대기중입니다.");

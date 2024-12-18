@@ -21,17 +21,19 @@
             padding-top: 10px;
         }
         .side-sub{
+        	z-index : 9999;
           	display: none;
           	position: absolute;
         	top : 0;
 			left: 100%;
 			width : 200px;
-			background: #5D5C5C;
+/* 			background: #5D5C5C; */
+			background: white;
         }
         
         .side-sub > li > a{
         	text-decoration: none;
-        	color: white;
+        	color: black;
         	margin: 0px;
         }
         
@@ -135,10 +137,12 @@
   //sub메뉴클릭시 숨기기 위한 이벤트
     $('.side-div').next().find('li').click(function(){
     	$('.side-div').next().css('display','none');
+    	$('.bgx').css('display','none');
     })
     
     	//sub메뉴 보여주기 위함
     	$('.side-div').click(function(e){
+    		  $('.bgx').css('display','block');
     		  $('.side-div').next().css('display','none');
     		  $('.side-div').removeClass("div-color");
     		  $(this).addClass("div-color");
