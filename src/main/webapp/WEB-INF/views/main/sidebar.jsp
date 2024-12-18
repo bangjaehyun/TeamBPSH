@@ -13,12 +13,10 @@
             margin: 0px;
         }
         .side-bar{
-        	position : relative;
         	z-index : 9999;
             height: calc(100vh - 50px);
             width: 55px;
             background-color: #CCCCCC;
-            position : absolute;
             bottom : 0;
             padding-top: 10px;
         }
@@ -54,7 +52,7 @@
         	margin-bottom: 10px;
         }
         .side-div{
-        	width : 40px;
+        	width : 45px;
         	cursor: pointer;
         	 margin:0 auto;
         	 border-radius: 10px;
@@ -65,7 +63,6 @@
         }
         .side-text{
         	color : #434343;
-        	font-weight : bold;
         	font-size: 13px;
         }
         .img-div{
@@ -85,16 +82,10 @@
 	<div class="side-bar">
 		<ul>
 			<li class="side-li">
-				<div class="side-div">
-					<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
-					<p class="side-text">문서</p>
+				<div id="main" class="side-div">
+					<div class="img-div"><img class="side-img" src="/resources/images/main.png" /></div>
+					<p class="side-text">main</p>
 				</div>
-				<ul class="side-sub">
-					<li>a</li>
-					<li>b</li>
-					<li>c</li>
-					<li>d</li>
-				</ul>
 			</li>
 			<li class="side-li">
 				<div class="side-div">
@@ -135,7 +126,7 @@
     </div>
     <script>
     function empWait(){
-    	
+    	if(checkAdmin()){
     	 $.ajax({
              url : "/emp/empWait.do",
              type : "post",
@@ -146,17 +137,15 @@
                 console.log('ajax error');
              }
           });
-//       let f = document.createElement('form');
-//     	f.setAttribute('method', 'post');
-//     	f.setAttribute('action', '/emp/empWait.do');
-//     	document.body.appendChild(f);
-//     	f.submit();
+    	}
     }
+    
+  //sub메뉴클릭시 숨기기 위한 이벤트
     $('.side-div').next().find('li').click(function(){
     	$('.side-div').next().css('display','none');
     })
     
-    
+    	//sub메뉴 보여주기 위함
     	$('.side-div').click(function(e){
     		  $('.side-div').next().css('display','none');
     		  $('.side-div').removeClass("div-color");
@@ -172,13 +161,16 @@
             type: "post",
             success : function(res) {
                 $('.page').html(res);
-                
-
             }
             , error : function() {
                 console.log('ajax 통신 오류');
             }
         });
+    });
+    
+    //main 페이지로 이동
+    $('#main').on('click',function(){
+    	pageMove("/emp/empMain.do");
     });
     	
     </script>

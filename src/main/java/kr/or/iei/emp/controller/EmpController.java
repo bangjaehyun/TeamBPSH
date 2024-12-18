@@ -3,6 +3,7 @@ package kr.or.iei.emp.controller;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -32,6 +33,7 @@ public class EmpController {
 	    @Qualifier("messageSource")
 	    private MessageSource message;
 	
+	//로그인
 	@PostMapping("mainPage.do")
 	private String login(Emp emp, HttpSession session) {
 		
@@ -40,12 +42,18 @@ public class EmpController {
 			if(loginEmp.getRankCode() != null) {
 				session.setAttribute("loginEmp", loginEmp);
 			}else {
-				//愿�由ъ옄 �듅�씤�쓣 紐삳컺�� �쉶�썝
-				return "redirect:/";
+				//승인이 안된 사원
+				  CommonException ex = new CommonException("관리자 승인 대기중입니다.");
+		          ex.setErrorCode("MA002");
+		          ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
+		          throw ex;
 			}
 		}else {
-			//�쉶�썝 媛��엯�쓣 �븞�븳 �쉶�썝
-			return "redirect:/";
+			//가입을 하지 않은 사람
+			CommonException ex = new CommonException("일치하는 회원정보가 존재하지 않습니다.");
+	        ex.setErrorCode("MA003");
+	        ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
+	        throw ex;
 		}
 		
 		return "main/mainPage";
@@ -81,7 +89,7 @@ public class EmpController {
 	    return result;
 	}
 	
-	
+	//신규 회원 관리 페이지로 변경
 	@PostMapping("empWait.do")
 	public String empWait(Model model) {
 		ArrayList<Emp> empWaitList = service.empWaitList();
@@ -90,16 +98,22 @@ public class EmpController {
 		return "main/empWait";
 	}
 	
-	@PostMapping("emp/approval.do")
-    public String approval(Emp emp, int salary) {
+	//관리자가 승인하였을 경우
+	@PostMapping(value="approval.do", produces="text/html; charset=utf-8;")
+    public String approval(Emp emp, int salary, Model model) {
         int result = service.approval(emp, salary);
         
         if(result < 1) {
-            CommonException ex = new CommonException("시발");
-            ex.setErrorCode("EC001");
-            ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
+            CommonException ex = new CommonException("관리자 승인중 오류 발생");
+            ex.setErrorCode("SE001");
+            Object msgParam[] = {"승인"};
+            ex.setUserMsg(message.getMessage(ex.getErrorCode(), msgParam, Locale.KOREA));
             throw ex;
         }
+        
+        ArrayList<Emp> empWaitList = service.empWaitList();
+		
+		model.addAttribute("empWaitList", empWaitList);
         
         return "main/empWait";
     }
@@ -109,6 +123,18 @@ public class EmpController {
     public String calendar() {
         return "emp/calendar";
     }
-	
-	
+   
+    //메인페이지로 이동
+	@PostMapping(value="empMain.do",  produces="text/html; charset=utf-8;")
+	public String mainPage(HttpSession session, HttpServletResponse response) {
+		Emp loginEmp = (Emp)session.getAttribute("loginEmp");
+		if(loginEmp == null) {
+			CommonException ex = new CommonException("not loginEmp");
+			ex.setErrorCode("MA001");
+            ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
+            throw ex;
+		}
+		
+		return "main/main";
+	}
 }

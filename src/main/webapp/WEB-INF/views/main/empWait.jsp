@@ -11,13 +11,16 @@
 		margin : 0px;
 		padding: 0px;
 		box-sizing: border-box;
-	}
-	h1{
-		margin-left : 10px;
-	}
+ }
+	
 	
 	/*테이블*/
+	.page-wrap{
+	width: calc(100vw - 200px);
+	height: calc(100vh - 200px);
+	}
 .tbl {
+  min-width : 100%;
   width: 100%;
   border-spacing: 0;
 }
@@ -26,9 +29,10 @@
   text-align: center;
   border-bottom: 1px solid black;
   padding: 10px 20px;
+  min-width: 130px;
 }
 .tbl th {
-  background-color: #e1fd85;
+  background-color: #f4fedc;
 }
 .tbl.tbl-hover tbody > tr:hover {
   cursor: pointer;
@@ -37,6 +41,21 @@
 .page-wrap{
 	margin : 50px;
 }
+.approval-btn{
+	width: 100px;
+	height: 30px;
+	border: none;
+	background: #9fd1fe;
+	color: white;
+}
+
+.approval-btn:hover{
+	background: #75befe;	
+	transform: scale(1.1);
+	text-transform: scale(1.1);
+}
+
+
 
 </style>
 </head>
@@ -80,11 +99,11 @@
 						</select>
 					</td>
 					<td>
-						<input type="number" name="salary" placeholder="급여">
+						<input type="number" name="salary" placeholder="급여" autocomplete="off">
 						<span>원</span>
 					</td>
 					<td>
-						<button onclick="approval(this)">승인</button>
+						<button class="approval-btn" onclick="approval(this)">승인</button>
 					</td>
 				</tr>
 			</c:forEach>
@@ -113,31 +132,31 @@
     	   let rankCode = $(obj).parent().parent().find('#rankCode').val();
     	   let salary = $(obj).parent().parent().find('input[name=salary]').val();
     	   
-    	   console.log(salary.length);
-    	   
-    	   $.ajax({
-    		  url : "emp/approval.do",
-    		  type : "post",
-    		  data : {"empCode" : empCode,
-    			  	  "teamCode" : teamCode,
-    			  	  "rankCode" : rankCode,
-    			  	  "deptCode" : deptCode,
-    			  	  "salary" : salary
-    			  	  },
-    	   	  success : function(res){
-    	   		if( Object.prototype.toString.call(res) === "[object JSON]")
-    	   		{ 
-    	   			console.log(JSON.stringify(res));
-    	   		}
-    	   		else{ 
-    	   			console.log(res);
-    	   			$('.page').html(res);
-    	   		}
-    	   	  },
-    	   	  error : function(){
-    	   		  console.log("ajax 오류");
-    	   	  }
-    	   });
+			if(salary.length > 0){    	   
+	    	   $.ajax({
+	    		  url : "approval.do",
+	    		  type : "post",
+	    		  data : {"empCode" : empCode,
+	    			  	  "teamCode" : teamCode,
+	    			  	  "rankCode" : rankCode,
+	    			  	  "deptCode" : deptCode,
+	    			  	  "salary" : salary
+	    			  	  },
+	    	   	  success : function(res){
+	    	   		try{
+	    	   			const errMsg = JSON.parse(res);
+		        		msg(errMsg.title, errMsg.msg,errMsg.icon);
+	    	   		}catch(e){
+	    	   			$('.page').html(res);
+	    	   		}
+	    	   	  },
+	    	   	  error : function(){
+	    	   		  console.log("ajax 오류");
+	    	   	  }
+	    	   });
+			}else{
+				msg("확인", "금액을 입력하여 주시기 바랍니다.","warning");
+			}
     	   
        }
     </script>

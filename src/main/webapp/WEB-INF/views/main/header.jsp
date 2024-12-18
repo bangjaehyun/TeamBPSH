@@ -5,9 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<!-- 메시지 API -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<!-- 구글폰트 적용 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<!-- 공통 css -->
 <link rel="stylesheet" href="/resources/css/default.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet"
@@ -32,6 +36,7 @@
             height: 50px;
         }
         .header-left{
+        	width: 300px;
         }
     </style>
 </head>
@@ -45,9 +50,53 @@
     </div>
 </header>
 <script>
-
-	function msg(title,text,icon){
-		console.log(title);	
+	//메인페이지로 이동 메시지
+	function mainMsg(title,msg,icon, callback){
+		swal({
+			title : title,
+			text : msg,
+			icon : icon
+		}).then(function(){
+			console.log(callback);
+				location.href = "/";
+		});	
+	}
+	//메시지
+	function msg(title,msg,icon, callback){
+		swal({
+			title : title,
+			text : msg,
+			icon : icon
+		});
+	}
+	
+	//기본 페이지 이동
+	function pageMove(url){
+		$.ajax({
+	         url : url,
+	         type : "post",
+	         success : function(res) {
+	        	try {
+	        		const errMsg = JSON.parse(res);
+	        		mainMsg(errMsg.title, errMsg.msg,errMsg.icon);
+	        	} catch (e) {
+	        		 $('.page').html(res);
+	        	}
+	         },
+	         error : function() {
+	            console.log('ajax error');
+	         }
+	      });
+	}
+	
+	//관리자 체크
+	function checkAdmin(){
+		if('${loginEmp.empId}' == 'admin'){
+			return true;
+		}else{
+			msg('확인','관리자 권한이 없습니다.','warning');
+			return false;
+		}
 	}
 </script>
 

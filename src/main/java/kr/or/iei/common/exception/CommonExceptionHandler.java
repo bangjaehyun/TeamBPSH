@@ -21,20 +21,17 @@ public class CommonExceptionHandler {
 	public Object commonExceptionHandle(CommonException ex, HttpServletRequest request, HttpServletResponse response) {
 		ex.printStackTrace();
 		
-		
 		if(isAjaxRequest(request)) {
 			//ajax - 예외 처리
 			
-			response.setContentType("application/json");
+			response.setContentType("application/json; charset=utf-8");
 			
 			JsonObject jsonObj = new JsonObject();
 			jsonObj.addProperty("title", "오류 발생");
 			jsonObj.addProperty("msg", ex.getUserMsg());
 			jsonObj.addProperty("icon", "error");
-			
+			System.out.println(new Gson().toJson(jsonObj));
 			return new Gson().toJson(jsonObj);
-		
-		
 		}else {
 			
 			ModelAndView model = new ModelAndView("error/errorMsg");
@@ -42,9 +39,8 @@ public class CommonExceptionHandler {
 			model.addObject("msg", ex.getUserMsg());
 			model.addObject("icon", "error");
 			
-			if(ex.getErrorCode().equals("EC101")) { //세션에 로그인 회원 미존재
+			if(ex.getErrorCode().substring(0, 2).equals("MA")) { //세션에 로그인 회원 미존재
 				model.addObject("loc", "/");
-				
 			} else if(ex.getErrorCode().equals("MN101")) { //메뉴 권한 불충분				
 				
 			}
