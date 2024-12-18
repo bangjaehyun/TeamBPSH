@@ -134,7 +134,7 @@
     	   
 			if(salary.length > 0){    	   
 	    	   $.ajax({
-	    		  url : "approval.do",
+	    		  url : "/emp/approval.do",
 	    		  type : "post",
 	    		  data : {"empCode" : empCode,
 	    			  	  "teamCode" : teamCode,
@@ -145,9 +145,10 @@
 	    	   	  success : function(res){
 	    	   		try{
 	    	   			const errMsg = JSON.parse(res);
-		        		msg(errMsg.title, errMsg.msg,errMsg.icon);
+	    	   			callbackMsg(errMsg.title, errMsg.msg,errMsg.icon, errMsg.loc);
 	    	   		}catch(e){
 	    	   			$('.page').html(res);
+	    	   			msg("확인", "승인이 완료되었습니다.", "success");
 	    	   		}
 	    	   	  },
 	    	   	  error : function(){

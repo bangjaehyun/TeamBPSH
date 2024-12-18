@@ -9,7 +9,14 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
-	<jsp:include page="/WEB-INF/views/emp/login.jsp"></jsp:include>
+	<c:choose>
+	<c:when test="${not empty loginEmp}">
+		<jsp:include page="/WEB-INF/views/main/mainPage.jsp"></jsp:include>
+	</c:when>
+	<c:when test="${empty loginEmp}">
+		<jsp:include page="/WEB-INF/views/emp/login.jsp"></jsp:include>
+	</c:when>
+	</c:choose>
 	
 	<script>
 	//회원 가입

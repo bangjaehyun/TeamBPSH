@@ -59,7 +59,7 @@ public class EmpController {
 	        throw ex;
 		}
 		
-		return "main/mainPage";
+		return "redirect:/";
 	}
 	
 	@PostMapping("joinFrm.do")
@@ -134,14 +134,6 @@ public class EmpController {
     //메인페이지로 이동
 	@PostMapping(value="empMain.do",  produces="text/html; charset=utf-8;")
 	public String mainPage(HttpSession session, HttpServletResponse response) {
-		Emp loginEmp = (Emp)session.getAttribute("loginEmp");
-		if(loginEmp == null) {
-			CommonException ex = new CommonException("not loginEmp");
-			ex.setErrorCode("MA001");
-            ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
-            throw ex;
-		}
-		
 		return "main/main";
 	}
 }

@@ -82,7 +82,7 @@
 	<div class="side-bar">
 		<ul>
 			<li class="side-li">
-				<div id="main" class="side-div">
+				<div class="side-div mainPage">
 					<div class="img-div"><img class="side-img" src="/resources/images/main.png" /></div>
 					<p class="side-text">main</p>
 				</div>
@@ -117,14 +117,17 @@
 					<p class="side-text">관리자</p>
 				</div>
 				<ul class="side-sub">
-					<li><a href="javascript:void(0)" onclick="empWait()">회원관리</a></li>
-					<li>문서관리</li>
+					<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
 					<li>매출관리</li>
 				</ul>
 			</li>
 		</ul>
     </div>
     <script>
+    function empManager(){
+    	pageMove("/emp/empManager.do");	
+    }
     function empWait(){
     	pageMove("/emp/empWait.do");
     }
@@ -158,7 +161,7 @@
     });
     
     //main 페이지로 이동
-    $('#main').on('click',function(){
+    $('.mainPage').on('click',function(){
     	pageMove("/emp/empMain.do");
     });
     	

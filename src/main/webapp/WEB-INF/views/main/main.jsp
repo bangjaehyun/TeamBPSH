@@ -175,6 +175,11 @@
 	
 	
 	<script>
+	$(document).ready(function(){
+		 $('.side-div').next().css('display','none');
+		 $('.side-div').removeClass("div-color");
+		 $('.side-li').find('.mainPage').addClass("div-color");
+	});
 		$('#emailWrite').click(function(){
 			$.ajax({
 				url : "emailiURL",

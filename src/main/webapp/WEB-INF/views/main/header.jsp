@@ -45,7 +45,7 @@
     <div class="header-wrap">
         <div class="header-left">
             <img onclick="toggle()" class="header-toogle"  src="/resources/images/exchange.png">
-            <img class="header-img" src="/resources/images/logo.png">
+            <a href="javascript:void(0)" class="mainPage"><img class="header-img" src="/resources/images/logo.png"></a>
         </div>        
     </div>
 </header>
