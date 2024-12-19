@@ -93,10 +93,12 @@
 					<p class="side-text">문서</p>
 				</div>
 				<ul class="side-sub">
-					<li>e</li>
-					<li>f</li>
-					<li>g</li>
-					<li>h</li>
+				<li><a href="javascript:void(0)" >문서조회예정</a></li>
+					<li><a href="javascript:void(0)"onclick="writeDoc('va')">휴가신청서 작성</a></li>
+					<li><a href="javascript:void(0)"onclick="writeDoc('co')">협조문 작성</a></li>
+					<li><a href="javascript:void(0)"onclick="writeDoc('es')">견적서 작성</a></li>
+					<li><a href="javascript:void(0)"onclick="writeDoc('bt')">출장보고서 작성</a></li>
+					<li><a href="javascript:void(0)"onclick="writeDoc('sp')">지출결의서 작성</a></li>
 				</ul>
 			</li>
 			<li class="side-li">
@@ -164,7 +166,21 @@
     $('.mainPage').on('click',function(){
     	pageMove("/emp/empMain.do");
     });
-    	
+    
+    function writeDoc(e){
+    	$.ajax({
+    	url:"/doc/writeDoc.do",
+    	type:"post",
+    	data:{"type":e},
+    	success:function(res){
+    	$('.page').html(res);
+    },
+    error:function(){
+    	console.log("오류");
+    }
+    	});
+    }
+  
     </script>
 </body>
 </html>
