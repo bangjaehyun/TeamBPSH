@@ -111,8 +111,8 @@
 
         <h1>회원가입</h1>
         <form action="/emp/join.do" method="post">
-                <label for="empId">아이디 입력</label>
             <div class="inputs">
+                <label for="empId">아이디 입력</label>
                 <div class="res">
                 <input type="text" id="empId" name="empId" placeholder="입력한 아이디 기준으로 이메일이 생성됩니다.">
                     <button type="button" id="btnCheckId">중복확인</button> 

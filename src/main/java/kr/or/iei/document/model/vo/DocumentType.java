@@ -1,4 +1,4 @@
-package kr.or.iei.document.type.model.vo;
+package kr.or.iei.document.model.vo;
 
 public class DocumentType {
 	
