@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="project">
-	<select id="projectList" resultType="project">
+	<select id="apiProjectList" 
+	parameterType="string" 
+	resultType="project">
 	SELECT
 		tbl_project.project_no as projectNo,
 		tbl_project.project_title as projectTitle,
@@ -22,5 +24,9 @@
 		tbl_document
 		ON tbl_document.document_type_code =
 		tbl_document_type.document_type_code
+        join
+        tbl_project_team
+        on tbl_project.project_no = tbl_project_team.project_no
+        where tbl_project_team.team_code = #{loginEmp.teamCode}
 	</select>
 </mapper>

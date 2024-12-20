@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.google.gson.Gson;
+
 import kr.or.iei.document.model.service.DocumentService;
+import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Team;
@@ -19,6 +22,7 @@ import kr.or.iei.emp.model.vo.Team;
 @Controller("documentController")
 @RequestMapping("/doc/")
 public class DocumentController {
+	
 	@Autowired
 	@Qualifier("documentService")
 	private DocumentService service;
@@ -77,6 +81,15 @@ public class DocumentController {
 		 }
 		 System.out.println(filterTeam);
 		return filterTeam;
+	}
+	
+	//달력에서 문서 List 조회 - 프로젝트제외
+	@PostMapping(value="api/documentType.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String apiDocumentList(String empCode) {
+		ArrayList<Document> list = service.apiDocumentList(empCode);
+		
+		return new Gson().toJson(list);
 	}
 	
 	

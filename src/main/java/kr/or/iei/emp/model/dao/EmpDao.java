@@ -28,8 +28,6 @@ public class EmpDao {
 		
 	}
 		
-	
-
 	public int selectAdmin(String empCode) {
 		return sqlSession.selectOne("emp.adminChk",empCode);
 	}

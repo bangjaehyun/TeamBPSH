@@ -106,7 +106,7 @@
 			<li class="side-li">
 				<div class="side-div">
 					<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
-					<p class="side-text">문서</p>
+					<p class="side-text">달력</p>
 				</div>
 			</li>
 			<li class="side-li">

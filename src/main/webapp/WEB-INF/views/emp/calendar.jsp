@@ -12,55 +12,94 @@
 
 <%-- 달력 오픈소스 주소 --%>
 <style>
+.calDiv {
+	display: flex;
+	justify-content: center;
+	width: calc(100vw - 55px);
+	height: calc(100vh - 50px);
+}
 
-
-	#calendar {
-	
-	max-width: 1250px;
-	margin: 0 auto;
-	
-	}
+#calendar {
+	margin: auto 0;
+	width: 80%;
+}
 </style>
 </head>
 <body>
-	<div>
+	<div class="calDiv">
+	<input type="hidden" name="empCode" value="${loginEmp.empCode}">
+	<input type="hidden" name="teamCode" value="${loginEmp.teamCode}">
 		<div id="calendar"></div>
 	</div>
-	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+	<script
+		src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 	<script>
-	
-	
-	
-	$(document).ready(function(){
-		var calendarEl = document.getElementById('calendar');
-		var calendar = new FullCalendar.Calendar(calendarEl, {
-			initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
-			headerToolbar : { // 헤더에 표시할 툴 바
-				start : 'prev next today',
-				center : 'title',
-				end : 'dayGridMonth,dayGridWeek,dayGridDay'
-			},
-			titleFormat : function(date) {
-				return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
-			},
-            
-            events : '/api/events' //api경로
-            /*
-           	eventClick: function (info) {
-                    alert('Event: ' + info.event.title);
-                }
-            */
-			//initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
-            //selectMirror: true,
-            navLinks:true, // 날짜 클릭시 상세보기
-			selectable : true, // 달력 일자 드래그 설정가능
-			droppable : true,
-			editable : true,
-			nowIndicator: true, // 현재 시간 마크
-			locale: 'ko' // 한국어 설정
-		});
-		calendar.render();
+
+	$(document).ready(function () {
+	    var calendarEl = document.getElementById('calendar');
+
+	    // 공통 AJAX 처리 함수
+	    function eventDoc(url, color, successCallback, failCallback) {
+	        $.ajax({
+	            url: url,
+	            type: 'POST',
+	            dataType: 'json',
+	            success: function (data) {
+	                var events = data.map(function (item) {
+	                    return {
+	                        id: item.projectNo || item.documentCode,
+	                        title: item.projectTitle || item.documentTitle,
+	                        description: item.projectContent || item.documentContent,
+	                        start: item.documentDate,
+	                        end: item.projectEnd || null,
+	                        color: color
+	                    };
+	                });
+	                successCallback(events);
+	            },
+	            error: function () {
+	                failCallback("오류");
+	            }
+	        });
+	    }
+
+	    var calendar = new FullCalendar.Calendar(calendarEl, {
+	        initialView: 'dayGridMonth',
+	        headerToolbar: {
+	            start: 'today prev',
+	            center: 'title',
+	            end: 'next dayGridMonth,dayGridWeek,dayGridDay'
+	        },
+	        titleFormat: function (date) {
+	            return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+	        },
+	        eventSources: [
+	            {
+	                events: function (info, successCallback, failCallback) {
+	                	eventDoc('/project/api/projectList.do?teamCode=${loginEmp.teamCode}', '#99CCFF', successCallback, failCallback);
+	                }
+	            },
+	            {
+	                events: function (info, successCallback, failCallback) {
+	                	eventDoc('/doc/api/documentType.do?empCode=${loginEmp.empCode}', '#CCCCFF', successCallback, failCallback);
+	                }
+	            }
+	            /* 휴가 결제 후 완료 되면 받아오기
+	            {
+	            	events: function (info, successCallback, failCallback) {
+	            		
+	            	}
+	            }
+	            */
+	        ],
+	        navLinks: true,
+	        nowIndicator: true,
+	        locale: 'ko'
+	    });
+
+	    calendar.render();
 	});
+
 	
 	</script>
 </body>
