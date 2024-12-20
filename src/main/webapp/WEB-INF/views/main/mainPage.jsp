@@ -55,6 +55,12 @@
   			font-weight: bold;
   		}
   		
+  		.myPage>ul>li>a{
+  			text-decoration: none;
+  			color: white;
+  			font-weight: bold;
+  		}
+  		
   		
   		
 </style>
@@ -83,14 +89,40 @@
             	 		</li>
             	 		<li><hr></li>
             	 		<li>내정보</li>
-            	 		<li>채팅</li>
-            	 		<li>로그아웃</li>
+            	 		<li><a href="javascript:void(0)" onclick="chatOpen()">채팅</a></li>
+            	 		<li><a href="javascript:void(0)" onclick="logOut()">로그아웃</a></li>
             	 	</ul>
             	 </div>
 		</div>
 	</div>
 	<script>
+	function chatOpen(){
+		let popupWidth = 600;
+		let popupHeight = 800;
+		
+		let top = (window.innerHeight - popupHeight) / 2 + window.screenY;
+		let left = window.innerWidth + window.screenX; 
+
+		let popupWindow = window.open("", "windowName", "width="+popupWidth+", height=" + popupHeight + ", top=" + top + ", left=" + left + ",resizable=0");
+		popupWindow.resizeTo(500, 500);
+		let f = document.createElement('form');
+		        f.setAttribute('method', 'post');
+		        f.setAttribute('action', '/emp/chatFrm.do');
+		        f.setAttribute('name', 'openForm');
+		        f.setAttribute('id', 'openForm');
+		popupWindow.document.body.appendChild(f);
+		f.submit();
+		
+		console.log(popupWindow);
+	}
 	
+	function logOut(){
+	       let f = document.createElement('form');
+		        f.setAttribute('method', 'post');
+		        f.setAttribute('action', '/emp/logout.do');
+		        document.body.appendChild(f);
+		        f.submit();
+	}
     function toggle(){
    if($(".side").css('display') == "block"){
             $('.side').css('display','none');

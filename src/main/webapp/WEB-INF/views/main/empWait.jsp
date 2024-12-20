@@ -24,6 +24,7 @@
   width: 100%;
   border-spacing: 0;
 }
+
 .tbl th,
 .tbl td {
   text-align: center;
@@ -31,6 +32,11 @@
   padding: 10px 20px;
   min-width: 130px;
 }
+
+.salary-div{
+	min-width: 185px;
+}
+
 .tbl th {
   background-color: #f4fedc;
 }
@@ -47,6 +53,7 @@
 	border: none;
 	background: #9fd1fe;
 	color: white;
+	border-radius: 10px;
 }
 
 .approval-btn:hover{
@@ -99,8 +106,10 @@
 						</select>
 					</td>
 					<td>
-						<input type="number" name="salary" placeholder="급여" autocomplete="off">
-						<span>원</span>
+						<div class="salary-div">
+							<input type="number" name="salary" placeholder="급여" autocomplete="off">
+							<span>원</span>
+						</div>
 					</td>
 					<td>
 						<button class="approval-btn" onclick="approval(this)">승인</button>
@@ -112,9 +121,7 @@
 	
 	 <script>
 	 	function changeTeam(obj){
-	 		console.log($(obj).val());
 	 		$('#teamCode').children().remove();
-	 		
 	 		<c:forEach var="team" items="${teamList}">
 			if("${team.deptCode}" == $(obj).val()){
 				var option = $("<option></option>");

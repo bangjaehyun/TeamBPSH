@@ -20,6 +20,11 @@
             bottom : 0;
             padding-top: 10px;
         }
+        
+          .side-bar>ul{
+            list-style: none;        
+        }
+        
         .side-sub{
         	z-index : 9999;
           	display: none;
@@ -30,6 +35,7 @@
 /* 			background: #5D5C5C; */
 			background: white;
         }
+        
         
         .side-sub > li > a{
         	text-decoration: none;

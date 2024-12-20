@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -73,5 +74,23 @@ public class EmpDao {
 	public int insertAdmin(Emp emp) {
 		return sqlSession.insert("emp.insertAdmin", emp);
 	}
+	
+    public List<Emp> chatEmpList() {
+        return sqlSession.selectList("emp.chatEmpList");
+    }
+
+    public String selectChatGroup(HashMap<String, String> map) {
+        System.out.println(map);
+        return sqlSession.selectOne("emp.selectChatGroup", map);
+    }
+
+    public int insertChatGroup(String empCode) {
+        return sqlSession.insert("emp.insertChatGroup", empCode);
+    }
+
+    public List<Chat> selectChatList(String groupNo) {
+        return sqlSession.selectList("emp.selectChatList", groupNo);
+    }
+
 
 }

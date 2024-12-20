@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 import kr.or.iei.common.annotation.AdminChk;
 import kr.or.iei.common.annotation.NoLoginChk;
 import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.emp.model.service.EmpService;
+import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Emp;
 
 
@@ -139,4 +142,40 @@ public class EmpController {
 	public String mainPage(HttpSession session, HttpServletResponse response) {
 		return "main/main";
 	}
+	
+    
+    //로그아웃
+    @PostMapping("logout.do")
+    public String logOut(HttpSession session) {
+        
+        Emp loginEmp = (Emp)session.getAttribute("loginEmp");
+        
+        if(loginEmp != null) {
+            session.invalidate();
+        }
+        
+        return "redirect:/"; 
+    }
+    
+    //채팅창으로 이동
+    @PostMapping("chatFrm.do")
+    public String chatFrm() {
+        return "emp/chat";
+    }
+    
+    @PostMapping(value="chatEmpList.do", produces="application/json; charset=utf-8")
+    @ResponseBody
+    public String chatEmpList() {
+        ArrayList<Emp> empList = service.chatEmpList();
+        
+        return new Gson().toJson(empList);
+    }
+    
+    @PostMapping(value="chatList.do", produces="application/json; charset=utf-8")
+    @ResponseBody
+    public String chatList(String fromEmpCode, String toEmpCode) {
+        ArrayList<Chat> chatList = service.selectChatList(fromEmpCode, toEmpCode);
+        
+        return new Gson().toJson(chatList);
+    }
 }

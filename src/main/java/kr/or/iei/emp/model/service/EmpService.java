@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.emp.model.dao.EmpDao;
+import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -106,5 +107,33 @@ public class EmpService {
 				dao.deleteWait(emp.getDeptCode());
 			}
 		}
+	}
+
+	public ArrayList<Emp> chatEmpList() {
+		return (ArrayList<Emp>)dao.chatEmpList();
+	}
+	
+	@Transactional
+	public ArrayList<Chat> selectChatList(String fromEmpCode, String toEmpCode) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("from", fromEmpCode);
+		map.put("to", toEmpCode);
+		
+		String groupNo = dao.selectChatGroup(map);
+		ArrayList<Chat> chatList = new ArrayList<Chat>();
+		if(groupNo == null) {
+			for(String key : map.keySet()) {
+				System.out.println(map.get(key));
+				int result = dao.insertChatGroup(map.get(key));
+				if(result < 1) {
+					break;
+				}
+			}
+		}else {
+			chatList = (ArrayList<Chat>)dao.selectChatList(groupNo);
+		}
+		
+		return chatList;
 	}
 }
