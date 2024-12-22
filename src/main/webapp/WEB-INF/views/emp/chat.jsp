@@ -121,12 +121,99 @@
 			<div class="chat-div"></div>
 			<div class="message-div">
 				<textarea class="message-box"></textarea>
-				<button class="send">버튼</button>
+				<button class="send" onclick="fn.sendValidate()">버튼</button>
 			</div>
 		</div>
 	</div>
 	
 	<script>
+	var ws;
+	var empCode = '${loginMember.empCode}';
+	var empName = '${loginMember.empName}';
+	var groupNo;	
+	let fn = {
+		init : function () {
+			//연결
+			ws = new WebSocket("ws://192.168.10.48/chat/doChat.do");
+			
+			//연결 시, 이벤트 핸들러
+			ws.onopen = function(){
+				var msg = {
+					type     : "connect",
+					empName : empName
+				};
+				
+				ws.send(JSON.stringify(msg));
+			};
+			
+			//메시지 수신 시, 이벤트 핸들러
+			ws.onmessage = function(e){
+				var msg = e.data;
+				var chat = $("#msgArea").html() + "\n <h4>" + msg + "</h4>";
+				$("#msgArea").html(chat);
+			};
+			
+			//소켓 연결 종료 이벤트 핸들러
+			ws.onclose = function(){
+				console.log("연결종료");
+			};
+		}	
+		,sendValidate : function () {
+			//파일 서버 업로드 -> 메시지 전송
+			let file = $('input[type=file]')[0].files;
+
+			if(file.length > 0){
+				file = file[0];
+				
+				const formData = new FormData();
+				formData.append("file", file);
+				formData.append("memberId", memberId);
+				
+				$.ajax({
+		            url: "/chat/fileUpload.do",
+		            type: "post",
+		            data: formData,
+		            processData: false,
+		            contentType: false,
+		            success: function(obj) {
+		            	fn.sendChat(obj); //fileName, filePath
+		            	
+		            },
+		            error: function() {
+		                alert("파일 업로드 실패: " + error);
+		            }
+		        });
+			}else {
+				let obj = {};
+				fn.sendChat(obj);
+			}
+			
+		}
+		,sendChat : function (sendObj) {
+			
+			sendObj.type = "chat";
+			sendObj.groupNo = groupNo;
+			sendObj.empCode= empCode;
+			sendObj.empName = empName;
+			sendObj.msg = $("#chatMsg").val();
+			
+			ws.send(JSON.stringify(sendObj));
+			
+			//기존 입력값 초기화
+			$("#chatMsg").val(""); 
+			$('input[type=file]').val("");
+			
+		}
+		,chatFileDown : function(fileName, filePath){
+			fileName = encodeURIComponent(fileName);
+			filePath = encodeURIComponent(filePath);
+			
+			location.href = "/chat/fileDown.do?fileName="+fileName+"&filePath="+filePath;
+
+		}
+	};
+	
+	
 	function menuClick(obj){
 		if($(obj).next().css('display') == 'none'){
 			$(obj).children('img').css('transform','rotate(90deg)');

@@ -123,9 +123,13 @@ public class EmpService {
 		String groupNo = dao.selectChatGroup(map);
 		ArrayList<Chat> chatList = new ArrayList<Chat>();
 		if(groupNo == null) {
+			groupNo = dao.selectGroupNo();
+			
 			for(String key : map.keySet()) {
-				System.out.println(map.get(key));
-				int result = dao.insertChatGroup(map.get(key));
+				HashMap<String, String> groupMap = new HashMap<String, String>();
+				groupMap.put("groupNo", groupNo);
+				groupMap.put("empCode", map.get(key));
+				int result = dao.insertChatGroup(groupMap);
 				if(result < 1) {
 					break;
 				}
@@ -135,5 +139,9 @@ public class EmpService {
 		}
 		
 		return chatList;
+	}
+
+	public int insertChat(Chat chat) {
+		return dao.insertChat(chat);
 	}
 }
