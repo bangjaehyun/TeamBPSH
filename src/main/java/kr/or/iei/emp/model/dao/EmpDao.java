@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
@@ -92,5 +93,8 @@ public class EmpDao {
         return sqlSession.selectList("emp.selectChatList", groupNo);
     }
 
-
+    //main 화면 출력할 메소드
+    public List<Document> docMain(String empCode) {
+        return sqlSession.selectList("document.docMain",empCode);
+    }
 }

@@ -1,7 +1,10 @@
 package kr.or.iei.emp.controller;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -21,6 +24,8 @@ import com.google.gson.Gson;
 import kr.or.iei.common.annotation.AdminChk;
 import kr.or.iei.common.annotation.NoLoginChk;
 import kr.or.iei.common.exception.CommonException;
+import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Emp;
@@ -177,5 +182,48 @@ public class EmpController {
         ArrayList<Chat> chatList = service.selectChatList(fromEmpCode, toEmpCode);
         
         return new Gson().toJson(chatList);
+    }
+    //main 화면 문서 종류별 출력
+    @PostMapping(value="docMain", produces="application/json; charset=utf-8")
+    @ResponseBody
+    public String docMain(String empCode) {
+        ArrayList<Document> documentList = service.docMain(empCode);
+        
+        for(Document document : documentList) {
+        	String sign = "대기 중";
+        	
+        	if(document.getSignList() != null && !document.getSignList().isEmpty()) {
+        		boolean signIng = false; //반려 상태 여부
+        		boolean signOk = true; // 모든 결제자가 결제상태인지 여부
+        		
+        		//모든 결제자 상태 check
+        		for(DocumentSign docSign : document.getSignList()) {
+        			String status = docSign.getSignYn(); // 결제자 상태 확인(-1 : 반려, 0 : 대기중, 1 : 결제승인)
+        			
+        			//결제 상태가 -1인 경우 반려
+        			if("-1".equals(status)) {
+        				signIng = true;
+        				break;
+        			}
+        		}
+        		
+        		//최종 결제상태 결정
+        		if(signIng) {
+        			sign = "반려";
+        		}else if(signOk) {
+        			sign = "결제 완료";
+        		}else {
+        			sign = "대기 중";
+        		}
+        		
+        	}
+        	document.setProgress(sign);
+        }
+        
+     // 문서 타입별로 데이터를 그룹화
+        Map<String, List<Document>> docType = documentList.stream()
+                .collect(Collectors.groupingBy(Document::getDocumentTypeCode));
+        
+        return new Gson().toJson(docType);
     }
 }

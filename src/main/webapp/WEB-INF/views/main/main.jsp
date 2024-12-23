@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,194 +8,313 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
-	
-	* {
-		margin : 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-	#content {
-		position : relative;
-		z-index : 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-        
-    }    
+/* 콘텐츠 영역 */
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px; /* 상단 이메일 테이블과 문서 타입 테이블 간격 */
+    padding: 20px;
     
-    .doc {
-        width: 400px; /* 테이블 고정 너비 */
-        background-color: #f9f9f9;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-    }
+}
 
-    .docTitle {
-        padding: 10px;
-        
-        color: black;
-        font-size: 18px;
-        font-weight: bold;
-        height: 350px;
-        justify-content: space-between;
-        align-items: center;
-    }
+/* 문서 타입 테이블 컨테이너 */
+.docType {
+    display: flex;
+    flex-wrap: wrap; /* 가로 배치하며 줄바꿈 허용 */
+    gap: 20px; /* 테이블 간 간격 */
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+/* 카드 스타일 */
+.doc {
+    flex: 1 1 calc(20% - 30px); /* 너비는 부모의 50%, 간격 포함 */
+    min-width: 400px; /* 최소 너비 설정 */
+    max-width: 600px; /* 최대 너비 설정 */
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap; /* 가로 배치하며 줄바꿈 허용 */
     
-    .docName {
-    	display: flex;
-    	justify-content: space-between;
-    }
-    
-    .doc {
-    	border:1px solid black;
-    }
-    
-    .docName > div:nth-child(1){
-    	border-top: 1px solid black;
-    	border-right: 1px solid black;
-    	border-left: 1px solid black;
-    	border-radius: 5px;
-    	background-color: red;
-    	display:flex;
-    	align-items: center;
-    	
-    }
-    
-    .docName > div > div {
-    	font-size: 10px;
-    	text-align: center;
-    	justify-content: center;
-    	
-    }
+}
 
-    #emailWrite {
-        background-color: white;
-        color: #333;
-        padding: 5px 10px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
+/* 문서 제목 */
+.docTitle {
+    padding: 15px;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-    #emailWrite:hover {
-        background-color: #f1f1f1;
-    }
+/* 이름 영역 */
+.docName {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 10px;
-        height: 350px;
-    }
+/* "이메일" 스타일 */
+.docName > div:first-child {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: #ff4d4d;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+}
 
+/* "신규" 버튼 스타일 */
+#emailWrite, .docWrite {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-align: center;
+}
 
-    .docContent {
-        
-    }
+#emailWrite:hover, .docWrite:hover {
+    background-color: #0056b3;
+}
 
-    .docList {
-        
-    }
-    
-    thead {
-     width: calc(100% - 17px);
-     display: table;
-     border:1px solid white;
-     font-size: 15px;
-    }
-    
-    tbody {
+/* 테이블 스타일 */
+/* 테이블 스타일 */
+table {
+    width: 100%; /* 테이블 너비를 부모에 맞춤 */
+    border-collapse: collapse; /* 셀 경계선을 합침 */
+    margin-top: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    border: 1px solid #ccc; /* 테두리 추가 */
+}
+
+/* 테이블 헤더 */
+table th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center; /* 중앙 정렬 */
+}
+
+/* 테이블 본문 */
+table td {
+    border: 1px solid #ccc; /* 셀 테두리 */
+    padding: 10px;
+    text-align: center; /* 가로 중앙 정렬 */
+    vertical-align: middle; /* 세로 중앙 정렬 */
+}
+
+/* 스크롤 가능한 tbody */
+tbody {
     display: block;
     width: 100%;
-    height: 350px;
-    overflow-y: auto;
-    margin-right: -1px;
-    border:1px solid white;
-    }
-    
-    tr {
-    display: table; /* tr을 table로 설정 */
-    width: 100%;
-    table-layout: fixed; /* 열 너비를 고정 */
+    height: 200px; /* 고정 높이 */
+    overflow-y: auto; /* 세로 스크롤 허용 */
+    border: 1px solid #ccc;
 }
-    
-    
+
+thead {
+    display: table-header-group;
+    width: 100%;
+    table-layout: fixed; /* 헤더와 본문 정렬 */
+}
+
+tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* 행 배경색 */
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* 행에 마우스 올릴 때 효과 */
+table tr:hover {
+    background-color: #e6f7ff;
+}
+@media (max-width: 768px) {
+    .doc {
+        flex: 1 1 100%; /* 한 행에 하나씩 */
+    }
+}
+
 </style>
 </head>
 <body>
-	<div id="content">
-	<%--<c:forEach var="doctypeCode" items="${docTypeCode}">  --%>
-	<div class="doc">
+	<div class="content">
+		<input type="hidden" name="empCode" value="${loginEmp.empCode}">
+		<div class="docType">
+		<div class="doc">
 			<div class="docTitle">
 				<div class="docName">
-					<div>이메일 &nbsp
-						<div><p>admin@naver.com</p></div>
+					<div>
+						이메일 &nbsp
+						<div>
+							<p>${loginEmp.empId}@도메인</p>
+						</div>
 					</div>
 					<div id="emailWrite">신규</div>
 				</div>
 				<div>
-				<table border="1">
-				<thead>
-					<tr class="docContent">
-						<th>글쓴이</th>
-						<th>제목</th>
-						<th>날짜</th>
-						<th>첨부파일</th>
-					</tr>
-					</thead>
-					</div>
-					<div>
-					<tbody>
-					<tr class="docList">
-						<td>이름</td>
-						<td>제목</td>
-						<td>발송날짜</td>
-						<td>갯수</td>
-					</tr>
-					</tbody>
-				</table>
-				</div>
-				<%--
-				<div class="docContent">
-					<div>글쓴이</div>
-					<div>제목</div>
-					<div>날짜</div> --%>
-				</div>
-				<%--<c:forEach></c:forEach> --%>
-				<%--<div class="docList">
-					<div style="border-right: 1px solid black;">docWrite</div>
-					<div>docTitle</div>
-					<div style="border-left: 1px solid black;">docDate</div>
+					<table border="1">
+						<thead>
+							<tr class="docContent">
+								<th>글쓴이</th>
+								<th>제목</th>
+								<th>날짜</th>
+								<th>첨부파일</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="docList">
+								<td>이름</td>
+								<td>제목</td>
+								<td>발송날짜</td>
+								<td>갯수</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 			</div>
-			 --%>
+		</div>
+		</div>
+		<%--문서 타입별 출력될 div --%>
 	</div>
-	 <%--</c:forEach>   --%>
-	</div>
-	
-	
+
 	<script>
-	$(document).ready(function(){
-		 $('.side-div').next().css('display','none');
-		 $('.side-div').removeClass("div-color");
-		 $('.side-li').find('.mainPage').addClass("div-color");
-	});
-		$('#emailWrite').click(function(){
+		$(document).ready(function() {
+			var empCode = $('input[name="empCode"]').val();
+
+			// AJAX 요청
 			$.ajax({
-				url : "emailiURL",
-				data : "/",
-				success : function(){
-					
+				type : 'post',
+				url : '/emp/docMain',
+				data : {
+					empCode : empCode
+				},
+				success : function(res) {
+					console.log(JSON.stringify(res)); // JSON 데이터를 문자열로 변환하여 출력
+					docList(res); // 데이터를 HTML로 출력하는 함수 호출
+				},
+				error : function() {
+					console.log('ajax 오류');
 				}
-			, error : function(){
-				alert('ajax 오류');
-			}
-			})
+			});
 		});
+
+		// 데이터를 HTML 테이블에 삽입하는 함수
+		function docList(data) {
+		    var newType = $('.docType').first();
+		    // 기존 .docType을 유지하고 새로운 것을 추가
+		    $('.content').append(newType);
+
+			// 데이터가 비어 있는지 확인
+			if (!data || Object.keys(data).length === 0) {
+
+				return;
+			}
+
+			// 문서 타입별 데이터 순회
+			$.each(data,function(type, documents) {
+								var documentTypeName = documents[0] ? documents[0].documentTypeName
+										: type;
+								var table = 
+										  '<div class="doc">'
+										+ '<div class="docTitle">'
+										+ '<div class="docName">' + '<div>'
+										+ documentTypeName + '</div>'
+										+ '<div class="docWrite" data-type='+ type +'>신규</div>'
+										+ '</div>' + '<div>'
+										+ '<table border="1">' + '<thead>'
+										+ '<tr>' + '<th>글쓴이</th>'
+										+ '<th>제목</th>' + '<th>날짜</th>'
+										+ '<th>첨부파일</th>' + '<th>결제상태</th>'
+										+ '</tr>' + '</thead>'
+										+ '<tbody></tbody>' + '</table>'
+										+ '</div>' + '</div>' + '</div>';
+
+								var tableEl = $(table);
+								var tbody = tableEl.find('tbody');
+
+								// 해당 문서 타입의 문서 데이터를 테이블에 추가
+								$.each(documents, function(index, doc) {
+
+									var row = '<tr>' + '<td>' + doc.empName
+											+ '</td>' + '<td>'
+											+ doc.documentTitle + '</td>'
+											+ '<td>' + doc.documentDate
+											+ '</td>' + '<td>갯수</td>' ;
+											if(doc.progress ==='결제 완료' ){
+												row += '<td class="completedSign">결제완료</td>';
+											}else if(doc.progress === '대기 중'){
+												row += '<td class="waitSign">대기 중</td>';
+											}else if(doc.progress === '반려'){
+												row += '<td class="backSign">반려</td>';
+											}
+											
+											row += '</tr>';
+									tbody.append(row);
+								});
+
+								newType.append(tableEl); // 테이블을 콘텐츠 영역에 추가
+							});
+		}
 		
-		
+		$(document).ready(function() {
+			$(document).on('click', '.docWrite', function() {
+				var documentTypeCode = $(this).data('type');
+				var empCode = $('input[name="empCode"]').val();
+				console.log(documentTypeCode);
+				var form = $('<form>', {
+					//문서작성 frm이나 주소로 이동
+					action : '/writeDoc.do/',
+					method : 'post'
+				});
+
+				form.append($('<input>', {
+					type : 'hidden',
+					name : 'documentTypeCode',
+					value : documentTypeCode
+				}));
+
+				form.append($('<input>', {
+					type : 'hidden',
+					name : 'empCode',
+					value : empCode
+				}));
+				
+				// 폼을 body에 추가하고 제출
+				$('body').append(form);
+				form.submit();
+			});
+		});
 	</script>
 </body>
 </html>

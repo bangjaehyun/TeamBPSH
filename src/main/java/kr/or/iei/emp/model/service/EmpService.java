@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Dept;
@@ -136,4 +137,8 @@ public class EmpService {
 		
 		return chatList;
 	}
+	
+	 public ArrayList<Document> docMain(String empCode) {
+	        return (ArrayList<Document>) dao.docMain(empCode);
+	    }
 }

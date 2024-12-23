@@ -15,10 +15,8 @@ public class DocumentDao {
 	@Qualifier("sqlSessionTemplate")
 	private SqlSessionTemplate sqlSession;
 
-	public List<Document> apiDocumentList(String empCode) {
-		
-		return sqlSession.selectList("document.apiDocumentList",empCode);
-	}
-	
-	
+	//달력에서 출력할 문서 List
+    public List<Document> apiDocumentList(String empCode) {        
+        return sqlSession.selectList("document.apiDocumentList",empCode);
+    }
 }

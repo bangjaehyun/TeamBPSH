@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="document">
-  	<!-- 달력에 문서 목록 출력 -->
-  	<select id="apiDocumentList" parameterType="string" resultType="document">
-  		 select document_code as documentCode,
-  		 		document_type_code as documentTypeCode,
-  		 		document_title as documentTitle,
-  		 		document_content as documentContent,
-  		 		emp_code as empCode,
-  		 		to_char(document_date, 'YYYYMMDD HH:MI') as documentDate
-  		 from tbl_document 
-  		 where document_type_code != 'pj'
-  		 and emp_code = #{empCode}
-  	</select>
+	<!-- 달력에 문서 목록 출력 -->
+	<select id="apiDocumentList" parameterType="string"
+		resultType="document">
+		select 
+		document_code as documentCode,
+		document_type_code as documentTypeCode,
+		document_title as documentTitle,
+		document_content as documentContent,
+		emp_code as empCode,
+		to_char(document_date, 'YYYYMMDD HH:MI') as documentDate
+		from tbl_document
+		where document_type_code != 'pj'
+		and emp_code = #{empCode}
+	</select>
+
+	<!-- 메인화면에 출력할 문서들의 query -->
+	<select id="docMain" parameterType="string"
+		resultType="document">
+		select
+			document_code as documentCode,
+			tbl_document.document_type_code as documentTypeCode,
+			document_title as documentTitle,
+			to_char(document_date, 'YYYYMMDD HH:MI') as documentDate,
+			emp_name as empName,
+			tbl_document_type.document_type_name as documentTypeName
+		from tbl_document
+		join tbl_emp
+		on tbl_document.emp_code = tbl_emp.emp_code
+			join tbl_document_type
+		on tbl_document_type.document_type_code =
+			tbl_document.document_type_code
+		where tbl_document.emp_code = #{empCode}
+	</select>
 </mapper>
