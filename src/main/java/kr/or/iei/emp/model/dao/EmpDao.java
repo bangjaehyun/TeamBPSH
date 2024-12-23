@@ -85,16 +85,28 @@ public class EmpDao {
         return sqlSession.selectOne("emp.selectChatGroup", map);
     }
 
-    public int insertChatGroup(String empCode) {
-        return sqlSession.insert("emp.insertChatGroup", empCode);
+    public int insertChatGroup(HashMap<String, String> groupMap) {
+        return sqlSession.insert("emp.insertChatGroup", groupMap);
     }
 
     public List<Chat> selectChatList(String groupNo) {
         return sqlSession.selectList("emp.selectChatList", groupNo);
     }
 
+
     //main 화면 출력할 메소드
     public List<Document> docMain(String empCode) {
         return sqlSession.selectList("document.docMain",empCode);
     }
+
+	public int insertChat(Chat chat) {
+		return sqlSession.insert("emp.insertChat", chat);
+	}
+
+	public String selectGroupNo() {
+		return sqlSession.selectOne("emp.getGroupNo");
+	}
+
+
+
 }

@@ -144,6 +144,24 @@
  	)
  	</insert>
  	
+	<select id="filterEmp"
+	parameterType="string"
+	resultType="emp">
+		select emp_code as empCode,
+ 		   team_code as teamCode,
+ 		   rank_code as rankCode,
+ 		   emp_id as empId,
+ 		   emp_pw as empPw,
+ 		   emp_name as empName,
+ 		   emp_phone as empPhone,
+ 		   emp_retire as empRetire,
+ 		   emp_date as empDate,
+ 		   rank_name as rankName
+ 	  from tbl_emp
+ 	  join tbl_rank using(rank_code) 
+ 	 where team_code = #{_string} 
+	</select>
+ 	
  	<select id="chatEmpList"
  	resultType="emp">
  	select emp_code as empCode,
@@ -170,15 +188,20 @@
  	having count(emp_code) > 1
  	</select>
  	
+ 	<select id="getGroupNo" resultType="string">
+	select TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_chat_group.NEXTVAL, 4, '0') from dual
+	</select>
+ 	
+ 	
  	<insert id="insertChatGroup"
- 	parameterType="string">
+ 	parameterType="map">
  	insert into tbl_chat_group
  	(
  	group_no,
  	emp_code
  	)
  	values(
-	TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_chat_group.NEXTVAL, 4, '0'), 		
+	#{groupNo}, 		
  	#{empCode}
  	)
  	</insert>
@@ -195,4 +218,29 @@
  	  from tbl_chat
  	 where group_no = #{groupNo}
  	</select>
+ 	
+ 	<insert id="insertChat"
+ 	parameterType="chat">
+ 	insert into tbl_chat
+ 	(
+ 	chat_no,
+ 	group_no,
+ 	emp_code,
+ 	msg_gb,
+ 	msg,
+ 	file_name,
+ 	file_path,
+ 	msg_date
+ 	)
+ 	values(
+ 	TO_CHAR(SYSDATE, 'YYYYMMDDHH24:MI:SS') || LPAD(seq_chat.NEXTVAL, 4, '0'),
+ 	#{groupNo},
+ 	#{empCode},
+ 	#{chatMsgGb},
+ 	#{chatMsg},
+ 	#{chatFileName},
+ 	#{chatFilePath},
+ 	sysdate
+ 	)
+ 	</insert>
 </mapper>

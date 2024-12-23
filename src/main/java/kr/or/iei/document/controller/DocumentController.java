@@ -2,6 +2,9 @@ package kr.or.iei.document.controller;
 
 import java.util.ArrayList;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -17,11 +20,14 @@ import kr.or.iei.document.model.service.DocumentService;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Dept;
+import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Team;
 
 @Controller("documentController")
 @RequestMapping("/doc/")
 public class DocumentController {
+	@Resource
+	private ServletContext servletContext;
 	
 	@Autowired
 	@Qualifier("documentService")
@@ -62,26 +68,46 @@ public class DocumentController {
 		return result;
 	}
 	
+	//type으로 보낸 값(결재자 or 참조자)구분
 	@PostMapping("searchMan")
-	public String searchMan(String option, Model m ) {
+	public String searchMan(String type, Model m) {
+		
+		m.addAttribute("type",type);
 		
 		return"document/searchMan";
 	}
 	
 	@PostMapping("srchTeam")
 	@ResponseBody
-	public ArrayList<Team>filtTeam(String deptCode){
-		EmpService service=new EmpService();
+	public ArrayList<Team>filterTeam(String deptCode){
+		
+		
 		 ArrayList<Team>filterTeam=new ArrayList<Team>();
-		 ArrayList<Team>teamList=service.loadTeam();
+		 //팀 리스트, 부서리스트는 어플리케이션 스코프에 저장되어있어 별도의 sql없이 불러옴.
+		 ArrayList<Team> teamList = (ArrayList<Team>) servletContext.getAttribute("teamList");
+		 
 		 for(int i=0;i<teamList.size();i++) {
-			 if(teamList.get(i).getDeptCode().equals(deptCode)) {
+			 Team team=new Team();
+			 team=teamList.get(i);
+			 
+			 if(team.getDeptCode().equals(deptCode)) {
 				 filterTeam.add(teamList.get(i));
 			 }
 		 }
 		 System.out.println(filterTeam);
 		return filterTeam;
 	}
+	
+	@PostMapping("srchEmp")
+	@ResponseBody
+	public ArrayList<Emp>filterEmp(String teamCode){
+		ArrayList<Emp>list=service.filterEmp(teamCode);
+		
+		return list;
+		
+	}
+	
+	
 	
 	//달력에서 문서 List 조회 - 프로젝트제외
 	@PostMapping(value="api/documentType.do", produces="application/json; charset=utf-8")
