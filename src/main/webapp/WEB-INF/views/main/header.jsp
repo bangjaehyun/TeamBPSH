@@ -78,17 +78,22 @@
 		}
 	})
 
+	<%-- 콜백 있는 메시지 --%>
 	function callbackMsg(title,msg,icon, callback){
 		swal({
 			title : title,
 			text : msg,
 			icon : icon
 		}).then(function(){
+			<%-- 자식 창일경우 로그인이 필요하면 종료--%>
+			if($(window.opener) != null){
+				self.close();
+			}
 			location.href = callback;
 		});
 	}
 
-	//메시지
+	<%--메시지--%>
 	function msg(title,msg,icon, callback){
 		swal({
 			title : title,

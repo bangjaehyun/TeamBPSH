@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Chat;
+import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -114,17 +115,17 @@ public class EmpService {
 	}
 	
 	@Transactional
-	public ArrayList<Chat> selectChatList(String fromEmpCode, String toEmpCode) {
+	public ChatGroup selectChatList(String fromEmpCode, String toEmpCode) {
 		
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("from", fromEmpCode);
 		map.put("to", toEmpCode);
 		
+		ChatGroup chatGroup = new ChatGroup(); 
 		String groupNo = dao.selectChatGroup(map);
-		ArrayList<Chat> chatList = new ArrayList<Chat>();
 		if(groupNo == null) {
 			groupNo = dao.selectGroupNo();
-			
+			chatGroup.setGroupNo(groupNo);
 			for(String key : map.keySet()) {
 				HashMap<String, String> groupMap = new HashMap<String, String>();
 				groupMap.put("groupNo", groupNo);
@@ -135,10 +136,14 @@ public class EmpService {
 				}
 			}
 		}else {
+			ArrayList<Chat> chatList = new ArrayList<Chat>();
 			chatList = (ArrayList<Chat>)dao.selectChatList(groupNo);
+			
+			chatGroup.setGroupNo(groupNo);
+			chatGroup.setChatList(chatList);
 		}
 		
-		return chatList;
+		return chatGroup;
 	}
 
 	public int insertChat(Chat chat) {

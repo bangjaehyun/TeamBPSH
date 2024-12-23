@@ -214,8 +214,10 @@
  		   msg as chatMsg,
  		   file_name as chatFileName,
  		   file_path as chatFilePath,
- 		   msg_date as chatDate
+ 		   msg_date as chatDate,
+ 		   emp_name as empName
  	  from tbl_chat
+ 	  join tbl_emp using(emp_code)
  	 where group_no = #{groupNo}
  	</select>
  	
@@ -233,7 +235,7 @@
  	msg_date
  	)
  	values(
- 	TO_CHAR(SYSDATE, 'YYYYMMDDHH24:MI:SS') || LPAD(seq_chat.NEXTVAL, 4, '0'),
+ 	TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') || LPAD(seq_chat.NEXTVAL, 4, '0'),
  	#{groupNo},
  	#{empCode},
  	#{chatMsgGb},

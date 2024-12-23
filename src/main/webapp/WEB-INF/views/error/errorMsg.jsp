@@ -5,6 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 <body>
@@ -26,6 +27,9 @@
 			}
 			
 			if(loc != '' && loc != null){
+				if($(window.opener) != null){
+					self.close();
+				}
 				location.href = loc; 
 			}
 		});

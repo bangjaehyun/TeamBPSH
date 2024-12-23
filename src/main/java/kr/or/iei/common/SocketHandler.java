@@ -1,12 +1,11 @@
 package kr.or.iei.common;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,6 +15,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -31,11 +31,11 @@ public class SocketHandler extends TextWebSocketHandler{
 	@Qualifier("empService")
 	private EmpService service;
 	
-	private ArrayList<WebSocketSession> members;
+	private ArrayList<WebSocketSession> emps;
 	private HashMap<String, WebSocketSession> map;
 	
 	public SocketHandler() {
-		members = new ArrayList<WebSocketSession>();
+		emps = new ArrayList<WebSocketSession>();
 		map = new HashMap<String, WebSocketSession>();
 	}
 	
@@ -43,7 +43,7 @@ public class SocketHandler extends TextWebSocketHandler{
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		System.out.println("연결 성공");
-		members.add(session); //신규 접속자 정보 저장
+		emps.add(session); //신규 접속자 정보 저장
 	}
 	
 	
@@ -52,19 +52,19 @@ public class SocketHandler extends TextWebSocketHandler{
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		
 		//수신 받은 메시지 형식 == Json 형식 => 파싱 처리
-		JsonParser parser = new JsonParser();
-		JsonElement element = parser.parse(message.getPayload());
+		JsonElement element = JsonParser.parseString(message.getPayload());
 		JsonObject jsonObj = element.getAsJsonObject();
 		String type= jsonObj.get("type").getAsString();
 		
 		if(type.equals("connect")) {
 			//최초 연결 시, 연결 정보 등록
-			String empName = jsonObj.get("empName").getAsString();
-			map.put(empName, session);	
+			String empCode = jsonObj.get("empCode").getAsString();
+			map.put(empCode, session);
 			
 		}else if(type.equals("chat")) {
 			//메시지 송신
-			String groupNO   = jsonObj.get("groupNO").getAsString();
+			String groupNo   = jsonObj.get("groupNo").getAsString();
+			String toEmpCode   = jsonObj.get("toEmp").getAsString();
 			String empCode = jsonObj.get("empCode").getAsString();
 			String empName = jsonObj.get("empName").getAsString();
 			String msg      = jsonObj.get("msg").getAsString();
@@ -72,25 +72,23 @@ public class SocketHandler extends TextWebSocketHandler{
 			String filePath = jsonObj.get("filePath") != null ? jsonObj.get("filePath").getAsString() : null;
 			
 			Chat chat = new Chat();
-			chat.setGroupNo(groupNO);
-			chat.setEmpName(empCode);
+			chat.setGroupNo(groupNo);
+			chat.setEmpCode(empCode);
+			chat.setEmpName(empName);
 			chat.setChatMsg(msg);
 			chat.setChatMsgGb(filePath != null ? "1" : "0");
 			chat.setChatFileName(fileName);
 			chat.setChatFilePath(filePath);
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			chat.setChatDate(sdf.format(date));
+			
 			//DB 등록
 			int result = service.insertChat(chat);
 			
 			if(result > 0) {
-				//파일 등록 시, 다운로드 가능하도록 텍스트 처리
-				if(filePath != null) {
-					msg = "<a href='javascript:void(0)' onclick='fn.chatFileDown(\"" + fileName + "\", \"" + filePath + "\")'>"
-					+ fileName + "</a> " + msg;
-				}
-				
-				msg = empName + " : " + msg;
-				this.sendMsg(msg);				
+				this.sendMsg(chat, empCode ,toEmpCode);				
 			}
 		}
 	
@@ -98,30 +96,32 @@ public class SocketHandler extends TextWebSocketHandler{
 	}
 	
 	//연결된 사용자들에게 메세지 전송
-	public void sendMsg(String msg) {
-		Set<String> set = map.keySet();
-		Iterator<String> keys = set.iterator();
-		
-		while(keys.hasNext()) {
-			String key = keys.next();
-			WebSocketSession ws = map.get(key);
-			
+	public void sendMsg(Chat chat, String fromEmpCode, String toEmpCode) {
+			WebSocketSession ws = map.get(fromEmpCode);
 			if(ws != null) {				
 				try {
-					ws.sendMessage(new TextMessage(msg));
+					ws.sendMessage(new TextMessage(new Gson().toJson(chat)));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-		}
+			ws = map.get(toEmpCode);
+			if(ws != null) {				
+				try {
+					ws.sendMessage(new TextMessage(new Gson().toJson(chat)));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		
 	}
-	
 	
 	//연결 종료
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		System.out.println("연결 종료");
-		members.remove(session);
+		emps.remove(session);
 	}
 }
