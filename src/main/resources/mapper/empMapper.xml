@@ -144,6 +144,24 @@
  	)
  	</insert>
  	
+	<select id="filterEmp"
+	parameterType="string"
+	resultType="emp">
+		select emp_code as empCode,
+ 		   team_code as teamCode,
+ 		   rank_code as rankCode,
+ 		   emp_id as empId,
+ 		   emp_pw as empPw,
+ 		   emp_name as empName,
+ 		   emp_phone as empPhone,
+ 		   emp_retire as empRetire,
+ 		   emp_date as empDate,
+ 		   rank_name as rankName
+ 	  from tbl_emp
+ 	  join tbl_rank using(rank_code) 
+ 	 where team_code = #{_string} 
+	</select>
+ 	
  	<select id="chatEmpList"
  	resultType="emp">
  	select emp_code as empCode,
