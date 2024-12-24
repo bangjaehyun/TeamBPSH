@@ -107,6 +107,26 @@ public class EmpDao {
 		return sqlSession.selectOne("emp.getGroupNo");
 	}
 
+	public List<Emp> empManagerList() {
+		return sqlSession.selectList("emp.empManagerList");
+	}
+
+	public int insertVacation(String empCode) {
+		return sqlSession.insert("emp.insertVacation", empCode);
+	}
+
+	public int updateEmp(Emp emp) {
+		return sqlSession.update("emp.updateEmp", emp);
+	}
+
+	public int updateSalary(Emp emp) {
+		return sqlSession.update("emp.updateSalary", emp);
+	}
+
+	public int updateVacation(Emp emp) {
+		return sqlSession.update("emp.updateVacation", emp);
+	}
+
 
 
 }

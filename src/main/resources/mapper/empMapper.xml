@@ -168,7 +168,6 @@
  		   team_code as teamCode,
  		   rank_code as rankCode,
  		   emp_id as empId,
- 		   emp_pw as empPw,
  		   emp_name as empName,
  		   emp_phone as empPhone,
  		   emp_retire as empRetire,
@@ -245,4 +244,59 @@
  	sysdate
  	)
  	</insert>
+ 	
+ 	<select id="empManagerList"
+ 	resultType="emp">
+ 	select emp_code as empCode,
+ 		   team_code as teamCode,
+ 		   rank_code as rankCode,
+ 		   emp_id as empId,
+ 		   emp_name as empName,
+ 		   emp_phone as empPhone,
+ 		   emp_retire as empRetire,
+ 		   emp_date as empDate,
+ 		   dept_code as deptCode,
+           salary as salary,
+           total_vacation as vacationTotal,
+           use_vacation as vacationUse
+ 	  from tbl_emp
+ 	  join tbl_team using(team_code)
+      join tbl_salary using(emp_code)
+      join tbl_vacation_count using(emp_code)
+ 	 where emp_code is not null
+ 	</select>
+ 	
+ 	<insert id="insertVacation"
+ 	parameterType="string">
+ 	insert into tbl_vacation_count
+ 	(
+ 	emp_code
+ 	)
+ 	values(
+ 	#{empCode}
+ 	)
+ 	</insert>
+ 	
+ 	<update id="updateEmp"
+ 	parameterType="emp">
+ 	update tbl_emp
+ 	   set team_code = #{teamCode},
+ 	   	   rank_code = #{rankCode}
+ 	 where emp_code = #{empCode}
+ 	</update>
+ 	
+ 	<update id="updateSalary"
+ 	parameterType="emp">
+ 	update tbl_salary
+ 	   set salary = #{salary}
+ 	 where emp_code = #{empCode} 
+ 	</update>
+ 	
+ 	<update id="updateVacation"
+ 	parameterType="emp">
+ 	update tbl_vacation_count
+ 	   set total_vacation = #{vacationTotal},
+ 	       use_vacation = #{vacationUse}
+ 	 where emp_code = #{empCode} 
+ 	</update>
 </mapper>

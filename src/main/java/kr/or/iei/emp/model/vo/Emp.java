@@ -13,6 +13,9 @@ public class Emp {
 	private String empDate;
 	private String rankName;
 	private String deptName;
+	private String salary; // 급여
+	private String vacationTotal; // 휴가
+	private String vacationUse;
 	private boolean admin;
 
 	public Emp() {
@@ -22,7 +25,7 @@ public class Emp {
 
 	public Emp(String empCode, String teamCode, String rankCode, String deptCode, String empId, String empPw,
 			String empName, String empPhone, String empRetire, String empDate, String rankName, String deptName,
-			boolean admin) {
+			String salary, String vacationTotal, String vacationUse, boolean admin) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
@@ -36,6 +39,9 @@ public class Emp {
 		this.empDate = empDate;
 		this.rankName = rankName;
 		this.deptName = deptName;
+		this.salary = salary;
+		this.vacationTotal = vacationTotal;
+		this.vacationUse = vacationUse;
 		this.admin = admin;
 	}
 
@@ -135,6 +141,30 @@ public class Emp {
 		this.deptName = deptName;
 	}
 
+	public String getSalary() {
+		return salary;
+	}
+
+	public void setSalary(String salary) {
+		this.salary = salary;
+	}
+
+	public String getVacationTotal() {
+		return vacationTotal;
+	}
+
+	public void setVacationTotal(String vacationTotal) {
+		this.vacationTotal = vacationTotal;
+	}
+
+	public String getVacationUse() {
+		return vacationUse;
+	}
+
+	public void setVacationUse(String vacationUse) {
+		this.vacationUse = vacationUse;
+	}
+
 	public boolean isAdmin() {
 		return admin;
 	}
@@ -148,13 +178,8 @@ public class Emp {
 		return "Emp [empCode=" + empCode + ", teamCode=" + teamCode + ", rankCode=" + rankCode + ", deptCode="
 				+ deptCode + ", empId=" + empId + ", empPw=" + empPw + ", empName=" + empName + ", empPhone=" + empPhone
 				+ ", empRetire=" + empRetire + ", empDate=" + empDate + ", rankName=" + rankName + ", deptName="
-				+ deptName + ", admin=" + admin + "]";
+				+ deptName + ", salary=" + salary + ", vacationTotal=" + vacationTotal + ", vacationUse=" + vacationUse
+				+ ", admin=" + admin + "]";
 	}
-
-	
-
-	
-	
-	
 
 }

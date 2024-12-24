@@ -116,8 +116,8 @@ public class EmpController {
 	
 	//관리자가 승인하였을 경우
 	@PostMapping(value="approval.do", produces="text/html; charset=utf-8;")
-    public String approval(Emp emp, int salary, Model model) {
-        int result = service.approval(emp, salary);
+    public String approval(Emp emp, Model model) {
+        int result = service.approval(emp);
         
         if(result < 1) {
             CommonException ex = new CommonException("관리자 승인중 오류 발생");
@@ -226,5 +226,34 @@ public class EmpController {
                 .collect(Collectors.groupingBy(Document::getDocumentTypeCode));
         
         return new Gson().toJson(docType);
+    }
+    
+    //회원관리
+    @PostMapping("empManager.do")
+    @AdminChk
+    public String empManager(Model model) {
+    	ArrayList<Emp> empList = service.empManagerList();
+    	model.addAttribute("empList", empList);
+    	return "main/empManager";
+    }
+    
+    //회원정보 변경
+    @PostMapping("changeEmp.do")
+    public String changeEmp(Emp emp, Model model) {
+    	 int result = service.changeEmp(emp);
+         
+         if(result < 1) {
+             CommonException ex = new CommonException("사원 수정중 오류 발생");
+             ex.setErrorCode("SE001");
+             Object msgParam[] = {"변경"};
+             ex.setUserMsg(message.getMessage(ex.getErrorCode(), msgParam, Locale.KOREA));
+             throw ex;
+         }
+         
+        ArrayList<Emp> empList = service.empManagerList();
+ 		model.addAttribute("empList", empList);
+    	
+    	
+    	return "main/empManager";
     }
 }
