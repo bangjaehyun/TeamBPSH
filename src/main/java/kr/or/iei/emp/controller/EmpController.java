@@ -28,6 +28,7 @@ import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Chat;
+import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Emp;
 
 
@@ -179,9 +180,9 @@ public class EmpController {
     @PostMapping(value="chatList.do", produces="application/json; charset=utf-8")
     @ResponseBody
     public String chatList(String fromEmpCode, String toEmpCode) {
-        ArrayList<Chat> chatList = service.selectChatList(fromEmpCode, toEmpCode);
+    	ChatGroup chatGroup = service.selectChatList(fromEmpCode, toEmpCode);
         
-        return new Gson().toJson(chatList);
+        return new Gson().toJson(chatGroup);
     }
     //main 화면 문서 종류별 출력
     @PostMapping(value="docMain", produces="application/json; charset=utf-8")

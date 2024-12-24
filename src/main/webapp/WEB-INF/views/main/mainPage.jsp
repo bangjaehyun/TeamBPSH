@@ -112,8 +112,6 @@
 		        f.setAttribute('id', 'openForm');
 		popupWindow.document.body.appendChild(f);
 		f.submit();
-		
-		console.log(popupWindow);
 	}
 	
 	function logOut(){

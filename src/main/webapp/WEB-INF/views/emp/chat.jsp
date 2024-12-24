@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="/resources/summernote/summernote-lite.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 	*{
@@ -23,14 +24,20 @@
 	.side-left{
 		width: 20%;
 		height: 100%;
-		background: #e0e0e0;
+		background: #f4f4f4;
 	}
 	
 	.chat-div{
 		height: 85%;
 		background: #cdeefd;
-		opacity: 0.4;
+		overflow: scroll;
 	}
+	
+	.chat-div::-webkit-scrollbar{
+		display: none;
+	}
+	
+	
 	.message-div{
 		display : flex;
 		width : 100%;
@@ -42,10 +49,12 @@
 	
 	.message-box{
 		width: 85%;
-		resize: none;
+		height : 100%;
+ 		resize: none; 
 		outline: none;
 		border: none;
 	}
+	
 	.message-box::-webkit-scrollbar{
 		display: none;
 	}
@@ -102,6 +111,59 @@
 		font-size: 12px;
 	}
 	
+	.msg{
+		background: white;
+		border-radius : 5px;
+		padding: 5px;
+		font-size: 15px;
+	}
+	
+	.msg-right{
+		display : flex;
+		justify-content : flex-end;
+		padding: 5px;
+		align-items: flex-end;
+	}
+	
+	.msg-left{
+		display : flex;
+		justify-content : flex-start;
+		padding: 5px;
+		align-items: flex-end;
+	}
+	
+	.name-right{
+		display : flex;
+		justify-content : flex-end;
+		align-items: flex-end;
+	}
+	
+	.name-right>span{
+		font-size: 14px;
+		margin-right: 5px;
+	}
+	
+	.name-left>span{
+		font-size: 14px;
+		margin-left: 5px;
+	}
+	
+	.name-left{
+		display : flex;
+		justify-content : flex-start;
+		align-items: flex-end;
+	}
+	
+	.msg-div{
+		word-break:break-word;
+		margin-bottom: 10px;
+	}
+	
+	.time{
+		font-size: 11px;
+		margin: 0 3px;
+		min-width: 50px;
+	}
 	
 </style>
 </head>
@@ -120,88 +182,106 @@
 		<div class="chat-main">
 			<div class="chat-div"></div>
 			<div class="message-div">
-				<textarea class="message-box"></textarea>
+				<textarea id="message-box" class="message-box" ></textarea>
 				<button class="send" onclick="fn.sendValidate()">버튼</button>
+<!-- 				<input type="file" name="uploadFile"> <br> -->
 			</div>
 		</div>
 	</div>
 	
 	<script>
+	
 	var ws;
-	var empCode = '${loginMember.empCode}';
-	var empName = '${loginMember.empName}';
-	var groupNo;	
+	<%-- 사원 코드 --%>
+	var empCode = '${loginEmp.empCode}';
+	<%-- 사원 이름 --%>
+	var empName = '${loginEmp.empName}';
+	<%-- 채팅 그룹 --%>
+	var groupNo;
+	<%--채팅 할 사원--%>
+	var toEmp;
 	let fn = {
 		init : function () {
-			//연결
-			ws = new WebSocket("ws://192.168.10.48/chat/doChat.do");
+			<%-- 소켓 연결 --%>
+			ws = new WebSocket("ws://192.168.10.48/emp/doChat.do");
 			
-			//연결 시, 이벤트 핸들러
+			<%-- 연결 시, 이벤트 핸들러 --%>
 			ws.onopen = function(){
 				var msg = {
 					type     : "connect",
-					empName : empName
+					empCode : empCode
 				};
 				
 				ws.send(JSON.stringify(msg));
 			};
 			
-			//메시지 수신 시, 이벤트 핸들러
+			<%-- 메시지 수신 시, 이벤트 핸들러 --%>
 			ws.onmessage = function(e){
-				var msg = e.data;
-				var chat = $("#msgArea").html() + "\n <h4>" + msg + "</h4>";
-				$("#msgArea").html(chat);
+				const chat = JSON.parse(e.data);
+				
+				addChat(chat);
+				
+				$('.chat-div').scrollTop($('.chat-div')[0].scrollHeight);
 			};
 			
-			//소켓 연결 종료 이벤트 핸들러
+			<%-- 소켓 연결 종료 이벤트 핸들러 --%>
 			ws.onclose = function(){
 				console.log("연결종료");
 			};
 		}	
-		,sendValidate : function () {
+		,sendValidate : function (enter) {
 			//파일 서버 업로드 -> 메시지 전송
-			let file = $('input[type=file]')[0].files;
+// 			let file = $('input[type=file]')[0].files;
 
-			if(file.length > 0){
-				file = file[0];
+// 			if(file.length > 0){
+// 				file = file[0];
 				
-				const formData = new FormData();
-				formData.append("file", file);
-				formData.append("memberId", memberId);
+// 				const formData = new FormData();
+// 				formData.append("file", file);
+// 				formData.append("memberId", memberId);
 				
-				$.ajax({
-		            url: "/chat/fileUpload.do",
-		            type: "post",
-		            data: formData,
-		            processData: false,
-		            contentType: false,
-		            success: function(obj) {
-		            	fn.sendChat(obj); //fileName, filePath
+// 				$.ajax({
+// 		            url: "/chat/fileUpload.do",
+// 		            type: "post",
+// 		            data: formData,
+// 		            processData: false,
+// 		            contentType: false,
+// 		            success: function(obj) {
+// 		            	fn.sendChat(obj); //fileName, filePath
 		            	
-		            },
-		            error: function() {
-		                alert("파일 업로드 실패: " + error);
-		            }
-		        });
-			}else {
+// 		            },
+// 		            error: function() {
+// 		                alert("파일 업로드 실패: " + error);
+// 		            }
+// 		        });
+// 			}else {
 				let obj = {};
-				fn.sendChat(obj);
-			}
+				fn.sendChat(obj,enter);
+// 			}
 			
 		}
-		,sendChat : function (sendObj) {
+		,sendChat : function (sendObj,enter) {
+			str = $('.message-box').val();
+			str = str.replace(/(?:\r\n|\r|\n)/g, "<br/>");
 			
+			if(enter != null){
+				str = str.slice(0, -5);
+			}
+			
+			console.log(str);
 			sendObj.type = "chat";
 			sendObj.groupNo = groupNo;
 			sendObj.empCode= empCode;
 			sendObj.empName = empName;
-			sendObj.msg = $("#chatMsg").val();
+			sendObj.toEmp = toEmp;
+			sendObj.msg = str;
+			
 			
 			ws.send(JSON.stringify(sendObj));
 			
 			//기존 입력값 초기화
-			$("#chatMsg").val(""); 
-			$('input[type=file]').val("");
+			$(".message-box").val(""); 
+// 			$('input[type=file]').val("");
 			
 		}
 		,chatFileDown : function(fileName, filePath){
@@ -254,14 +334,16 @@
 				
 				for(idx in list){
 					let emp = list[idx];
-					var liEmp = $("<li></li>");
-					var item = $("<a class='empName' href='javascript:void(0)' onclick='choose(this)'></a>");
-					item.html(emp.empName);
-					item.attr('id',emp.empCode);
-					liEmp.append(item);
-					liEmp.attr('class','menu-emp');
-					
-					$('#'+ emp.teamCode).append(liEmp);
+					if(emp.empCode != ${loginEmp.empCode}){
+						var liEmp = $("<li></li>");
+						var item = $("<a class='empName' href='javascript:void(0)' onclick='choose(this)'></a>");
+						item.html(emp.empName);
+						item.attr('id',emp.empCode);
+						liEmp.append(item);
+						liEmp.attr('class','menu-emp');
+						
+						$('#'+ emp.teamCode).append(liEmp);
+					}
 				};
 				
 			},
@@ -269,40 +351,120 @@
 				console.log('ajax 오류');	
 			}
 		});
+		<%-- 소켓 초기화 --%>
+		fn.init();
 	});
 	
+	<%-- 사원 선택시 채팅리트스 select --%>
 	function choose(obj){
+		toEmp =  $(obj).attr('id');
+		<%-- 기존 채팅내용 제거 --%>
+		$(".chat-div").children().remove();
 		$.ajax({
 			url : '/emp/chatList.do',
 			type : 'post',
 			data : {'fromEmpCode' : '${loginEmp.empCode}',
-					'toEmpCode' : $(obj).attr('id')},
+					'toEmpCode' : toEmp},
 			success : function(res){
-				console.log(res);
+				for(let i = 0; i < res.chatList.length; i++){
+					let chat = res.chatList[i];
+					<%--채팅 정보--%>
+					addChat(chat);
+				}
+				<%--스크롤 최 하단으로 이동--%>
+				$('.chat-div').scrollTop($('.chat-div')[0].scrollHeight);
+				groupNo = res.groupNo;
 			},
 			error : function(){
-				console.log('ajaxError')
+				console.log('ajaxError');
 			}
 					
 		});
 	}
 	
+	const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+	const day = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일',]
+ 	<%-- 채팅 내용 동적 추가 --%>
+	function addChat(chat){
+		let date = getDay(chat.chatDate);
+		if(chat.empCode == ${loginEmp.empCode}){
+			let divEl = $('<div></div>');
+			let namDiv = $('<div></div>');
+			let name = $('<span></span>');
+			let msgDiv = $('<div></div>');
+			let msg = $('<span></span>');
+			let time = $('<span></span>');
+			name.html(chat.empName);
+			namDiv.append(name);
+			namDiv.attr('class', 'name-right');
+			time.html(getTime(chat.chatDate));
+			time.attr('class', 'time');
+			msg.html(chat.chatMsg);
+			msg.attr('class', 'msg');
+			msgDiv.attr('class', 'msg-right');
+			msgDiv.append(time);
+			msgDiv.append(msg);
+			divEl.append(namDiv);
+			divEl.append(msgDiv);
+			divEl.attr('class','msg-div');
+			$(".chat-div").append(divEl);
+		}else{
+			let divEl = $('<div></div>');
+			let namDiv = $('<div></div>');
+			let name = $('<span></span>');
+			let msgDiv = $('<div></div>');
+			let msg = $('<span></span>');
+			let time = $('<span></span>');
+			name.html(chat.empName);
+			namDiv.append(name);
+			namDiv.attr('class', 'name-left');
+			msg.html(chat.chatMsg);
+			msg.attr('class', 'msg');
+			time.html(getTime(chat.chatDate));
+			time.attr('class', 'time');
+			msgDiv.attr('class', 'msg-left');
+			msgDiv.append(msg);
+			msgDiv.append(time);
+			divEl.append(namDiv);
+			divEl.append(msgDiv);
+			divEl.attr('class','msg-div');
+			$(".chat-div").append(divEl);
+		}
+	}
+	
+	$('.message-box').keyup(function(e){
+		 if (e.keyCode == 13 && !e.shiftKey){
+	        fn.sendValidate(false);
+		 }
+	});
+	
 	$(window).resize(function () {
 	    window.resizeTo(600, 800);
 	});
 	
+	function getDay(chatDate){
+		let date = new Date(chatDate);
+		return date.getFullYear() + "년 " + months[date.getMonth()] + " " + date.getDate() + "일 " + day[date.getDay()];
+	}
 	
-	//test
-	$(window).bind('beforeunload', function() {
-		console.log("11111");
-		self.close();
-	});
+	function getTime(chatDate){
+		console.log(chatDate);
+		let date = new Date(chatDate);
+		
+		const hours = date.getHours();
+		const minutes = date.getMinutes();
+		
+		if (hours > 12) {
+	 		const pmHours = hours - 12;
+			return "오후 " + pmHours + ":"+ pad(minutes);
+	  	} else {
+	    	return "오전 " + hours + ":" + pad(minutes);
+	  	}
+	}
 	
-	$(window).on('beforeunload', function() {
-		console.log("222222");
-		self.close();
-	});
-	
+	 function pad(d) {
+	    	return (Number(d) < 10) ? '0' + d.toString() : d.toString();
+	  }
 	</script>
 </body>
 </html>

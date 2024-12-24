@@ -16,8 +16,8 @@
 	
 	/*테이블*/
 	.page-wrap{
-	width: calc(100vw - 200px);
-	height: calc(100vh - 200px);
+	width: calc(100vw - 55px);
+	height: calc(100vh - 50px);
 	}
 .tbl {
   min-width : 100%;
@@ -45,7 +45,7 @@
   background-color: rgba(0, 76, 161, 0.1);
 }
 .page-wrap{
-	margin : 50px;
+	padding : 50px;
 }
 .approval-btn{
 	width: 100px;
