@@ -34,4 +34,73 @@
 			tbl_document.document_type_code
 		where tbl_document.emp_code = #{empCode}
 	</select>
+	
+	<select id="selectDocumentCode"
+  	resultType="string">
+  		select to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,6,'0') as document_code from dual
+  	</select>
+	
+	<insert id="insertDocument"
+  	parameterType="document">
+  		insert into tbl_document values(
+  			#{documentCode},
+  			#{documentTypeCode},
+  			#{empCode},
+  			#{documentTitle},
+  			#{documentContent},
+  			sysdate
+  		)
+  		
+  	</insert>
+  	<insert id="insertVacationHalf"
+  	parameterType="vacHalf">
+  		insert into tbl_half
+  		values(
+  			#{documentCode},
+  			#{vacDate},
+  			#{halfTime}
+  		)
+  		
+  	</insert>
+  	
+  	<insert id="insertVacationAnnual"
+  	parameterType="selDay">
+  		insert into tbl_annual
+  		values(
+			#{documentCode},
+			#{start},
+			#{end}  		
+  		)
+  	</insert>
+  	
+  	<insert id="inserDocumentFile"
+  	parameterType="file">
+  		insert into tbl_files
+  		values(
+  			to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,4,'0'),
+  			#{documentCode},
+  			#{fileName},
+  			#{filePath}
+  		)
+  	</insert>
+  	
+  	<insert id="insertDocumentSign"
+  	parameterType="sign">
+  		insert into tbl_document_sign
+  		values(
+  			#{documentCode},
+  			#{empCode},
+  			0,
+  			#{documentSeq}
+  		)
+  	</insert>
+  	
+  	<insert id="insertDocumentRef"
+  	parameterType="ref">
+  		insert into tbl_reference
+  		values(
+  			#{documentCode},
+  			#{empCode}
+  		)
+  	</insert>
 </mapper>

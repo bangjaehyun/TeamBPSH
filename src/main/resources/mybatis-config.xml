@@ -12,5 +12,10 @@
 		<typeAlias type="kr.or.iei.project.model.vo.Project" alias="project"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.Chat" alias="chat"/>
 		<typeAlias type="kr.or.iei.document.model.vo.Document" alias="document"/>
+		<typeAlias type="kr.or.iei.document.model.vo.DocumentSelectDay" alias="selDay"/>
+		<typeAlias type="kr.or.iei.document.model.vo.VacationHalf" alias="vacHalf"/>
+		<typeAlias type="kr.or.iei.document.model.vo.DocumentFile" alias="file"/>
+		<typeAlias type="kr.or.iei.document.model.vo.DocumentSign" alias="sign"/>
+		<typeAlias type="kr.or.iei.document.model.vo.DocumentReference" alias="ref"/>
 	</typeAliases>
 </configuration>
