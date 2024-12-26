@@ -25,6 +25,17 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		return (ArrayList<Emp>)dao.filterEmp(teamCode);
 	}
+
+	public Document viewDocOne(String documentCode) {
+		Document document = dao.viewDocOne(documentCode);
+		/*
+		if(document != null) {
+		//파일 LIST CHECK	
+		}
+		*/
+		
+		return document;
+	}
 	
 	
 }

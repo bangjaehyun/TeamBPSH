@@ -27,6 +27,11 @@ public class DocumentDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("emp.filterEmp",teamCode);
 	}
+
+	public Document viewDocOne(String documentCode) {
+		
+		return sqlSession.selectOne("document.viewDocOne",documentCode);
+	}
 	
 	
 

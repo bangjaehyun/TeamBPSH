@@ -34,4 +34,14 @@
 			tbl_document.document_type_code
 		where tbl_document.emp_code = #{empCode}
 	</select>
+	
+	<select id="viewDocOne" parameterType="string" 
+	resultType="document">
+		select 
+			document_title as documentTitle,
+			document_content as documentContent,
+			document_date as documentDate
+		from tbl_document
+		where document_code = #{documentCode}
+	</select>
 </mapper>
