@@ -185,7 +185,7 @@ public class EmpController {
         return new Gson().toJson(chatGroup);
     }
     //main 화면 문서 종류별 출력
-    @PostMapping(value="docMain.do", produces="application/json; charset=utf-8")
+    @PostMapping(value="docMain", produces="application/json; charset=utf-8")
     @ResponseBody
     public String docMain(String empCode) {
         ArrayList<Document> documentList = service.docMain(empCode);
