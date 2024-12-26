@@ -75,18 +75,22 @@ public class EmpService {
 	}
 
 	@Transactional
-	public int approval(Emp emp, int salary) {
+	public int approval(Emp emp) {
 		int result = dao.approvalEmp(emp);
 		
 		if(result > 0) {
 			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("empCode", emp.getEmpCode());
-			map.put("salary", String.valueOf(salary));
+			map.put("salary", emp.getSalary());
 			
 			result = dao.insertSalary(map);
 			
 			if(result > 0) {
-				result = dao.deleteWait(emp.getEmpCode());
+				
+				result = dao.insertVacation(emp.getEmpCode());
+				if(result > 0) {
+					result = dao.deleteWait(emp.getEmpCode());
+				}
 			}
 		}
 		return result;
@@ -105,9 +109,6 @@ public class EmpService {
 			emp.setEmpPhone("01012341234");
 			emp.setEmpRetire("n");
 			result = dao.insertAdmin(emp);
-			if(result > 0) {
-				dao.deleteWait(emp.getDeptCode());
-			}
 		}
 	}
 
@@ -155,6 +156,26 @@ public class EmpService {
 
 	public int insertChat(Chat chat) {
 		return dao.insertChat(chat);
+	}
+
+	public ArrayList<Emp> empManagerList() {
+		return (ArrayList<Emp>)dao.empManagerList();
+	}
+
+	@Transactional
+	public int changeEmp(Emp emp) {
+		int result = dao.updateEmp(emp);
+		System.out.println(result);
+		if(result > 0) {
+			result = dao.updateSalary(emp);
+			System.out.println(result);
+			if(result > 0) {
+				result = dao.updateVacation(emp);
+				System.out.println(result);
+			}
+		}
+		
+		return result;
 	}
 
 }
