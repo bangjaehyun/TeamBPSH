@@ -202,10 +202,4 @@ public class Document {
 				+ ", progress=" + progress + ", fileList=" + fileList + ", signList=" + signList + ", refList="
 				+ refList + "]";
 	}
-	
-	
-
-	
-	
-	
 }

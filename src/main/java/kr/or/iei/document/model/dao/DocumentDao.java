@@ -33,6 +33,7 @@ public class DocumentDao {
 		return sqlSession.selectList("emp.filterEmp",teamCode);
 	}
 
+
 	//documentCode 생성
 	public String selectDocumentCode() {
 		// TODO Auto-generated method stub
@@ -72,6 +73,12 @@ public class DocumentDao {
 			// TODO Auto-generated method stub
 			return sqlSession.insert("document.insertDocumentRef", ref);
 		}
+
+	public Document viewDocOne(String documentCode) {
+		
+		return sqlSession.selectOne("document.viewDocOne",documentCode);
+	}
+
 	
 	
 
