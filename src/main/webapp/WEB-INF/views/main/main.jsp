@@ -302,7 +302,7 @@ table tr:hover {
 	        if (documentCode) {
 	            //동적으로 form 생성
 	            var form = $('<form>',{
-	            	'action' : '/doc/viewDocOne',
+	            	'action' : '/doc/viewDocOne.do',
 	            	'method' : 'post'
 	            });
 	            form.append($('<input>',{

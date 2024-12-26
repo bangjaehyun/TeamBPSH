@@ -118,16 +118,9 @@ public class DocumentController {
 		
 		return new Gson().toJson(list);
 	}
-	
-	@GetMapping("detailDoc")
-	public String detailDoc(Model model,Document document) {
-		
-		model.addAttribute(document.getDocumentCode());
-		return "document/detailDoc";
-	}
-	
+
 	//문서 상세보기 페이지
-	@PostMapping("viewDocOne")
+	@PostMapping("viewDocOne.do")
 	public String viewDocOne(Model model, String documentCode) {
 		Document document = service.viewDocOne(documentCode);
 		model.addAttribute(document);
