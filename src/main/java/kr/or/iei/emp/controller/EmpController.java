@@ -1,6 +1,7 @@
 package kr.or.iei.emp.controller;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
+import kr.or.iei.common.EmpSessionListener;
 import kr.or.iei.common.annotation.AdminChk;
 import kr.or.iei.common.annotation.NoLoginChk;
 import kr.or.iei.common.exception.CommonException;
@@ -51,8 +53,17 @@ public class EmpController {
 		Emp loginEmp = service.login(emp);
 		if(loginEmp != null) {
 			if(loginEmp.getRankCode() != null) {
-				session.setAttribute("loginEmp", loginEmp);
-				session.setMaxInactiveInterval(600);
+				if(EmpSessionListener.getInstance().isUsing(loginEmp.getEmpCode())) {
+                    CommonException ex = new CommonException("이미 아이디가 접속중 입니다.");
+                    ex.setErrorCode("DL001");
+                    ex.setData(loginEmp);
+                    ex.setUserMsg(message.getMessage(ex.getErrorCode(), null, Locale.KOREA));
+                    throw ex;
+                }else {
+                	session.setAttribute("loginEmp", loginEmp);
+					session.setMaxInactiveInterval(600);
+                	EmpSessionListener.getInstance().setSession(session, loginEmp.getEmpCode());
+                }
 			}else {
 				//승인이 안된 사원
 				  CommonException ex = new CommonException("관리자 승인 대기중입니다.");
@@ -174,6 +185,16 @@ public class EmpController {
     public String chatEmpList() {
         ArrayList<Emp> empList = service.chatEmpList();
         
+        Collection<String> empCodes = EmpSessionListener.getInstance().getEmps();
+        
+        for(String code : empCodes) {
+            for(Emp emp : empList) {
+                if(emp.getEmpCode().equals(code)) {
+                    emp.setLogin(true);
+                }
+            }
+        }    
+        
         return new Gson().toJson(empList);
     }
     
@@ -255,5 +276,22 @@ public class EmpController {
     	
     	
     	return "main/empManager";
+    }
+    
+  //기존 세션 종료
+    @PostMapping(value="removeSession.do", produces="application/json; charset=utf-8")
+    @NoLoginChk
+    @ResponseBody
+    public String removeSession(Emp emp, HttpSession session) {
+        
+        if(emp != null) {
+            EmpSessionListener.getInstance().removeSession(emp.getEmpCode());
+        
+            session.setAttribute("loginEmp", emp);
+            session.setMaxInactiveInterval(600);
+            EmpSessionListener.getInstance().setSession(session, emp.getEmpCode());
+        }
+        
+        return "1";
     }
 }
