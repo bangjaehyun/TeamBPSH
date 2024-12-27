@@ -29,7 +29,7 @@
  		.myPage{
  			position : absolute;
          	visibility: hidden;
-         	width : 100px;
+         	width : 140px;
          	height : 0px;
          	top: 55px;
          	right : 10px;
@@ -53,6 +53,8 @@
   		.myPage>ul>li{
   			font-size: 13px;
   			font-weight: bold;
+  			text-align: center;
+  			margin-bottom 5px: 
   		}
   		
   		.myPage>ul>li>a{
@@ -81,7 +83,7 @@
             	 		<li>
             	 		<c:forEach var="dept" items="${deptList}">
             	 			<c:if test="${loginEmp.deptCode eq dept.deptCode}">
-            	 				${dept.deptName}
+            	 				${dept.deptName}(${loginEmp.empName})
             	 			</c:if>
 
             	 		</c:forEach>

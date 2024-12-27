@@ -6,7 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/resources/summernote/summernote-lite.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
 	*{
@@ -66,12 +65,17 @@
 	.empName{
 		text-decoration: none;
 		font-size: 12px;
-		color : blue;
+		color : #d3d3d3;
 	}
 	
 	.empName:hover{
 		font-size: 13px;
 	}
+	
+	.login{
+		color: black;
+	}
+	
 	.arrow{
 		height: 14px;
 	}
@@ -165,6 +169,8 @@
 		min-width: 50px;
 	}
 	
+	
+	
 </style>
 </head>
 <body>
@@ -217,11 +223,16 @@
 			
 			<%-- 메시지 수신 시, 이벤트 핸들러 --%>
 			ws.onmessage = function(e){
-				const chat = JSON.parse(e.data);
-				
-				addChat(chat);
-				
-				$('.chat-div').scrollTop($('.chat-div')[0].scrollHeight);
+				if(JSON.parse(e.data).type == "chat"){
+					const chat = JSON.parse(e.data).data;
+					addChat(JSON.parse(chat));
+					$('.chat-div').scrollTop($('.chat-div')[0].scrollHeight);
+				}else if(JSON.parse(e.data).type == "login"){
+					$("#"+JSON.parse(e.data).empCode).addClass("login");
+				}
+				else if(JSON.parse(e.data).type == "logout"){
+					$("#"+JSON.parse(e.data).empCode).removeClass("login");
+				}
 			};
 			
 			<%-- 소켓 연결 종료 이벤트 핸들러 --%>
@@ -326,7 +337,6 @@
 		</c:forEach>
 		
 		
-		
 		$.ajax({
 			url : '/emp/chatEmpList.do',
 			type : "post",
@@ -334,11 +344,15 @@
 				
 				for(idx in list){
 					let emp = list[idx];
+					console.log(emp);
 					if(emp.empCode != ${loginEmp.empCode}){
 						var liEmp = $("<li></li>");
 						var item = $("<a class='empName' href='javascript:void(0)' onclick='choose(this)'></a>");
 						item.html(emp.empName);
 						item.attr('id',emp.empCode);
+						if(emp.login){
+							item.addClass('login');
+						}
 						liEmp.append(item);
 						liEmp.attr('class','menu-emp');
 						
@@ -465,6 +479,7 @@
 	 function pad(d) {
 	    	return (Number(d) < 10) ? '0' + d.toString() : d.toString();
 	  }
+	 
 	</script>
 </body>
 </html>

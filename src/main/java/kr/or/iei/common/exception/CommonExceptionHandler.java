@@ -34,6 +34,17 @@ public class CommonExceptionHandler {
 			}
 			return new Gson().toJson(jsonObj);
 		}else {
+			if(ex.getErrorCode().substring(0,2).equals("DL")) {
+				ModelAndView model = new ModelAndView("error/removeSession");
+				model.addObject("title", "오류 발생");
+				model.addObject("msg", ex.getUserMsg());
+				model.addObject("icon", "error");
+				model.addObject("obj", new Gson().toJson(ex.getData()));
+				model.addObject("url", "/emp/removeSession.do");
+				
+				return model;
+			}
+			
 			
 			ModelAndView model = new ModelAndView("error/errorMsg");
 			model.addObject("title", "오류 발생");

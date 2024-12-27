@@ -32,7 +32,7 @@ public class SocketHandler extends TextWebSocketHandler{
 	private EmpService service;
 	
 	private ArrayList<WebSocketSession> emps;
-	private HashMap<String, WebSocketSession> map;
+	public static HashMap<String, WebSocketSession> map;
 	
 	public SocketHandler() {
 		emps = new ArrayList<WebSocketSession>();
@@ -98,9 +98,14 @@ public class SocketHandler extends TextWebSocketHandler{
 	//연결된 사용자들에게 메세지 전송
 	public void sendMsg(Chat chat, String fromEmpCode, String toEmpCode) {
 			WebSocketSession ws = map.get(fromEmpCode);
+			
+			JsonObject json = new JsonObject();
+			json.addProperty("type", "chat");
+			json.addProperty("data",  new Gson().toJson(chat));
+			
 			if(ws != null) {				
 				try {
-					ws.sendMessage(new TextMessage(new Gson().toJson(chat)));
+					ws.sendMessage(new TextMessage(new Gson().toJson(json)));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -109,7 +114,7 @@ public class SocketHandler extends TextWebSocketHandler{
 			ws = map.get(toEmpCode);
 			if(ws != null) {				
 				try {
-					ws.sendMessage(new TextMessage(new Gson().toJson(chat)));
+					ws.sendMessage(new TextMessage(new Gson().toJson(json)));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

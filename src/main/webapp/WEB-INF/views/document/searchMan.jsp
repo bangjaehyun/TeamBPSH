@@ -45,6 +45,8 @@
         display: flex;
         width:33%;
         justify-content: center;
+        font-size:24px;
+        color:white;
         background-color: gray;
         border: 1px solid black;
        }
@@ -159,24 +161,18 @@
 	        </div>
 	
 	        <div class="filter" id="team">
-	           
-	            
-	           
+	     
 	        </div>
 	
 	        <div class="filter" id="emp">
-	           
-	            
-	               
-	                
-	            
+	      
 	        </div>
 	    </div>
 	    <div class="results">
 		    <span>결제 순서대로 체크해 주세요.</span>
 		    <form id="selectedEmp">
-		        <!--체크함수따라 체크예정-->
-		        
+		      
+		    
 		    </form>
 	    </div>
 	    	<div class="submit">
@@ -194,7 +190,7 @@
        
         //해당부서의 하위 팀
         $.ajax({
-        	url:"/doc/srchTeam",
+        	url:"/doc/srchTeam.do",
         	type:"post",
         	data:{"deptCode":e},
         	success:function(res){
@@ -229,7 +225,7 @@
 	function srchEmp(e){
 		 $('#emp').empty();
 		 $.ajax({
-		        url: "/doc/srchEmp",
+		        url: "/doc/srchEmp.do",
 		        type: "post",
 		        data: {"teamCode": e},
 		        success: function(res) {
@@ -289,6 +285,8 @@
 		 $(select).html(e.rankName+" "+e.empName);
 		 $(select).attr('id', e.empCode);
 		 $('#selectedEmp').append(select);
+		 $(select).attr('value',e.empCode);
+		 
 			
 	}
 	

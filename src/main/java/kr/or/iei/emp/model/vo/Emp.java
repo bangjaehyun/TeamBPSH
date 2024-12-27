@@ -17,6 +17,7 @@ public class Emp {
 	private String vacationTotal; // 휴가
 	private String vacationUse;
 	private boolean admin;
+	private boolean login;
 
 	public Emp() {
 		super();
@@ -25,7 +26,7 @@ public class Emp {
 
 	public Emp(String empCode, String teamCode, String rankCode, String deptCode, String empId, String empPw,
 			String empName, String empPhone, String empRetire, String empDate, String rankName, String deptName,
-			String salary, String vacationTotal, String vacationUse, boolean admin) {
+			String salary, String vacationTotal, String vacationUse, boolean admin, boolean login) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
@@ -43,6 +44,7 @@ public class Emp {
 		this.vacationTotal = vacationTotal;
 		this.vacationUse = vacationUse;
 		this.admin = admin;
+		this.login = login;
 	}
 
 	public String getEmpCode() {
@@ -173,13 +175,21 @@ public class Emp {
 		this.admin = admin;
 	}
 
+	public boolean isLogin() {
+		return login;
+	}
+
+	public void setLogin(boolean login) {
+		this.login = login;
+	}
+
 	@Override
 	public String toString() {
 		return "Emp [empCode=" + empCode + ", teamCode=" + teamCode + ", rankCode=" + rankCode + ", deptCode="
 				+ deptCode + ", empId=" + empId + ", empPw=" + empPw + ", empName=" + empName + ", empPhone=" + empPhone
 				+ ", empRetire=" + empRetire + ", empDate=" + empDate + ", rankName=" + rankName + ", deptName="
 				+ deptName + ", salary=" + salary + ", vacationTotal=" + vacationTotal + ", vacationUse=" + vacationUse
-				+ ", admin=" + admin + "]";
+				+ ", admin=" + admin + ", login=" + login + "]";
 	}
 
 }
