@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.vo.Chat;
+import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -125,6 +126,11 @@ public class EmpDao {
 
 	public int updateVacation(Emp emp) {
 		return sqlSession.update("emp.updateVacation", emp);
+	}
+	
+	public int reportCreate(DailyReport daily) {
+		System.out.println(daily.getEmpCode());
+		return sqlSession.insert("emp.reportCreate", daily);
 	}
 
 

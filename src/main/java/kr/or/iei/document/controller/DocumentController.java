@@ -9,18 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-
 import com.google.gson.Gson;
-
 import kr.or.iei.document.model.service.DocumentService;
 import kr.or.iei.document.model.vo.Document;
-
-import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Team;
 
@@ -126,5 +120,7 @@ public class DocumentController {
 		model.addAttribute(document);
 		return "document/viewDocOne";
 	}
+	
+
 	
 }

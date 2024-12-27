@@ -299,4 +299,20 @@
  	       use_vacation = #{vacationUse}
  	 where emp_code = #{empCode} 
  	</update>
+ 	
+ 	<insert id="reportCreate"
+ 	parameterType="dailyReport">
+ 		insert into tbl_daily_report
+ 			(
+ 				report_date,
+ 				emp_code,
+ 				report_content
+ 			)
+ 			values
+ 			(
+ 				sysdate,
+ 				#{empCode},
+ 				#{reportContent}
+ 			)
+ 	</insert>
 </mapper>

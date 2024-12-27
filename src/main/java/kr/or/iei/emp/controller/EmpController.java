@@ -1,6 +1,7 @@
 package kr.or.iei.emp.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -27,8 +28,8 @@ import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.emp.model.service.EmpService;
-import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
+import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Emp;
 
 
@@ -256,4 +257,31 @@ public class EmpController {
     	
     	return "main/empManager";
     }
+    //업무일지 창 
+    @PostMapping("dailyReportWrite.do")
+    public String dailyReportWrite(String empCode, Model model) {
+    	model.addAttribute("empCode",empCode);
+    	model.addAttribute("reportContent","test");
+    	return "emp/dailyReportWrite";
+    }
+    
+    //일일 업무일지 등록
+    @PostMapping("dailyReportCreate.do")
+    public Map<String, Object> reportCreate(DailyReport daily) {
+    	HashMap<String, Object> response = new HashMap<>();
+    	
+    	int result = service.reportCreate(daily);
+    	
+    	if(result >1) {
+    		response .put("success", true);
+    		response .put("message","일일 업무일지가 등록 되었습니다.");
+    	}else {
+    		response .put("success", false);
+    		response .put("message", "일일 업무일지 등록에 실패했습니다.");
+    	}
+    	
+    	return response;
+    }
+    
+    
 }

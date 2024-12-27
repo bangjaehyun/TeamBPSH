@@ -203,7 +203,7 @@
 	let fn = {
 		init : function () {
 			<%-- 소켓 연결 --%>
-			ws = new WebSocket("ws://192.168.10.48/emp/doChat.do");
+			ws = new WebSocket("ws://192.168.10.51/emp/doChat.do");
 			
 			<%-- 연결 시, 이벤트 핸들러 --%>
 			ws.onopen = function(){

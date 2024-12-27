@@ -13,6 +13,7 @@ import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
+import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -177,5 +178,11 @@ public class EmpService {
 		
 		return result;
 	}
+
+	public int reportCreate(DailyReport daily) {
+		int result = dao.reportCreate(daily);
+		return result;
+	}
+
 
 }

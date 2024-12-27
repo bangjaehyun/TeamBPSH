@@ -207,7 +207,7 @@ table tr:hover {
 	//회원번호로 main 랜더링
 		$(document).ready(function() {
 			var empCode = $('input[name="empCode"]').val();
-
+			
 			// AJAX 요청
 			$.ajax({
 				type : 'post',
@@ -344,8 +344,6 @@ table tr:hover {
 			});
 
 		});
-		
-		
 		
 	</script>
 </body>
