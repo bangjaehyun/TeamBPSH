@@ -122,6 +122,11 @@ public class DocumentService {
 		return document;
 
 	}
+
+	public int insertSpending(Document document) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 }

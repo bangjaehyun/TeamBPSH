@@ -6,6 +6,10 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
+
+      
+
 <style>
 * {
 	padding: 0px;
@@ -223,10 +227,9 @@ label {
 
 					<div>
 						<label for="vac-content">내용</label>
-						<div class="vac-content">
-							<textarea name="docContent" maxlength="600"
-								placeholder="최대 600자까지 입력 가능합니다."></textarea>
-						</div>
+						<textarea  id="summernote" class="vac-content">
+							
+						</textarea>
 					</div>
 					<div class="insert-file">
 						<input type="file" name="files" multiple>
@@ -241,10 +244,12 @@ label {
 	</div>
 	</div>
 </body>
+<script src="/resources/summernote/summernote-lite.js"></script>
+<script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
 <script>
-
 //작성조건이 맞는가?
-const checkDocument={
+
+var checkDocument={
 		"docTitle":	false,
 		"sign":		false,
 		"date":		false,
@@ -253,6 +258,105 @@ const checkDocument={
 		"ovarlap":	true
 		
 };
+
+
+
+
+//const checkDocument=null;
+
+//섬머노트 테스트
+//     $(document).ready(function() {
+        $('#summernote').summernote(   {
+            codeviewFilter : false, // 코드 보기 필터 비활성화
+            codeviewIframeFilter : true, // 코드 보기 iframe 필터 비활성화
+            height : '300', // 에디터 높이
+            width : '100%',
+            minHeight : null, // 최소 높이
+            maxHeight : null, // 최대 높이
+            focus : false, // 에디터 로딩 후 포커스 설정
+            lang : 'ko-KR', // 언어 설정 (한국어)
+            disableDragAndDrop : false,
+            tabDisable : true,
+            
+            disableResizeEditor : true, // Does not work either   
+            
+            toolbar : [ [ 'style', [ 'style' ] ], // 글자 스타일 설정 옵션
+            [ 'fontsize', [ 'fontsize' ] ], // 글꼴 크기 설정 옵션
+            [ 'font', [ 'bold', 'underline', 'clear' ] ], // 글자 굵게, 밑줄, 포맷 제거 옵션
+            [ 'color', [ 'color' ] ], // 글자 색상 설정 옵션
+            [ 'table', [ 'table' ] ], // 테이블 삽입 옵션
+            [ 'para', [ 'ul', 'ol', 'paragraph' ] ], // 문단 스타일, 순서 없는 목록, 순서 있는 목록 옵션
+            [ 'height', [ 'height' ] ], // 에디터 높이 조절 옵션
+            [ 'insert', [ 'picture', 'link', 'video' ] ], // 이미지 삽입, 링크 삽입, 동영상 삽입 옵션
+            [ 'view', [ 'fullscreen', 'help' ] ], // 코드 보기, 전체 화면, 도움말 옵션
+            ],
+
+            fontSizes : [ '8', '9', '10', '11', '12', '14', '16', '18',
+                  '20', '22', '24', '28', '30', '36', '50', '72', ], // 글꼴 크기 옵션
+
+            styleTags : [ 'p', // 일반 문단 스타일 옵션
+            {
+               title : 'Blockquote',
+               tag : 'blockquote',
+               className : 'blockquote',
+               value : 'blockquote',
+            }, // 인용구 스타일 옵션
+            'pre', // 코드 단락 스타일 옵션
+            {
+               title : 'code_light',
+               tag : 'pre',
+               className : 'code_light',
+               value : 'pre',
+            }, // 밝은 코드 스타일 옵션
+            {
+               title : 'code_dark',
+               tag : 'pre',
+               className : 'code_dark',
+               value : 'pre',
+            }, // 어두운 코드 스타일 옵션
+            'h1', 'h2', 'h3', 'h4', 'h5', 'h6', // 제목 스타일 옵션
+            ],
+            
+            callbacks : {                                                    
+               onImageUpload : function(files, editor, welEditable) {   
+                      // 다중 이미지 처리를 위해 for문을 사용했습니다.
+                  for (var i = 0; i < files.length; i++) {
+                     uploadImage(files[i], this);
+                  }
+               }
+            }
+        });
+//     });
+        $('input[name="files"]').on('change', function() {
+            const files = $(this)[0].files;
+           
+        });
+    
+    function uploadImage(file, editor){
+        const form = new FormData(); //<form> 태그
+        form.append("uploadFile", file); //<input type="file" name="uploadFile">
+        
+//         $.ajax ({
+//            url : "/doc/documentImage.do",
+//            type : "post", //post 필수
+//            data : form,  //전송 데이터
+//            processData : false, //기본 문자열 전송 세팅 해제
+//            contentType : false, //기본 form enctype 해제
+//            cache:false,
+//            success : function(savePath){
+//               //savePath : 파일 업로드 경로
+//               $(editor).summernote("insertImage", savePath); //에디터 본문에 이미지 표기
+              
+//               //게시글 작성 시, 이미지 중복 등록 방지
+//             //  $("input[id*=note-dialog]").remove();
+//            },
+//            error : function(){
+//               console.log("오류");
+//            }
+//         });
+     }
+
+
 
 
 $('#title').on('input',function(){
@@ -289,7 +393,7 @@ function totalDays() {
 
     const time = end - start; 
     const days = time / (1000 * 60 * 60 * 24);
-	console.log(days);
+	
     result.textContent = "총"+ (days + 1)+"일";
     checkDocument.date=true;
 }
@@ -304,10 +408,7 @@ const endDate = $('#endDate');
 const halfTime = $('.half-time');
 const result = $('.result');
 
-console.log(halfChecked);
-console.log(endDate);
-console.log(halfTime);
-console.log(result);
+
 
 if (halfChecked) {
 	 $('#vacEnd').val($('#vacStart').val());
@@ -358,7 +459,7 @@ function onDateChange() {
 }
 
 	function searchMan(e) {
-		console.log(e);
+		
 		let popupWidth = 800;
 		let popupHeight = 800;
 
@@ -395,7 +496,14 @@ function onDateChange() {
 
 	
 	
-	
+	var selectedFiles = []; 
+
+	$('input[name="files"]').on('change', function() {
+		selectedFiles = []
+	   
+	    selectedFiles = $(this)[0].files;
+	    
+	});
 	
 	
 	function writeDocument() {
@@ -470,7 +578,7 @@ function onDateChange() {
 	            return;
 	        }
 	    }
-
+	    
 	    const formData = new FormData();
 	    formData.append("documentTitle", $('#title').val());
 	    formData.append("documentTypeCode","va");
@@ -478,7 +586,7 @@ function onDateChange() {
 	    formData.append("halfTime", $('input[name="select"]:checked').val());
 	    formData.append("start", $('#vacStart').val());
 	    formData.append("end", $('#vacEnd').val());
-	    formData.append("documentContent", $('textarea[name="docContent"]').val());
+	    formData.append("documentContent",$('#summernote').val());
 		formData.append("empCode",${loginEmp.empCode});
 	    
 	    const signsList = [];
@@ -486,21 +594,29 @@ function onDateChange() {
 	        signsList.push($(this).val()); 
 	    });
 	    formData.append("signEmpList", signsList);
-			console.log(signsList);
+			
 			
 	    const refsList = [];
 	    $('#ref button').each(function() {
 	        refsList.push($(this).val());
 	    });
 	    formData.append("refEmpList", refsList);
-	    console.log(refsList);
-	    
+	   
+	   
 	    // 파일 처리
-	    const files = $('input[name="files"]')[0].files;
-	    for (let i = 0; i < files.length; i++) {
-	        formData.append("files", files[i]);
-	    }
-
+// 	    const files = $('input[name="files"]')[0].files;
+// 	    console.log(files);
+// 		for (let i = 0; i < files.length; i++) {
+// 		    formData.append("files", files[i]);
+// 		    console.log(files[i]);
+// 		}
+		if (selectedFiles.length > 0) {
+		        for (let i = 0; i < selectedFiles.length; i++) {
+		            formData.append("files", selectedFiles[i]);
+		            console.log('파일 전송:', selectedFiles[i]);
+		        }
+		    }
+	
 	    
 	    $.ajax({
 	        url: "/doc/writeVacation.do",
