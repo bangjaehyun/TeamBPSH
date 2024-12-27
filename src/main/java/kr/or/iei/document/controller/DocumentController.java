@@ -13,8 +13,11 @@ import java.util.Random;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.connector.Response;
+import org.apache.maven.classrealm.ClassRealmRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -27,7 +30,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import com.google.gson.Gson;
+
 
 import kr.or.iei.document.model.service.DocumentService;
 import kr.or.iei.document.model.vo.Document;
@@ -37,7 +42,7 @@ import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.VacationHalf;
-import kr.or.iei.emp.model.service.EmpService;
+
 
 
 
@@ -143,31 +148,65 @@ public class DocumentController {
 		
 		return new Gson().toJson(list);
 	}
+	//이미지 넣기
+	@PostMapping("documentImage.do")
+	@ResponseBody
+	public void insertDocumentImage(HttpServletRequest request,HttpServletResponse response, File uploadFile ) {
+		request.getSession().getServletContext().getRealPath("/");
+		String today=new SimpleDateFormat("yyyyMMdd").format(new Date());
+		String savePath="/resources/documentImages/"+today+"/";
+		String resPath=savePath;
+		int maxSize=1024*1024*100;
+		File directory=new File(savePath);
+		if(!directory.exists()) {
+			directory.mkdirs();
+		}
+//		try {
+//		//	MultipartRequest mRequest=new MultipartRequest(request, savePath,"utf-8");
+//		 
+//			//response.getWriter().print(resPath+mRequest.getFilesystemName("uploadFile"));
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+	
+	}
 
 	
 	//휴가신청서
 		@PostMapping(value="writeVacation.do",produces="application/json; charset=utf-8")
 		@ResponseBody
-		public int writeDocument(HttpSession session,HttpServletRequest request,Document document,@RequestParam("files") MultipartFile[] files,@RequestParam("signEmpList") List<String> signEmpList,@RequestParam("refEmpList") List<String> refEmpList,DocumentSelectDay selDay,VacationHalf vacHalf,Model m ) {
-			
+		public int writeVacation(HttpSession session,HttpServletRequest request,Document document,@RequestParam MultipartFile[] files,@RequestParam List<String> signEmpList, @RequestParam List<String> refEmpList,DocumentSelectDay selDay,VacationHalf vacHalf,Model m ) {
+			String root=request.getSession().getServletContext().getRealPath("/resources/");
 			
 			//파일관련 기능
 			ArrayList<DocumentFile>fileList=new ArrayList<DocumentFile>();
+			
 			String documentCode=service.selectDocumentCode();
 			document.setDocumentCode(documentCode);
+			Date date=new Date();
+			String today=new SimpleDateFormat("yyyyMMdd").format(date);
+			
+			String savePath = root + "documentFiles" + File.separator + today + File.separator;
+
+			
+			File directory=new File(savePath);
+			if(!directory.exists()) {
+				directory.mkdir();
+			}
 			
 			for (int i=0;i<files.length;i++) {
 				MultipartFile file=files[i];
-				System.out.println("파일 크기: " + file.getSize());
+				
 				if(!file.isEmpty()) {
-					String savePath = request.getSession().getServletContext().getRealPath("/resources/documentFiles/");
+					
 					String originalFileName =file.getOriginalFilename();
 					String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					
-					String toDay = new SimpleDateFormat("yyyyMMdd").format(new Date());
+					
 					int ranNum = new Random().nextInt(9999)+1;
-					String filePath=fileName+"_"+toDay+"_"+ranNum+extension;
+					String filePath=fileName+"_"+today+"_"+ranNum+extension;
 					savePath+=filePath;
 					
 					BufferedOutputStream bos=null;
@@ -177,7 +216,7 @@ public class DocumentController {
 							FileOutputStream fos=new FileOutputStream(new File(savePath));
 							bos = new BufferedOutputStream(fos);
 							bos.write(bytes);
-							bos.flush();
+							
 							DocumentFile docFile=new DocumentFile();
 							docFile.setFileName(originalFileName);
 							docFile.setFilePath(filePath);
@@ -186,13 +225,12 @@ public class DocumentController {
 					}catch(IOException e) {
 						e.printStackTrace();
 					}finally {
-						
-							try {
-								bos.flush();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}				
+						try {
+							bos.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -240,6 +278,106 @@ public class DocumentController {
 			int result=service.insertVacation(document,selDay, vacHalf);
 			return result;
 		}
+		
+		
+		//지출결의서 작성
+		@PostMapping(value="writeSpending.do",produces="application/json; charset=utf-8")
+		@ResponseBody
+		public int writeSpending(HttpSession session,HttpServletRequest request,Document document,@RequestParam MultipartFile[] files,@RequestParam List<String> signEmpList, @RequestParam List<String> refEmpList,@RequestParam List<String> spendingList,Model m ) {
+			String root=request.getSession().getServletContext().getRealPath("/resources/");
+			
+			//파일관련 기능
+			ArrayList<DocumentFile>fileList=new ArrayList<DocumentFile>();
+			
+			String documentCode=service.selectDocumentCode();
+			document.setDocumentCode(documentCode);
+			Date date=new Date();
+			String today=new SimpleDateFormat("yyyyMMdd").format(date);
+			
+			String savePath = root + "documentFiles" + File.separator + today + File.separator;
+
+			File directory=new File(savePath);
+			if(!directory.exists()) {
+				directory.mkdir();
+			}
+			
+			for (int i=0;i<files.length;i++) {
+				MultipartFile file=files[i];
+				System.out.println(file);
+				System.out.println("파일 크기: " + file.getSize());
+			
+				if(!file.isEmpty()) {
+					
+					String originalFileName =file.getOriginalFilename();
+					String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+					
+					
+					int ranNum = new Random().nextInt(9999)+1;
+					String filePath=fileName+"_"+today+"_"+ranNum+extension;
+					savePath+=filePath;
+					
+					BufferedOutputStream bos=null;
+					
+					try {
+							byte []bytes=file.getBytes();
+							FileOutputStream fos=new FileOutputStream(new File(savePath));
+							bos = new BufferedOutputStream(fos);
+							bos.write(bytes);
+							
+							DocumentFile docFile=new DocumentFile();
+							docFile.setFileName(originalFileName);
+							docFile.setFilePath(filePath);
+							docFile.setDocumentCode(documentCode);
+							fileList.add(docFile);
+					}catch(IOException e) {
+						e.printStackTrace();
+					}finally {
+						try {
+							bos.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			document.setFileList(fileList);
+			
+			
+			//결재자
+			 ArrayList<DocumentSign> signList = new ArrayList<>();
+			    for (int i = 0; i < signEmpList.size(); i++) {
+			        DocumentSign sign = new DocumentSign();
+			        sign.setEmpCode(signEmpList.get(i));
+			        sign.setDocumentSeq(String.valueOf(i + 1));
+			        sign.setDocumentCode(documentCode);
+			        signList.add(sign);
+			    }
+			    document.setSignList(signList);
+			
+			    ArrayList<DocumentReference> refList = new ArrayList<>();
+			    for (String refCode : refEmpList) {
+			        DocumentReference ref = new DocumentReference();
+			        ref.setEmpCode(refCode);
+			        ref.setDocumentCode(documentCode);
+			        refList.add(ref);
+			    }
+			    document.setRefList(refList);
+			
+			   
+			   
+			    		
+			    				
+
+			
+			
+				
+				
+			int result=service.insertSpending(document);
+			return result;
+		}
+		
 
 
 
