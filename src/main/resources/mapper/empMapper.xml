@@ -162,9 +162,10 @@
  	 where team_code = #{_string} 
 	</select>
  	
- 	<select id="chatEmpList"
- 	resultType="emp">
- 	select emp_code as empCode,
+ 	 <select id="chatEmpList"
+     parameterType="string"
+     resultType="emp">
+       select emp_code as empCode,
  		   team_code as teamCode,
  		   rank_code as rankCode,
  		   emp_id as empId,
@@ -172,11 +173,17 @@
  		   emp_phone as empPhone,
  		   emp_retire as empRetire,
  		   emp_date as empDate,
- 		   dept_code as deptCode
- 	  from tbl_emp
- 	  join tbl_team using(team_code) 
- 	 where emp_code is not null
- 	</select>
+ 		   dept_code as deptCode,
+ 		   (select fromEmp.read_count
+			  from tbl_chat_group fromEmp
+			  JOIN tbl_chat_group toEmp
+				ON fromEmp.group_no = toEmp.group_no
+			 WHERE fromEmp.emp_code = e.emp_code
+               AND toEmp.emp_code = #{empCode}) as readCount
+ 	  from tbl_emp e
+ 	  join tbl_team using(team_code)
+ 	 where emp_code is not null and emp_code != #{empCode}
+     </select>
  	<select id="selectChatGroup"
  	parameterType="map"
  	resultType="string">
@@ -209,6 +216,7 @@
  	parameterType="string"
  	resultType="chat">
  	select emp_code as empCode,
+ 		   group_no as groupNo,
  		   msg_gb as chatMsgGb,
  		   msg as chatMsg,
  		   file_name as chatFileName,
@@ -315,4 +323,20 @@
  				#{reportContent}
  			)
  	</insert>
+ 	
+ 	<update id="chatAddReadCount"
+     parameterType="chat">
+     update tbl_chat_group
+        set read_count = read_count +1
+      where group_no = #{groupNo} 
+        and emp_code = #{empCode}
+     </update>
+     
+     <update id="chatReSetReadCount"
+     parameterType="map">
+     update tbl_chat_group
+        set read_count = 0
+      where group_no = #{groupNo} 
+        and emp_code != #{empCode}
+     </update>
 </mapper>

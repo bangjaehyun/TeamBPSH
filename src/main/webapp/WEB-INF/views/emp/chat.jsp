@@ -60,6 +60,12 @@
 	
 	.send{
 		width: 15%;
+		background: #fce025;
+		border: none;
+	}
+	
+	.send>img{
+		width: 50%;
 	}
 	
 	.empName{
@@ -100,7 +106,7 @@
 	
 	
 	.menu-emp{
-		margin-left : 40px;
+		margin-left : 30px;
 	}
 	
 	ul{
@@ -169,6 +175,41 @@
 		min-width: 50px;
 	}
 	
+	.readCount{
+		width : 18px;
+		text-align : center;
+		display : inline-block;
+		margin-left : 3px;
+		font-size: 12px;
+		color: white;
+		background-color: red;
+ 		border-radius: 12px; 
+	}
+	
+	.fileBox{
+		display : flex;
+		gap : 5px;
+		text-align : center;
+		align-items: center;
+		background: white;
+		padding: 5px;
+		border-radius: 15px;
+	}
+	
+	
+	.fileBox a{
+		width : 50px;
+		height : 50px;
+		border: 1px solid black;
+		border-radius: 50px;
+		align-content: center;
+	}
+	
+	.fileBox img{
+		margin : auto 0;
+		height: 38px;
+	}
+	
 	
 	
 </style>
@@ -189,8 +230,7 @@
 			<div class="chat-div"></div>
 			<div class="message-div">
 				<textarea id="message-box" class="message-box" ></textarea>
-				<button class="send" onclick="fn.sendValidate()">버튼</button>
-<!-- 				<input type="file" name="uploadFile"> <br> -->
+				<button class="send" onclick="fn.sendValidate()"><img src="/resources/images/send.png"></button>
 			</div>
 		</div>
 	</div>
@@ -209,7 +249,7 @@
 	let fn = {
 		init : function () {
 			<%-- 소켓 연결 --%>
-			ws = new WebSocket("ws://192.168.10.51/emp/doChat.do");
+			ws = new WebSocket("ws://192.168.10.48/emp/doChat.do");
 			
 			<%-- 연결 시, 이벤트 핸들러 --%>
 			ws.onopen = function(){
@@ -225,13 +265,42 @@
 			ws.onmessage = function(e){
 				if(JSON.parse(e.data).type == "chat"){
 					const chat = JSON.parse(e.data).data;
-					addChat(JSON.parse(chat));
+					if(JSON.parse(chat).chatMsgGb == "1"){
+						addFile(JSON.parse(chat));
+					}else{
+						addChat(JSON.parse(chat));
+					}
 					$('.chat-div').scrollTop($('.chat-div')[0].scrollHeight);
 				}else if(JSON.parse(e.data).type == "login"){
 					$("#"+JSON.parse(e.data).empCode).addClass("login");
 				}
 				else if(JSON.parse(e.data).type == "logout"){
 					$("#"+JSON.parse(e.data).empCode).removeClass("login");
+				}else if(JSON.parse(e.data).type == "readCount"){
+					$.ajax({
+						url : "/emp/addReadCount.do",
+						type : "post",
+						data : {"empCode" : JSON.parse(e.data).empCode,
+								"groupNo" : JSON.parse(e.data).groupNo},
+						success : function(res){
+							console.log(JSON.parse(e.data));
+							if(JSON.parse(e.data).socket != null){
+								console.log($("#"+JSON.parse(e.data).empCode).next());
+								if($("#"+JSON.parse(e.data).empCode).next().length == 0){
+									let readCount = $('<div></idv>');
+									readCount.html(1);
+									readCount.attr('class','readCount');
+									$("#"+JSON.parse(e.data).empCode).parent().append(readCount);
+								}else{
+									$("#"+JSON.parse(e.data).empCode).next().html(Number($("#"+JSON.parse(e.data).empCode).next().html())+1);
+								}
+							}
+							console.log("알람 카운트 증가");
+						},
+						error : function(){
+							console.log("ajax 오류")
+						}
+					});
 				}
 			};
 			
@@ -241,35 +310,8 @@
 			};
 		}	
 		,sendValidate : function (enter) {
-			//파일 서버 업로드 -> 메시지 전송
-// 			let file = $('input[type=file]')[0].files;
-
-// 			if(file.length > 0){
-// 				file = file[0];
-				
-// 				const formData = new FormData();
-// 				formData.append("file", file);
-// 				formData.append("memberId", memberId);
-				
-// 				$.ajax({
-// 		            url: "/chat/fileUpload.do",
-// 		            type: "post",
-// 		            data: formData,
-// 		            processData: false,
-// 		            contentType: false,
-// 		            success: function(obj) {
-// 		            	fn.sendChat(obj); //fileName, filePath
-		            	
-// 		            },
-// 		            error: function() {
-// 		                alert("파일 업로드 실패: " + error);
-// 		            }
-// 		        });
-// 			}else {
 				let obj = {};
 				fn.sendChat(obj,enter);
-// 			}
-			
 		}
 		,sendChat : function (sendObj,enter) {
 			str = $('.message-box').val();
@@ -279,7 +321,6 @@
 				str = str.slice(0, -5);
 			}
 			
-			console.log(str);
 			sendObj.type = "chat";
 			sendObj.groupNo = groupNo;
 			sendObj.empCode= empCode;
@@ -287,24 +328,64 @@
 			sendObj.toEmp = toEmp;
 			sendObj.msg = str;
 			
-			
 			ws.send(JSON.stringify(sendObj));
 			
 			//기존 입력값 초기화
 			$(".message-box").val(""); 
-// 			$('input[type=file]').val("");
 			
 		}
 		,chatFileDown : function(fileName, filePath){
 			fileName = encodeURIComponent(fileName);
 			filePath = encodeURIComponent(filePath);
 			
-			location.href = "/chat/fileDown.do?fileName="+fileName+"&filePath="+filePath;
+			
+				location.href = "/emp/chatFileDown.do?fileName="+fileName+"&filePath="+filePath;
 
 		}
 	};
 	
 	
+	<%-- 기본 드래그 오버 방지--%>
+	 $('#message-box').on("dragover", function(e) {
+		    e.preventDefault();
+		  });
+
+		  <%-- 드롭 이벤트 처리 --%>
+		  $('#message-box').on("drop", function(e) {
+		    e.preventDefault();
+		    const files = e.originalEvent.dataTransfer.files; // 드롭된 파일 가져오기
+
+		    if (files.length > 0) {
+		      console.log("드롭된 파일:", files);
+		      uploadFile(files[0]);
+		    } else {
+		      console.warn("드롭된 파일이 없습니다.");
+		    }
+		  });
+		  
+		  
+		// 파일 업로드 함수
+		  function uploadFile(file) {
+			console.log(file);
+		    const formData = new FormData();
+		    formData.append("file", file); // 서버에서 받을 파일 필드 이름
+			
+		    $.ajax({
+		      url: '/emp/chatUpload.do', // 서버의 파일 업로드 처리 URL
+		      type: 'POST',
+		      data: formData,
+		      processData: false, 
+		      contentType: false, 
+		      success: function(obj) {
+		        fn.sendChat(obj);
+		      },
+		      error: function() {
+		        console.error("업로드 실패");
+		      }
+		    });
+		}
+	
+	<%-- 컨텍스트 메뉴 클릭시에 해당 img 동적으로 변경 --%>
 	function menuClick(obj){
 		if($(obj).next().css('display') == 'none'){
 			$(obj).children('img').css('transform','rotate(90deg)');
@@ -316,6 +397,7 @@
 	}
 	
 	$(document).ready(function(){
+		<%-- 팀별로 li태그 생성--%>
 		<c:forEach var="team" items="${teamList}">
 			var liEl = $('<li></li>');
 			var divEl = $('<div onclick="menuClick(this)"></div>')
@@ -336,29 +418,38 @@
 			$('#${team.deptCode}').append(liEl);
 		</c:forEach>
 		
-		
+		<%-- 본인 제외 사원 조회후 각 팀별로 넣어주고 읽지 않은 메시지가 있다면 표시 --%>
 		$.ajax({
 			url : '/emp/chatEmpList.do',
 			type : "post",
+			data : {"empCode" : "${loginEmp.empCode}"},
 			success : function(list){
-				
 				for(idx in list){
 					let emp = list[idx];
 					console.log(emp);
-					if(emp.empCode != ${loginEmp.empCode}){
-						var liEmp = $("<li></li>");
-						var item = $("<a class='empName' href='javascript:void(0)' onclick='choose(this)'></a>");
+						let liEmp = $("<li></li>");
+						<%-- 사원 이름 --%>
+						let item = $("<a class='empName' href='javascript:void(0)' onclick='choose(this)'></a>");
+						
 						item.html(emp.empName);
 						item.attr('id',emp.empCode);
+						<%-- 로그인 하였을 경우와 하지 않았을경우에 색 다르게 표현 --%>
 						if(emp.login){
 							item.addClass('login');
 						}
+						
 						liEmp.append(item);
+						<%-- 기존 읽지 않은 메시지가 있다면 표현 --%>
+						if(emp.readCount > 0){
+							let readCount = $('<div></idv>');
+							readCount.html(emp.readCount);
+							readCount.attr('class','readCount');
+							liEmp.append(readCount);
+						}
 						liEmp.attr('class','menu-emp');
 						
 						$('#'+ emp.teamCode).append(liEmp);
-					}
-				};
+				}
 				
 			},
 			error : function(){
@@ -371,6 +462,7 @@
 	
 	<%-- 사원 선택시 채팅리트스 select --%>
 	function choose(obj){
+		$(obj).next().html("");
 		toEmp =  $(obj).attr('id');
 		<%-- 기존 채팅내용 제거 --%>
 		$(".chat-div").children().remove();
@@ -380,11 +472,25 @@
 			data : {'fromEmpCode' : '${loginEmp.empCode}',
 					'toEmpCode' : toEmp},
 			success : function(res){
+				let msg = {
+						type     : "group",
+						empCode : empCode,
+						groupNo : res.groupNo
+					};
+					<%-- 채팅 그룹 설정하기 위하여 서버에 전송 --%>
+					ws.send(JSON.stringify(msg));
+				
 				for(let i = 0; i < res.chatList.length; i++){
 					let chat = res.chatList[i];
 					<%--채팅 정보--%>
-					addChat(chat);
+					console.log(chat);
+					if(chat.chatMsgGb == "1"){
+						addFile(chat);
+					}else{
+						addChat(chat);
+					}
 				}
+				
 				<%--스크롤 최 하단으로 이동--%>
 				$('.chat-div').scrollTop($('.chat-div')[0].scrollHeight);
 				groupNo = res.groupNo;
@@ -446,12 +552,77 @@
 		}
 	}
 	
+	
+	function addFile(chat){
+		let date = getDay(chat.chatDate);
+		if(chat.empCode == ${loginEmp.empCode}){
+			let divEl = $('<div></div>');
+			let namDiv = $('<div></div>');
+			let name = $('<span></span>');
+			let msgDiv = $('<div></div>');
+			let fileBox = $('<div></div>');
+			let fileName = $('<span></span>');
+			let fileDown = $('<a></a>');
+			let img = $('<img src="/resources/images/filedown.png"></img>');
+			let time = $('<span></span>');
+			name.html(chat.empName);
+			namDiv.append(name);
+			namDiv.attr('class', 'name-right');
+			time.html(getTime(chat.chatDate));
+			time.attr('class', 'time');
+			msgDiv.append(time);
+			fileDown.attr('href','javascript:void(0)');
+			fileDown.attr('onclick', 'fn.chatFileDown('+ "'" + chat.chatFileName + "'" +','+  "'" + chat.chatFilePath + "'" +')');
+			fileDown.append(img);
+			fileName.html(chat.chatFileName);
+			fileBox.append(fileName);
+			fileBox.append(fileDown);
+			fileBox.attr('class','fileBox');
+			msgDiv.append(fileBox);
+			msgDiv.attr('class', 'msg-right');
+			divEl.append(namDiv);
+			divEl.append(msgDiv);
+			divEl.attr('class','msg-div');
+			$(".chat-div").append(divEl);
+		}else{
+			let divEl = $('<div></div>');
+			let namDiv = $('<div></div>');
+			let name = $('<span></span>');
+			let msgDiv = $('<div></div>');
+			let fileBox = $('<div></div>');
+			let fileName = $('<span></span>');
+			let fileDown = $('<a></a>');
+			let img = $('<img src="/resources/images/filedown.png"></img>');
+			let time = $('<span></span>');
+			name.html(chat.empName);
+			namDiv.append(name);
+			namDiv.attr('class', 'name-left');
+			time.html(getTime(chat.chatDate));
+			time.attr('class', 'time');
+			fileDown.attr('href','javascript:void(0)');
+			fileDown.attr('onclick', 'fn.chatFileDown('+ "'" + chat.chatFileName + "'" +','+  "'" + chat.chatFilePath + "'" +')');
+			fileDown.append(img);
+			fileName.html(chat.chatFileName);
+			fileBox.append(fileName);
+			fileBox.append(fileDown);
+			fileBox.attr('class','fileBox');
+			msgDiv.append(fileBox);
+			msgDiv.append(time);
+			msgDiv.attr('class', 'msg-left');
+			divEl.append(namDiv);
+			divEl.append(msgDiv);
+			divEl.attr('class','msg-div');
+			$(".chat-div").append(divEl);
+		}
+	}
+	
 	$('.message-box').keyup(function(e){
 		 if (e.keyCode == 13 && !e.shiftKey){
 	        fn.sendValidate(false);
 		 }
 	});
 	
+	<%-- 사이즈 변경 못하게 고정 --%>
 	$(window).resize(function () {
 	    window.resizeTo(600, 800);
 	});

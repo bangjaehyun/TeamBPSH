@@ -27,7 +27,7 @@
         	justify-content : space-between;
             width: 100%;
             height: 50px;
-            background: linear-gradient(#99CCFF, #CCCCFF);
+            background: #e0e0e0;
         }
         
         .header-img{
@@ -45,6 +45,11 @@
         	display: flex;	
         }
         .header-my{
+        	margin: auto 15px;
+        	height: 40px;
+        }
+        
+        .header-notification{
         	margin: auto 0;
         	height: 40px;
         }
@@ -53,6 +58,19 @@
        	 visibility: visible;
        	 height : 80px;
        	 opacity: 1;
+       }
+       
+       .notification-count{
+       		background : red;
+       		display : inline-block;
+       		align-content : center;
+       		text-align: center;
+       		width: 20px;
+       		height: 20px;
+       		border-radius: 10px;
+       }
+       .notification-count>span{
+       		color: white;
        }
        
     </style>
@@ -65,6 +83,10 @@
             <a href="javascript:void(0)" class="mainPage"><img class="header-img" src="/resources/images/logo.png"></a>
         </div>
            <div class="header-right">
+           	<img class="header-notification" src="/resources/images/notification.png">
+           	<div class="notification-count">
+           		<span>1</span>
+           	</div>
             <img class="header-my" src="/resources/images/person.png">
         </div>                
     </div>

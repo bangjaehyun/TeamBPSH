@@ -77,8 +77,9 @@ public class EmpDao {
 		return sqlSession.insert("emp.insertAdmin", emp);
 	}
 	
-    public List<Emp> chatEmpList() {
-        return sqlSession.selectList("emp.chatEmpList");
+	 public List<Emp> chatEmpList(String empCode) {
+		 	System.out.println(empCode);
+	        return sqlSession.selectList("emp.chatEmpList", empCode);
     }
 
     public String selectChatGroup(HashMap<String, String> map) {
@@ -133,6 +134,13 @@ public class EmpDao {
 		return sqlSession.insert("emp.reportCreate", daily);
 	}
 
+	public void chatAddReadCount(Chat chat) {
+	    sqlSession.update("emp.chatAddReadCount", chat);
+	}
+
+	public int chatResetReadCount(HashMap<String, String> groupMap) {
+	    return sqlSession.update("emp.chatReSetReadCount", groupMap);
+	}
 
 
 }

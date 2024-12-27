@@ -1,11 +1,24 @@
 package kr.or.iei.emp.controller;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.mindrot.jbcrypt.BCrypt;
@@ -14,9 +27,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.google.gson.Gson;
 import kr.or.iei.common.EmpSessionListener;
 import kr.or.iei.common.annotation.AdminChk;
@@ -25,6 +41,7 @@ import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.emp.model.service.EmpService;
+import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Emp;
@@ -178,8 +195,8 @@ public class EmpController {
     
     @PostMapping(value="chatEmpList.do", produces="application/json; charset=utf-8")
     @ResponseBody
-    public String chatEmpList() {
-        ArrayList<Emp> empList = service.chatEmpList();
+    public String chatEmpList(String empCode) {
+        ArrayList<Emp> empList = service.chatEmpList(empCode);
         
         Collection<String> empCodes = EmpSessionListener.getInstance().getEmps();
         
@@ -319,5 +336,105 @@ public class EmpController {
         
         return "1";
     }
+    
+    
+    @PostMapping(value="addReadCount.do", produces="application/json; charset=utf-8")
+    @ResponseBody
+    public String addReadCount(Chat chat) {
+        service.chatAddReadCount(chat);
+        
+        return "1";
+    }
+    
+    
+    //채팅 파일 업로드
+      @PostMapping(value="chatUpload.do", produces = "application/json; charset=utf-8")
+      @ResponseBody
+      public String chatUpload(HttpServletRequest request, MultipartFile file) {
+          Chat chat = null;
+          if(!file.isEmpty()) {
+
+              String savePath = request.getSession().getServletContext().getRealPath("/resources/chatUpload/");
+              String originalFilename = file.getOriginalFilename();
+              String fileName = originalFilename.substring(0, originalFilename.lastIndexOf("."));
+              String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+              
+              //서버 업로드 파일명 중복되지 않도록
+              String toDay = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+              int ranNum = new Random().nextInt(100000) +1;
+              String filePath = fileName + "_" + toDay + "_" + ranNum + extension;
+              
+              savePath += filePath;
+              
+              try {
+                  byte[] bytes = file.getBytes();
+                  BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(new File(savePath)));
+                  bos.write(bytes);
+                  bos.close();
+                  
+                  chat = new Chat();
+                  chat.setChatFileName(originalFilename);
+                  chat.setChatFilePath(filePath);
+                  
+                  //result = service.insertChatFile(chat);
+              } catch (IOException e) {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+              }
+          }
+          
+          return new Gson().toJson(chat);
+      }
+      
+      //채팅 파일 다운
+      @GetMapping(value="/chatFileDown.do", produces = "application/octet-stream;")
+      public void chatFileDown(HttpServletRequest request, HttpServletResponse response, String fileName, String filePath) {
+            
+            String root = request.getSession().getServletContext().getRealPath("/resources/chatUpload/");
+          
+          
+            BufferedInputStream bis = null;
+            BufferedOutputStream bos = null;
+            
+            try {
+               FileInputStream fis = new FileInputStream(root + filePath);
+               
+               bis = new BufferedInputStream(fis);
+               
+               ServletOutputStream sos = response.getOutputStream();
+               
+               bos = new BufferedOutputStream(sos);
+               
+               String resFilename = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+               
+               response.setHeader("Content-Disposition", 
+                       "attachment; filename="+resFilename);
+               
+               while(true) {
+                  int read = bis.read();
+                  if(read == -1) {
+                      break;
+                  }else {
+                      bos.write(read);
+                      System.out.println(read);
+                  }
+              }
+               
+            } catch (FileNotFoundException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            } catch (IOException e) {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+            } finally {
+                try {
+                    bos.close();
+                    bis.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+      }
 
 }
