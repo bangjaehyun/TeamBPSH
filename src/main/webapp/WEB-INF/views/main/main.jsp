@@ -285,6 +285,7 @@ table tr:hover {
 													}
 													row += '</tr>';
 													tbody.append(row);
+													
 												});
 								
 								

@@ -127,6 +127,11 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public ArrayList<Document> apiPageDocType(String empCode) {
+		
+		return (ArrayList<Document>) dao.apiPageDocType(empCode);
+	}
 	
 	
 }

@@ -17,6 +17,7 @@
 	justify-content: center;
 	width: calc(100vw - 55px);
 	height: calc(100vh - 50px);
+	gap:10px;
 }
 
 #calendar {
@@ -26,6 +27,7 @@
 
 .divEl{
 	display:flex;
+	
 }
 
 .modal {
@@ -115,12 +117,8 @@
     color: #ffffff;
 }
 
-/* 문서 종류 항목 스타일 */
-.documentType {
-    display: flex;
-    align-items: center; /* 텍스트와 체크박스 수직 정렬 */
-    gap: 10px; /* 체크박스와 텍스트 간격 */
-}
+/* 공통 버튼 스타일 */
+.documentType,
 #dailyReport {
     background-color: #ffffff; /* 기본 배경색 */
     color: #007bff; /* 기본 글자색 */
@@ -131,19 +129,30 @@
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
+    display: inline-block; /* 체크박스와 버튼의 동일한 배치 */
+    text-align: center;
 }
 
 /* 호버 상태 */
+.documentType:hover,
 #dailyReport:hover {
     background-color: #007bff;
     color: #ffffff;
 }
 
 /* 클릭(활성화) 상태에서도 스타일 유지 */
+.documentType:active,
 #dailyReport:active {
     background-color: #ffffff;
     color: #007bff;
     transform: none; /* 눌렸을 때 변형되지 않도록 */
+}
+
+/* 체크박스 스타일 조정 (documentType 내부) */
+.documentType input[type="checkbox"] {
+    margin-right: 10px; /* 체크박스와 텍스트 간의 간격 */
+    transform: scale(1.2); /* 체크박스 크기 조정 */
+    cursor: pointer;
 }
 
 
@@ -151,7 +160,7 @@
 </head>
 <body>
 	<div class="calDiv">
-		<input type="hidden" name="empCode" value="${loginEmp.empCode}">
+		<input id="empCode" type="hidden" name="empCode" value="${loginEmp.empCode}">
 		<input type="hidden" name="teamCode" value="${loginEmp.teamCode}">
 		<div class="divEl">
 			<button type="button"  class="documentType" id="dailyReport">일일 업무일지 작성</button>
@@ -167,24 +176,35 @@
 					</div>
 				</div>
 			</div>
-			
-			<div class="documentType"><input type="checkbox">문서 종류</div>
-			<div class="documentType"><input type="checkbox">문서 종류</div>
-			<div class="documentType"><input type="checkbox">문서 종류</div>
-			<div class="documentType"><input type="checkbox">문서 종류</div>
-			<%--<c:forEach var="documentTypeName" items="${documentTypeList}">
-				
-			</c:forEach> --%>
+			<c:forEach var="docList" items="${documentList}">
+			<div id="result">
+			<input type="checkbox" name="${docList.documentTypeCode}">${docList.documentTypeName}
+			</div>
+			</c:forEach>
 			
 		</div>
 		<div id="calendar"></div>
 	</div>
-	</div>
+	
 
 	<script
 		src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 	<script>
+		
 		$(document).ready(function() {
+			var empCodeEl = $('#empCode').val();
+			$.ajax({
+				url : '/doc/apiPageDocType',
+				type : 'post',
+				data : {'empCode' : empCodeEl},
+				success : function(res){
+					console.log(res);
+				},
+				error : function(){
+					console.log('ajax오류');
+				}
+			});
+			
 			var calendarEl = document.getElementById('calendar');
 							// 공통 AJAX 처리 함수
 							function eventDoc(url, color, successCallback,failCallback) {
@@ -228,34 +248,36 @@
 										},
 										eventSources : [
 												{
-													events : function(info,
-															successCallback,
-															failCallback) {
+													events : function(info,successCallback,failCallback) {
 														eventDoc(
 																'/project/api/projectList.do?teamCode=${loginEmp.teamCode}',
 																'#99CCFF',
-																successCallback,
-																failCallback);
+																successCallback,failCallback);
 													}
 												},
 												{
-													events : function(info,
-															successCallback,
-															failCallback) {
+													events : function(info,successCallback,failCallback) {
 														eventDoc(
 																'/doc/api/documentType.do?empCode=${loginEmp.empCode}',
 																'#CCCCFF',
-																successCallback,
-																failCallback);
+																successCallback,failCallback);
 													}
 												}
-										/* 휴가 결제 후 완료 되면 받아오기
+												//휴가 결제 완료 후 받아오기
+												/*
 										{
 											events: function (info, successCallback, failCallback) {
+												eventDoc(
+														'/doc/api/documentType.do?empCode=${loginEmp.empCode}',
+														'#222',
+														successCallback,failCallback
+												);
 												
 											}
+												
 										}
-										 */
+												*/
+										 
 										],
 										navLinks : true,
 										nowIndicator : true,
@@ -264,57 +286,7 @@
 
 							calendar.render();
 						});
-		/*
-		$(document).ready(function(){
-			$('#openModal').on('click',function(){
-				swal({
-					title : "일일 업무 일지",
-					text : "업무내용을 입력하세요",
-					content : {
-						element : "textarea",
-						attributes:{
-							placeholder : "최대 600자 입력 가능합니다.",
-							maxlenght : 600,
-							rows : 5,
-							cols : 40,
-						},
-					},
-					button : {
-						cancel : "취소",
-						confirm : {
-							text : "작성",
-							closeModal : false
-						
-					}
-					}
-				}).then((value) => {
-					if(!value){
-						swal("취소됨","작업이 취소되었습니다.","info");
-						return;
-					}
-					
-					$.ajax({
-						url : '/emp/dailyReportCreate.do',
-						type : 'post',
-						contentType : 'application/json',
-						data : JSON.stringfy({
-							reportContent : value,
-						}),
-						success : function(res){
-							if(res.success){
-								swal("성공", res.message,"success");
-							}else {
-								swal("실패",res.message,"error");
-							}
-						},
-						error : function(){
-							swal("오류","ajax오류","error");
-						}
-					});
-				});
-			});
-		});	
-		*/
+		
 		
 		$(document).ready(function() {
 			// 모달 창 열기
@@ -334,35 +306,16 @@
 					}
 				});
 			});
+			
+			
 
 			// 모달 창 닫기
 			$('#closeModalController').on('click', function() {
 				$('#controllerModal').removeClass('show');
 			});
-		});	
-		/*
-		$('#dailyReport').on('click', function () {
-		    // 팝업 창 URL 및 옵션 설정
-		    var popupUrl = "/emp/dailyReportWrite.do"; // 이동할 JSP 페이지 경로
-		    var popupOptions = "width=800,height=600,resizable=yes,scrollbars=yes";
-		    
-		    // 팝업 창 열기
-		    window.open(popupUrl, "dailyReport", popupOptions);
-		});
 			
-		    if (popup) {
-		        // 팝업 창이 정상적으로 열렸을 경우, URL 설정
-		        popup.location.href = popupUrl;
-		        popup.focus(); // 팝업 창 활성화
-		    } else {
-		        // 팝업 창이 차단되거나 열리지 않은 경우 처리
-		        swal({
-		            title: "팝업 차단",
-		            text: "팝업 창을 열 수 없습니다. 팝업 차단 설정을 확인해주세요.",
-		            icon: "error",
-		        });
-		    }
-		 */
+		});	
+		
 	</script>
 </body>
 </html>

@@ -134,10 +134,10 @@ public class DocumentController {
 	@ResponseBody
 	public String apiDocumentList(String empCode) {
 		ArrayList<Document> list = service.apiDocumentList(empCode);
-		
 		return new Gson().toJson(list);
 	}
-	//이미지 넣기
+	
+	
 	@PostMapping("documentImage.do")
 	@ResponseBody
 	public void insertDocumentImage(HttpServletRequest request,HttpServletResponse response, File uploadFile ) {
@@ -378,6 +378,12 @@ public class DocumentController {
 		return "document/viewDocOne";
 	}
 
+	@PostMapping("apiPageDocType")
+	public String apiPageDocType(Model model,String empCode) {
+		ArrayList<Document> documentList = service.apiPageDocType(empCode);
+		model.addAttribute(documentList);
+		return "docment/calendar";
+	}
 	
 
 	

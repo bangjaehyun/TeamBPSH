@@ -144,7 +144,7 @@ public class EmpController {
     //달력 화면
     @PostMapping("calendar.do")
     public String calendar() {
-        return "emp/calendar";
+    	return "emp/calendar";
     }
     
     //달력 프로젝트 불러오기
@@ -208,42 +208,34 @@ public class EmpController {
         ArrayList<Document> documentList = service.docMain(empCode);
         
         for(Document document : documentList) {
-        	String sign = "대기 중";
-        	
-        	if(document.getSignList() != null && !document.getSignList().isEmpty()) {
-        		boolean signIng = false; //반려 상태 여부
-        		boolean signOk = true; // 모든 결제자가 결제상태인지 여부
+        	String sign = "";
+        	String status = "";
+        	if(document.getProgress() != null && !document.getProgress().isEmpty()) {
         		
         		//모든 결제자 상태 check
-        		for(DocumentSign docSign : document.getSignList()) {
-        			String status = docSign.getSignYn(); // 결제자 상태 확인(-1 : 반려, 0 : 대기중, 1 : 결제승인)
-        			
-        			//결제 상태가 -1인 경우 반려
-        			if("-1".equals(status)) {
-        				signIng = true;
-        				break;
+        			 status = document.getProgress(); // 결제자 상태 확인(-1 : 반려, 0 : 대기중, 1 : 결제승인)
+        			//최종 결제상태 결정
+        			if(status.equals("-1")) {
+        				sign = "반려";
+        			}else if(status.equals("1")) {
+        				sign = "결제 완료";
+        			}else {
+        				sign = "대기 중";
         			}
         		}
-        		
-        		//최종 결제상태 결정
-        		if(signIng) {
-        			sign = "반려";
-        		}else if(signOk) {
-        			sign = "결제 완료";
-        		}else {
-        			sign = "대기 중";
-        		}
-        		
+        	
+        	 document.setProgress(sign);
+        	
         	}
-        	document.setProgress(sign);
+        	
+        	// 문서 타입별로 데이터를 그룹화
+        	Map<String, List<Document>> docType = documentList.stream()
+        			.collect(Collectors.groupingBy(Document::getDocumentTypeCode));
+        	
+        	return new Gson().toJson(docType);
         }
         
-     // 문서 타입별로 데이터를 그룹화
-        Map<String, List<Document>> docType = documentList.stream()
-                .collect(Collectors.groupingBy(Document::getDocumentTypeCode));
-        
-        return new Gson().toJson(docType);
-    }
+    
     
     //회원관리
     @PostMapping("empManager.do")
@@ -319,5 +311,7 @@ public class EmpController {
         
         return "1";
     }
+    
+    
 
 }

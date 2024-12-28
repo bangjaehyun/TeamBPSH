@@ -79,6 +79,11 @@ public class DocumentDao {
 		return sqlSession.selectOne("document.viewDocOne",documentCode);
 	}
 
+	public List<Document> apiPageDocType(String empCode) {
+		
+		return sqlSession.selectList("docment.apiPageDocType", empCode);
+	}
+
 	
 	
 
