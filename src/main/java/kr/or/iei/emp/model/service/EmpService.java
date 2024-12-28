@@ -113,8 +113,8 @@ public class EmpService {
 		}
 	}
 
-	public ArrayList<Emp> chatEmpList() {
-		return (ArrayList<Emp>)dao.chatEmpList();
+	public ArrayList<Emp> chatEmpList(String empCode) {
+        return (ArrayList<Emp>)dao.chatEmpList(empCode);
 	}
 	
 	@Transactional
@@ -139,12 +139,18 @@ public class EmpService {
 				}
 			}
 		}else {
-			ArrayList<Chat> chatList = new ArrayList<Chat>();
-			chatList = (ArrayList<Chat>)dao.selectChatList(groupNo);
-			
-			chatGroup.setGroupNo(groupNo);
-			chatGroup.setChatList(chatList);
-		}
+			  HashMap<String,String> groupMap = new HashMap<String, String>();
+	            groupMap.put("empCode", fromEmpCode);
+	            groupMap.put("groupNo", groupNo);
+	            int result = dao.chatResetReadCount(groupMap);
+	            if(result > 0) {
+	                ArrayList<Chat> chatList = new ArrayList<Chat>();
+	                chatList = (ArrayList<Chat>)dao.selectChatList(groupNo);
+	                
+	                chatGroup.setGroupNo(groupNo);
+	                chatGroup.setChatList(chatList);
+	            }
+	        }
 		
 		return chatGroup;
 	}
@@ -183,6 +189,12 @@ public class EmpService {
 		int result = dao.reportCreate(daily);
 		return result;
 	}
+	
+	 public void chatAddReadCount(Chat chat) {
+	        
+	        dao.chatAddReadCount(chat);
+	    }
+
 
 
 }
