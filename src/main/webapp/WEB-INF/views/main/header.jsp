@@ -62,7 +62,7 @@
        
        .notification-count{
        		background : red;
-       		display : inline-block;
+       		display : none;
        		align-content : center;
        		text-align: center;
        		width: 20px;
@@ -85,20 +85,40 @@
            <div class="header-right">
            	<img class="header-notification" src="/resources/images/notification.png">
            	<div class="notification-count">
-           		<span>1</span>
+           		<span>0</span>
            	</div>
             <img class="header-my" src="/resources/images/person.png">
         </div>                
     </div>
 </header>
 <script>
+	//login시 sse로 empCode 전달하여 관리
+	const eventSource = new EventSource("/emitter?empCode=${loginEmp.empCode}");//controller 경로
+	
+	//server에서 메시지 올시 알람 count 증가 처리
+	eventSource.onmessage = (event) => { //데이터를 받아옴
+		if(Number($('.notification-count').children().html()) < 99){
+		    if($('.notification-count').css('display') == "none"){
+		    	$('.notification-count').css('display', 'inline-block');
+		    	$('.notification-count').children().html( Number($('.notification-count').children().html()) + 1);
+		    }else{
+		    	$('.notification-count').children().html( Number($('.notification-count').children().html()) + 1);
+		    }
+		}
+	};
+	<%-- 
+ 	eventSource.onerror = (error) => {
+ 	    console.error("Error occurred:", error);
+ 	    eventSource.close();
+ 	};
+    --%>
 	$('.header-my').on('click',function(){
 		if($('.myPage').hasClass('act')){
 			$('.myPage').removeClass('act');
 		}else{
 			$('.myPage').addClass('act');
 		}
-	})
+	});
 
 	<%-- 콜백 있는 메시지 --%>
 	function callbackMsg(title,msg,icon, callback){

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
@@ -75,6 +76,13 @@ public class CommonExceptionHandler {
 	public String exception(Exception ex) {
 		ex.printStackTrace();
 		System.out.println("Exception Handler");
+		return null;
+	}
+	
+	@ExceptionHandler(AsyncRequestTimeoutException.class)
+	public String timeOut(AsyncRequestTimeoutException ex)
+	{
+		System.out.println("sse timeOut");
 		return null;
 	}
 }

@@ -283,9 +283,7 @@
 						data : {"empCode" : JSON.parse(e.data).empCode,
 								"groupNo" : JSON.parse(e.data).groupNo},
 						success : function(res){
-							console.log(JSON.parse(e.data));
 							if(JSON.parse(e.data).socket != null){
-								console.log($("#"+JSON.parse(e.data).empCode).next());
 								if($("#"+JSON.parse(e.data).empCode).next().length == 0){
 									let readCount = $('<div></idv>');
 									readCount.html(1);
@@ -307,6 +305,9 @@
 			<%-- 소켓 연결 종료 이벤트 핸들러 --%>
 			ws.onclose = function(){
 				console.log("연결종료");
+				ws.close();
+				ws = null
+				setTimeout(fn.init(), 5000);
 			};
 		}	
 		,sendValidate : function (enter) {
@@ -338,9 +339,7 @@
 			fileName = encodeURIComponent(fileName);
 			filePath = encodeURIComponent(filePath);
 			
-			
-				location.href = "/emp/chatFileDown.do?fileName="+fileName+"&filePath="+filePath;
-
+			location.href = "/emp/chatFileDown.do?fileName="+fileName+"&filePath="+filePath;
 		}
 	};
 	
@@ -621,6 +620,12 @@
 	        fn.sendValidate(false);
 		 }
 	});
+	
+	$('body').keyup(function(e){
+		if (e.keyCode == 27){
+	        self.close();
+		 }	
+	})
 	
 	<%-- 사이즈 변경 못하게 고정 --%>
 	$(window).resize(function () {
