@@ -195,6 +195,18 @@ public class EmpService {
 	        dao.chatAddReadCount(chat);
 	    }
 
+	public DailyReport dailyReportUpdate(String empCode) {
+		
+		return dao.dailyReportUpdate(empCode);
+	}
+
+	public boolean empCheckReport(String empCode) {
+		
+		return dao.empCheckReport(empCode) > 0;
+	}
+
+
+
 
 
 }

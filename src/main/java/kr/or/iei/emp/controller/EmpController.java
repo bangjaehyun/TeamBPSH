@@ -308,7 +308,26 @@ public class EmpController {
     	
     	return response;
     }
+    //일일 업무일지  
+    @PostMapping("dailyReportUpdateForm.do")
+    public String dailyReportUpdate(Model model, String empCode) {
+    	DailyReport report = service.dailyReportUpdate(empCode);
+    	model.addAttribute("dailyReport", report);
+    	return "emp/dailyReportUpdate";
+    }
+    //일일 업무일지 상태 확인 
+    @PostMapping("/dailyReportCheck.do")
+    @ResponseBody
+    public boolean checkDailyReportExists(String empCode) {
+    	boolean exist = service.empCheckReport(empCode);
+    	return exist;
+    }
     
+    @PostMapping("dailyReportUpdate.do")
+    public String dailyReportUpdate(String empCode) {
+    	DailyReport report = service.dailyReportUpd(empCode);
+    	return null;
+    }
     
 
     

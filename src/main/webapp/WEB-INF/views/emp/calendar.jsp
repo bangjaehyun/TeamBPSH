@@ -154,6 +154,24 @@
     transform: scale(1.2); /* 체크박스 크기 조정 */
     cursor: pointer;
 }
+/* 버튼 크기와 위치를 고정 */
+#dailyReport {
+    position: relative; /* 버튼의 위치를 고정 */
+    display: block; /* 인라인 요소의 크기를 명확히 지정 */
+    margin: 0 auto; /* 수평 중앙 정렬 */
+    width: auto; /* 버튼 너비를 고정 */
+    height: auto; /* 버튼 높이를 고정 */
+}
+
+/* 버튼의 클릭 후에도 스타일이 유지되도록 설정 */
+#dailyReport:focus,
+#dailyReport:active {
+    outline: none; /* 클릭 후 발생하는 윤곽선을 제거 */
+    box-shadow: none; /* 클릭 시 버튼 주변 그림자를 제거 */
+    background-color: #ffffff; /* 활성화 상태에서도 배경 유지 */
+    color: #007bff; /* 텍스트 색상 유지 */
+}
+
 
 
 </style>
@@ -288,34 +306,103 @@
 						});
 		
 		
-		$(document).ready(function() {
-			// 모달 창 열기
-			$('#dailyReport').on('click', function() {
-				$('#controllerModal').addClass('show'); // 모달 창 표시
+		$(document).ready(function () {
+		    // 버튼 상태 관리 변수
+		    let isUpdateMode = false;
 
-				// AJAX로 Spring 컨트롤러에 요청
-				$.ajax({
-					url : '/emp/dailyReportWrite.do', // 컨트롤러 경로
-					type : 'post', // 또는 POST
-					success : function(data) {
-						// 가져온 데이터를 모달 창에 삽입
-						$('#modalContent').html(data);
-					},
-					error : function() {
-						$('#modalContent').html('<p>데이터를 불러오지 못했습니다.</p>');
-					}
-				});
-			});
-			
-			
+		    // 일일 업무일지 작성/수정 버튼 클릭
+		    $('#dailyReport').on('click', function (e) {
+		        e.preventDefault(); // 기본 동작 방지
 
-			// 모달 창 닫기
-			$('#closeModalController').on('click', function() {
-				$('#controllerModal').removeClass('show');
-			});
-			
-		});	
-		
+		        const url = isUpdateMode
+		            ? '/emp/dailyReportUpdateForm.do' // 수정 폼 URL
+		            : '/emp/dailyReportWrite.do';    // 등록 폼 URL
+
+		        const data = { empCode: $('#empCode').val() };
+
+		        // AJAX 요청
+		        $.ajax({
+		            url: url,
+		            type: 'post',
+		            data: data,
+		            success: function (response) {
+		                // 수정.jsp의 HTML 내용을 모달에 삽입
+		                $('#modalContent').html(response);
+
+		                // 모달 창 열기
+		                $('#controllerModal').addClass('show');
+		            },
+		            error: function () {
+		                alert('데이터를 불러오지 못했습니다.');
+		            }
+		        });
+		    });
+
+		    // 폼 제출 (등록/수정 처리)
+		    $(document).on('submit', '#dailyReportForm', function (e) {
+		        e.preventDefault(); // 기본 동작 방지
+
+		        const formData = $(this).serialize(); // 폼 데이터 직렬화
+		        const url = isUpdateMode
+		            ? '/emp/dailyReportUpdate.do' // 수정 요청 URL
+		            : '/emp/dailyReportCreate.do'; // 등록 요청 URL
+
+		        $.ajax({
+		            url: url,
+		            type: 'post',
+		            data: formData,
+		            success: function () {
+		                alert(isUpdateMode
+		                    ? '업무일지가 성공적으로 수정되었습니다.'
+		                    : '업무일지가 성공적으로 등록되었습니다.');
+
+		                // 모달 닫기
+		                $('#controllerModal').removeClass('show');
+
+		                // 상태 업데이트
+		                if (!isUpdateMode) {
+		                    $('#dailyReport').text('일일 업무일지 수정'); // 버튼 텍스트 변경
+		                    isUpdateMode = true; // 수정 모드로 전환
+		                }
+		            },
+		            error: function () {
+		                alert(isUpdateMode
+		                    ? '업무일지 수정에 실패했습니다.'
+		                    : '업무일지 등록에 실패했습니다.');
+		            }
+		        });
+		    });
+
+		    // 모달 창 닫기
+		    $('#closeModalController').on('click', function () {
+		        $('#controllerModal').removeClass('show');
+		    });
+
+		    // 상태 확인
+		    const empCode = $('#empCode').val();
+		    $.ajax({
+		        url: '/emp/dailyReportCheck.do',
+		        type: 'post',
+		        data: { empCode: empCode },
+		        dataType: 'json', // 서버가 JSON을 반환해야 함
+		        success: function (response) {
+		            console.log("서버 응답:", response);
+		            if (response) { // true 또는 false 값 체크
+		                $('#dailyReport').text('일일 업무일지 수정'); // 버튼 상태 변경
+		                isUpdateMode = true; // 수정 모드 활성화
+		            } else {
+		                $('#dailyReport').text('일일 업무일지 작성');
+		                isUpdateMode = false; // 등록 모드 활성화
+		            }
+		        },
+		        error: function (xhr, status, error) {
+		            console.error("AJAX 오류:", status, error);
+		            alert('상태 확인에 실패했습니다. 다시 시도해주세요.');
+		        }
+		    });
+		});
+
+
 	</script>
 </body>
 </html>

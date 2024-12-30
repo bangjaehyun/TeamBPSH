@@ -339,4 +339,26 @@
       where group_no = #{groupNo} 
         and emp_code != #{empCode}
      </update>
+     
+     <select id="dailyReportView"
+     parameterType="string"
+     resultType="dailyReport">
+     	SELECT 
+            report_date AS reportDate,
+            emp_code AS empCode,
+            report_content AS reportContent
+        FROM tbl_daily_report
+        WHERE report_date = TRUNC(SYSDATE) 
+          AND emp_code = #{empCode}
+     </select>
+     
+     <select id="checkReport"
+     parameterType="string"
+     resultType="int">
+     	select 
+     		count(*)
+     	from tbl_daily_report
+     	where report_date = TRUNC(SYSDATE) 
+     	and emp_code = #{empCode}
+     </select>
 </mapper>

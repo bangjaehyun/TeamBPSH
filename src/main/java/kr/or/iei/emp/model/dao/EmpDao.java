@@ -142,6 +142,18 @@ public class EmpDao {
 	    return sqlSession.update("emp.chatReSetReadCount", groupMap);
 	}
 
+	public DailyReport dailyReportUpdate(String empCode) {
+		
+		return sqlSession.selectOne("emp.dailyReportView",empCode);
+	}
+
+	public int empCheckReport(String empCode) {
+		
+		return sqlSession.selectOne("emp.checkReport",empCode);
+	}
+
+
+
 
 
 }
