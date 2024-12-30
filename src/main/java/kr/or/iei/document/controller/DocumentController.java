@@ -2,6 +2,7 @@ package kr.or.iei.document.controller;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -33,6 +34,7 @@ import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Dept;
@@ -136,28 +138,42 @@ public class DocumentController {
 		ArrayList<Document> list = service.apiDocumentList(empCode);
 		return new Gson().toJson(list);
 	}
-	
-	
-	@PostMapping("documentImage.do")
+
+	//이미지 넣기
+	@PostMapping(value="documentImage.do",produces="application/json;charset=utf-8")
 	@ResponseBody
-	public void insertDocumentImage(HttpServletRequest request,HttpServletResponse response, File uploadFile ) {
-		request.getSession().getServletContext().getRealPath("/");
+	public String insertDocumentImage(HttpServletRequest request,HttpServletResponse response,  MultipartFile uploadFile ) {
 		String today=new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String savePath="/resources/documentImages/"+today+"/";
-		String resPath=savePath;
-		int maxSize=1024*1024*100;
-		File directory=new File(savePath);
+		String root=request.getSession().getServletContext().getRealPath(savePath);
+		
+		
+		
+		File directory=new File(root);
 		if(!directory.exists()) {
 			directory.mkdirs();
 		}
-//		try {
-//		//	MultipartRequest mRequest=new MultipartRequest(request, savePath,"utf-8");
-//		 
-//			//response.getWriter().print(resPath+mRequest.getFilesystemName("uploadFile"));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		today=new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		String originalFileName =((MultipartFile) uploadFile).getOriginalFilename();
+		String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		
+		
+		
+		String filePath=fileName+"_"+today+extension;
+		root+=filePath;
+		savePath+=filePath;
+		 File savedFile = new File(root);
+	        try {
+				uploadFile.transferTo(savedFile);
+				System.out.println(savedFile);
+			} catch (IllegalStateException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		System.out.println(savePath);
+	        	
+	        return new Gson().toJson(savePath);
 	
 	}
 
@@ -183,7 +199,7 @@ public class DocumentController {
 			if(!directory.exists()) {
 				directory.mkdir();
 			}
-			
+			today=new SimpleDateFormat("yyyyMMddHHmmss").format(date);
 			for (int i=0;i<files.length;i++) {
 				MultipartFile file=files[i];
 				
@@ -194,8 +210,8 @@ public class DocumentController {
 					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 					
 					
-					int ranNum = new Random().nextInt(9999)+1;
-					String filePath=fileName+"_"+today+"_"+ranNum+extension;
+					
+					String filePath=fileName+"_"+today+extension;
 					savePath+=filePath;
 					
 					BufferedOutputStream bos=null;
@@ -289,11 +305,10 @@ public class DocumentController {
 			if(!directory.exists()) {
 				directory.mkdir();
 			}
-			
+			today=new SimpleDateFormat("yyyyMMddHHmmss").format(date);
 			for (int i=0;i<files.length;i++) {
 				MultipartFile file=files[i];
-				System.out.println(file);
-				System.out.println("파일 크기: " + file.getSize());
+				
 			
 				if(!file.isEmpty()) {
 					
@@ -363,7 +378,9 @@ public class DocumentController {
 			
 				
 				
-			int result=service.insertSpending(document);
+			int result=service.insertSpending(document,spendingList);
+			
+			
 			return result;
 		}
 		

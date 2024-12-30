@@ -5,9 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 
+
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
       
 
 <style>
@@ -18,7 +20,7 @@
 }
 
 .board{
-	
+	margin-left:300px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -60,14 +62,44 @@
 }
 
 .doc-title {
+	width: 550px;
 	display: flex;
-	justify-content: space-between;
+	border:none;
+	border: 1px solid #ccc;
+	
+	
+	border-radius: 8px;
+	align-items:center;	
 	margin: 0px;
 	margin-bottom: 10px;
 }
+	.doc-title input{
+		background:none;
+		width:550px;
+		border:none;
+		font-size: 18px;
+	}
 
 .ref {
 	display: flex;
+}
+	.ref>button{
+	padding: 7px 4px;
+	border-radius: 4px;
+	background-color:gray;
+	border:none;
+	color:white;
+	
+	
+}
+
+	.ref>button:hover{
+	scale:1.1;
+}
+
+.ref>button:active{
+	scale:1;
+	background-color:black;
 }
 
 .sign {
@@ -102,6 +134,10 @@ label {
 	border: 1px solid black;
 }
 
+	.selectedBtn:hover{
+		cursor: pointer;
+		
+	}
 .half-time {
 	display: none;
 	gap: 10px;
@@ -109,19 +145,17 @@ label {
 
 .set-date {
 	display: flex;
+	gap:5px;
 }
 
-.set-date div {
+.set-date>.date{
 	height: 100%;
+	box-sizing:border-box;
+}
+.date *{
+	padding:4px 8px;
 }
 
-.set-date label {
-	height: 100%;
-}
-
-.set-date input {
-	height: 100%;
-}
 
 .set-date .result {
 	background-color: white;
@@ -173,11 +207,7 @@ label {
 			<div class="main-container">
 				<form action="/doc/writeVacation.do" method="post" enctype="multipart/form-data">
 					<div class="doc-title">
-						<div>
-							<label for="title">제목</label> <input id="title" type="text"
-								name="title" placeholder="제목 입력" />
-						</div>
-
+						 <input id="title" type="text"name="title" placeholder="제목 입력" />
 					</div>
 					<div class="ref">
 						<button type="button" onclick="searchMan('sign')">결재자 검색</button>
@@ -237,15 +267,17 @@ label {
 				</form>
 				<div class="buttons">
 					<button class="submit" type="button" onclick="writeDocument()">작성</button>
-					<button class="cancel" type="button">취소</button>
+					<button class="cancel" type="button" onclick="cancel()">취소</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	</div>
-</body>
 <script src="/resources/summernote/summernote-lite.js"></script>
 <script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
+
+
+
 <script>
 //작성조건이 맞는가?
 
@@ -255,21 +287,35 @@ var checkDocument={
 		"date":		false,
 		"sameSign":	true,
 		"sameRef":	true,
-		"ovarlap":	true
+		"ovarlap":	true,
+		"past":		false
+		
 		
 };
 
-
+function msg(title, text, icon, callback){
+	swal({
+		title : title,
+		text : text,
+		icon : icon
+	}).then(function(){
+		if(callback != "0"){
+			location.href = "/";
+		}
+	});
+	
+}
 
 
 //const checkDocument=null;
 
 //섬머노트 테스트
-//     $(document).ready(function() {
-        $('#summernote').summernote(   {
+//      $(document).ready(function() {
+        	
+         $('#summernote').summernote(   {
             codeviewFilter : false, // 코드 보기 필터 비활성화
             codeviewIframeFilter : true, // 코드 보기 iframe 필터 비활성화
-            height : '300', // 에디터 높이
+            height : 300, // 에디터 높이
             width : '100%',
             minHeight : null, // 최소 높이
             maxHeight : null, // 최대 높이
@@ -288,7 +334,7 @@ var checkDocument={
             [ 'para', [ 'ul', 'ol', 'paragraph' ] ], // 문단 스타일, 순서 없는 목록, 순서 있는 목록 옵션
             [ 'height', [ 'height' ] ], // 에디터 높이 조절 옵션
             [ 'insert', [ 'picture', 'link', 'video' ] ], // 이미지 삽입, 링크 삽입, 동영상 삽입 옵션
-            [ 'view', [ 'fullscreen', 'help' ] ], // 코드 보기, 전체 화면, 도움말 옵션
+            [ 'view', [  'fullscreen', 'help' ] ], // 코드 보기, 전체 화면, 도움말 옵션
             ],
 
             fontSizes : [ '8', '9', '10', '11', '12', '14', '16', '18',
@@ -318,15 +364,18 @@ var checkDocument={
             ],
             
             callbacks : {                                                    
-               onImageUpload : function(files, editor, welEditable) {   
+               onImageUpload : function(files, editor, welEditable) {  
                       // 다중 이미지 처리를 위해 for문을 사용했습니다.
                   for (var i = 0; i < files.length; i++) {
-                     uploadImage(files[i], this);
+            	  
+                     uploadImage(files[i],  $(this));
                   }
                }
             }
         });
-//     });
+//       });
+     
+     
         $('input[name="files"]').on('change', function() {
             const files = $(this)[0].files;
            
@@ -336,24 +385,25 @@ var checkDocument={
         const form = new FormData(); //<form> 태그
         form.append("uploadFile", file); //<input type="file" name="uploadFile">
         
-//         $.ajax ({
-//            url : "/doc/documentImage.do",
-//            type : "post", //post 필수
-//            data : form,  //전송 데이터
-//            processData : false, //기본 문자열 전송 세팅 해제
-//            contentType : false, //기본 form enctype 해제
-//            cache:false,
-//            success : function(savePath){
-//               //savePath : 파일 업로드 경로
-//               $(editor).summernote("insertImage", savePath); //에디터 본문에 이미지 표기
-              
-//               //게시글 작성 시, 이미지 중복 등록 방지
-//             //  $("input[id*=note-dialog]").remove();
-//            },
-//            error : function(){
-//               console.log("오류");
-//            }
-//         });
+        $.ajax ({
+           url : "/doc/documentImage.do",
+           type : "post", //post 필수
+           data : form,  //전송 데이터
+           processData : false, //기본 문자열 전송 세팅 해제
+           contentType : false, //기본 form enctype 해제
+           cache:false,
+           success : function(savePath){
+              //savePath : 파일 업로드 경로
+              console.log(editor);
+               $(editor).summernote("insertImage", savePath);
+             console.log(savePath);
+              //게시글 작성 시, 이미지 중복 등록 방지
+            //  $("input[id*=note-dialog]").remove();
+           },
+           error : function(){
+              console.log("오류");
+           }
+        });
      }
 
 
@@ -374,14 +424,17 @@ function totalDays() {
     const startDate =$('#vacStart').val();
     const endDate = $('#vacEnd').val();
     const result = document.querySelector('.result span');
-
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
     if (!startDate || !endDate) {
         result.textContent = "날짜를 전부 입력하라.";
         checkDocument.date=false;
         return;
     }
-
+	
     const start = new Date(startDate);
+    
     const end = new Date(endDate);
 
     if (start > end) {
@@ -390,7 +443,13 @@ function totalDays() {
         return;
        
     }
-
+    
+    //오늘보다 이전 날짜를 골랐는가?
+	if(start.getTime()<today.getTime()){
+		checkDocument.past=false;
+	}else{
+		checkDocument.past=true;
+	}
     const time = end - start; 
     const days = time / (1000 * 60 * 60 * 24);
 	
@@ -565,12 +624,13 @@ function onDateChange() {
 	    for (let check in checkDocument) {
 	        if (!checkDocument[check]) {
 	            switch (check) {
-	                case "docTitle": alert("제목을 작성하시오."); break;
-	                case "sign": alert("최소 1명 이상의 결재자가 필요합니다"); break;
-	                case "date": alert("날짜형식이 잘못되었습니다."); break;
-	                case "sameSign": alert("중복된 결재자가 있습니다."); checkDocument.sameSign=true; break;  
-	                case "sameRef": alert("중복된 참조자가 있습니다.");  checkDocument.sameRef=true; break;
-	                case "overlap":	alert("한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다."); checkDocument.overlap=true; break;
+	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
+	                case "sign":msg("알림","결재자는 최소 1명 이상이어야 합니다.","error","0"); break;
+	                case "date":msg("알림","날짜형식이 잘못되었습니다.","error","0"); break;
+	                case "sameSign":msg("알림","중복된 결재자가 존재합니다.","error","0"); checkDocument.sameSign=true; break;  
+	                case "sameRef": msg("알림","중복된 참조자가 존재합니다.","error","0");  checkDocument.sameRef=true; break;
+	                case "overlap":msg("알림","한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다.","error","0"); checkDocument.overlap=true; break;
+	                case "past":msg("알림","오늘보다 이전 날짜는 선택이 불가능 합니다.","error","0"); checkDocument.past=false; break;
 	                //중복체크는 확인시 다시 값 초기화
 	                
 	               
@@ -626,15 +686,32 @@ function onDateChange() {
 	        processData: false,  // 파일 업로드 시 필수
 	        contentType: false,  // 파일 업로드 시 필수
 	        success: function(res) {
-	            console.log("연결성공");
+	        	  if(res>3){
+		            	msg("알림","문서작성이 왼료되었습니다.","success","1")
+		            }else if(res==3){
+		            	msg("알림","휴가 날짜 적용중 문제가 발생했습니다.","error","0")
+		            }
+		            else if(res==2){
+		            	msg("알림","결재자,참조자 적용중 문제가 발생했습니다.","error","0")
+		            }
+		            else if(res==1){
+		            	msg("알림","첨부파일 적용중에 문제가 발생했습니다.","error","0")
+		            }
+		            else{
+		            	msg("알림","문서내용 적용중 문제가 발생했습니다.","error","0")	
+		            }
 	        },
 	        error: function() {
 	            console.log("오류");
 	        }
 	    });
 	}
+	
+	function cancel(){
+		location.href="/";
+	}
 
 	
-	
-</script>
+	</script>
+</body>
 </html>
