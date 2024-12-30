@@ -98,11 +98,11 @@ button:hover {
     </style>
     <body>
         <div class="container">
-            <form id="reportForm" action="/emp/dailyReportCreate.do" method="post">
+            <form id="dailyReportForm" action="/emp/dailyReportUpdate.do" method="post">
             <input type="hidden" name="EmpCode" value="${loginEmp.empCode}">
                 <!-- Title Section -->
                 <div class="title-section">
-                    <div class="title">${loginEmp.empName}일일 업무 일지</div>
+                    <div class="title">${loginEmp.empCode}일일 업무 일지</div>
                 </div>
                 <!-- Content Section -->
                 <div class="content-section">
