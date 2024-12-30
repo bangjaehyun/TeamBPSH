@@ -7,16 +7,26 @@ public class ProjectPartemp {
 	private String empCode;
 	private String partempContent;
 	
+	//종속 변수 추가
+	private String teamCode;
+	private String rankCode;
+	private String empName;
+	
 	public ProjectPartemp() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public ProjectPartemp(String partempNo, String projectNo, String empCode, String partempContent) {
+	public ProjectPartemp(String partempNo, String projectNo, String empCode, String partempContent, String teamCode,
+			String rankCode, String empName) {
 		super();
 		this.partempNo = partempNo;
 		this.projectNo = projectNo;
 		this.empCode = empCode;
 		this.partempContent = partempContent;
+		this.teamCode = teamCode;
+		this.rankCode = rankCode;
+		this.empName = empName;
 	}
 
 	public String getPartempNo() {
@@ -51,14 +61,39 @@ public class ProjectPartemp {
 		this.partempContent = partempContent;
 	}
 
+	public String getTeamCode() {
+		return teamCode;
+	}
+
+	public void setTeamCode(String teamCode) {
+		this.teamCode = teamCode;
+	}
+
+	public String getRankCode() {
+		return rankCode;
+	}
+
+	public void setRankCode(String rankCode) {
+		this.rankCode = rankCode;
+	}
+
+	public String getEmpName() {
+		return empName;
+	}
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
 	@Override
 	public String toString() {
-		return "ProjectPartEmp [partempNo=" + partempNo + ", projectNo=" + projectNo + ", empCode=" + empCode
-				+ ", partempContent=" + partempContent + "]";
+		return "ProjectPartemp [partempNo=" + partempNo + ", projectNo=" + projectNo + ", empCode=" + empCode
+				+ ", partempContent=" + partempContent + ", teamCode=" + teamCode + ", rankCode=" + rankCode
+				+ ", empName=" + empName + "]";
 	}
 	
 	
-	
+
 	
 
 }

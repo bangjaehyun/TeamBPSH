@@ -1,5 +1,6 @@
 package kr.or.iei.project.model.vo;
 
+import java.util.ArrayList;
 
 public class Project {
 	private String projectNo;
@@ -11,15 +12,19 @@ public class Project {
 	//종속 변수
 	private String empCode;
 	private String documentDate;
+	private String teamLeader;
+	private ArrayList<ProjectPartemp> projectPartemp;
 	
 	
 	public Project() {
 		super();
+		
 	}
 
 
 	public Project(String projectNo, String documentTypeCode, String projectTitle, String projectContent,
-			String projectEnd, String empCode, String documentDate) {
+			String projectEnd, String empCode, String documentDate, String teamLeader,
+			ArrayList<ProjectPartemp> projectPartemp) {
 		super();
 		this.projectNo = projectNo;
 		this.documentTypeCode = documentTypeCode;
@@ -28,6 +33,8 @@ public class Project {
 		this.projectEnd = projectEnd;
 		this.empCode = empCode;
 		this.documentDate = documentDate;
+		this.teamLeader = teamLeader;
+		this.projectPartemp = projectPartemp;
 	}
 
 
@@ -101,12 +108,37 @@ public class Project {
 	}
 
 
+	public String getTeamLeader() {
+		return teamLeader;
+	}
+
+
+	public void setTeamLeader(String teamLeader) {
+		this.teamLeader = teamLeader;
+	}
+
+
+	public ArrayList<ProjectPartemp> getProjectPartemp() {
+		return projectPartemp;
+	}
+
+
+	public void setProjectPartemp(ArrayList<ProjectPartemp> projectPartemp) {
+		this.projectPartemp = projectPartemp;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Project [projectNo=" + projectNo + ", documentTypeCode=" + documentTypeCode + ", projectTitle="
 				+ projectTitle + ", projectContent=" + projectContent + ", projectEnd=" + projectEnd + ", empCode="
-				+ empCode + ", documentDate=" + documentDate + "]";
+				+ empCode + ", documentDate=" + documentDate + ", teamLeader=" + teamLeader + ", projectPartemp="
+				+ projectPartemp + "]";
 	}
+	
+	
+	
+	
 
 	
 	

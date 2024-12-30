@@ -1,5 +1,6 @@
 package kr.or.iei.project.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.vo.Project;
 
 @Repository("projectDao")
@@ -22,6 +24,22 @@ public class ProjectDao {
 		return sqlSession.selectList("project.apiProjectList",teamCode);
 		
 	}
+
+	public List<Project> projectList(String teamCode) {
+		
+		return sqlSession.selectList("project.projectList", teamCode);
+	}
+
+	public Project projectView(String projectNo) {
+		
+		return sqlSession.selectOne("project.projectView", projectNo);
+	}
+
+	public List<Emp> projectEmpList(String projectNo) {
+		
+		return sqlSession.selectList("project.projectPartempList", projectNo);
+	}
+
 	
 	
 

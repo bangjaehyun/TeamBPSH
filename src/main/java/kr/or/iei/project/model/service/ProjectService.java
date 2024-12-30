@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.dao.ProjectDao;
 import kr.or.iei.project.model.vo.Project;
 
@@ -23,4 +24,20 @@ public class ProjectService {
 		
 		return (ArrayList<Project>)dao.getProjects(teamCode);
 	}
+
+	public ArrayList<Project> projectList(String teamCode) {
+		
+		return  (ArrayList<Project>)dao.projectList(teamCode);
+	}
+
+	public Project projectView(String projectNo) {
+		
+		return dao.projectView(projectNo);
+	}
+
+	public List<Emp> projectEmpList(String projectNo) {
+		return  dao.projectEmpList(projectNo);
+	}
+
+
 }

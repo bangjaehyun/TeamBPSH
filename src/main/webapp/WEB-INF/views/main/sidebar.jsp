@@ -118,7 +118,7 @@
 			<li class="side-li">
 				<div class="side-div">
 					<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
-					<p class="side-text">문서</p>
+					<p class="side-text">프로젝트</p>
 				</div>
 			</li>
 			<li class="side-li">
@@ -162,6 +162,20 @@
     $('.side-li:nth-child(3)').on('click',function(){
         $.ajax({
             url : "/emp/calendar.do",
+            type: "post",
+            success : function(res) {
+                $('.page').html(res);
+            }
+            , error : function() {
+                console.log('ajax 통신 오류');
+            }
+        });
+    });
+    
+    //4번째 li 태그로 이동
+     $('.side-li:nth-child(4)').on('click',function(){
+        $.ajax({
+            url : "/project/list.do",
             type: "post",
             success : function(res) {
                 $('.page').html(res);

@@ -29,4 +29,62 @@
         on tbl_project.project_no = tbl_project_team.project_no
         where tbl_project_team.team_code = #{loginEmp.teamCode}
 	</select>
+	
+	<select id="projectList" 
+	parameterType="string" 
+	resultType="project">
+		select 
+			tbl_project.project_no as projectNo,
+			tbl_project.project_title as projectTitle,
+			tbl_project.project_content as projectContent,
+			tbl_project.project_end as projectEnd,
+			tbl_emp.emp_name as teamLeader
+		from tbl_project_team  
+			join tbl_project 
+			on tbl_project_team.project_no = tbl_project.project_no
+			join tbl_team_leader 
+			on tbl_project_team.team_code = tbl_team_leader.team_code
+			join tbl_emp
+			on tbl_emp.emp_code = tbl_team_leader.emp_code
+	</select>
+	
+	<select id="projectView"
+	parameterType="string"
+	resultType="project">
+		SELECT 
+        tbl_project.project_no AS projectNo,
+        tbl_project.project_title AS projectTitle,
+        tbl_project.project_content AS projectContent,
+        tbl_project.project_end AS projectEnd,
+        tbl_emp.emp_name AS teamLeader
+    FROM 
+        tbl_project 
+    JOIN 
+        tbl_project_team 
+        ON tbl_project.project_no = tbl_project_team.project_no
+    JOIN 
+        tbl_team_leader 
+        ON tbl_project_team.team_code = tbl_team_leader.team_code
+    JOIN 
+        tbl_emp 
+        ON tbl_team_leader.emp_code = tbl_emp.emp_code
+    WHERE 
+        tbl_project.project_no = #{projectNo}
+		
+	</select>
+	
+	<select id="projectPartempList"
+	parameterType="string"
+	resultType="projectPartemp">
+		select
+			tbl_emp.emp_code as empCode,
+        	tbl_emp.emp_name as empName,
+        	tbl_project_partemp.partemp_content as partempContent,
+        	tbl_emp.team_code as teamCode,
+        	tbl_emp.rank_code as rankCode
+        from tbl_project_partemp
+        join tbl_emp 
+        on tbl_project_partemp.emp_code = tbl_emp.emp_code
+        where tbl_project_partemp.project_no = #{projectNo}
+	</select>
 </mapper>

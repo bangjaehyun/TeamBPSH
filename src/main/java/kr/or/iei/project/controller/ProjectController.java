@@ -1,19 +1,22 @@
 package kr.or.iei.project.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.maven.model.Model;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
+import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.service.ProjectService;
 import kr.or.iei.project.model.vo.Project;
 
@@ -32,6 +35,24 @@ public class ProjectController {
 		
 		ArrayList<Project> project = service.getProjects(teamCode);
 		 return new Gson().toJson(project); 
-		 
 	}
+	
+	@PostMapping("list.do")
+	public String projectListPage(Model model, String teamCode) {
+		ArrayList<Project> project = service.projectList(teamCode);
+		model.addAttribute("projectList",project);
+		return "project/projectList";
+	}
+	
+	@PostMapping("view.do")
+	public String projectView(Model model, String projectNo) {
+		Project project = service.projectView(projectNo);
+		List<Emp> projectPartempList = service.projectEmpList(projectNo);
+		 model.addAttribute("project", project);
+		 model.addAttribute("projectPartempList", projectPartempList);
+	    
+	    return "project/projectView";
+	}
+	
+
 }
