@@ -65,7 +65,7 @@ button {
     </head>
     <body>
         <div class="container">
-            <form id="reportForm" action="/emp/dailyReportCreate.do" method="post">
+            <form id="reportForm"method="post">
             <input type="hidden" name="empCode" value="${loginEmp.empCode}">
                 <!-- Title Section -->
                 <div class="title-section">
@@ -75,93 +75,40 @@ button {
                 <div class="content-section">
                     <textarea name="reportContent"  maxlength="600" placeholder="최대 600자까지 입력 가능합니다."></textarea> 
                 </div>
-                <button id="btnSubmit"  data-action="create">작성</button>
+                <button type="submit" id="btnSubmit">작성</button>
             </form>
         </div>
     
     <script>
-    
-    /*
-        //하루에 한번 작성 하게 어디서 할지?
-        //작성 후 수정만 가능하게 
-        window.onbeforeunload = function() {};
-        function closePopup() {
-            if (confirm('정말로 작업을 종료하시겠습니까?')) {
-                window.close(); // 팝업 창 닫기
-            }
-        }
-        
-        window.addEventListener('beforeunload', function (event) {
-            // 부모 창에 메시지를 전달
-            if (window.opener) {
-                window.opener.alert('팝업 창이 닫혔습니다. 작업 상태를 확인하세요.');
-            }
-        });
-        */
-        $(document).ready(function () {
-            // 폼 제출 이벤트
-            $('#reportForm').on('submit', function (e) {
-                e.preventDefault(); // 기본 폼 제출 방지
-				console.log($('input[name=empCode]').val());
-                $.ajax({
-                    url: '/emp/dailyReportCreate.do',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                          reportContent: $('textarea[name="reportContent"]').val(),
-                    }),
-                    success: function (res) {
-                        // 서버 응답 처리
-                        if (res.success) {
-                            swal({
-                                title: "성공",
-                                text: res.message,
-                                icon: "success",
-                            }).then(function () {
-                            	self.close();
-                            });
-                        } else {
-                            swal({
-                                title: "실패",
-                                text: res.message,
-                                icon: "error",
-                            });
-                        }
-                    },
-                    error: function () {
-                        swal({
-                            title: "오류",
-                            text: "서버와의 통신 중 문제가 발생했습니다.",
-                            icon: "error",
-                        });
+    $(document).ready(function () {
+        // 폼 제출 이벤트
+        $('#reportForm').on('submit', function (e) {
+            e.preventDefault();
+
+            const formData = $(this).serialize();
+
+            $.ajax({
+                url: '/emp/dailyReportCreate.do', // 또는 Context Path를 포함한 URL
+                type: 'post',
+                data: formData,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $('#controllerModal').removeClass('show');
+                    } else {
+                        alert(response.message);
                     }
-                });
-            });
-        });
-        
-        window.addEventListener('beforeunload', function (event) {
-            // SweetAlert를 표시
-            swal({
-                title: "창을 닫으시겠습니까?",
-                text: "현재 작업이 저장되지 않을 수 있습니다.",
-                icon: "warning",
-                buttons: ["취소", "닫기"],
-                dangerMode: true,
-            }).then(function (willClose) {
-                if (!willClose) {
-                    // 사용자가 닫기를 취소하면 기본 동작을 중단
-                    
-                } else {
-                    // 팝업 창을 정상적으로 닫을 수 있도록 처리
-                    window.onbeforeunload = null;
-                    window.close();
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX 오류 상태:", status);
+                    console.error("AJAX 오류 메시지:", error);
+                    console.error("AJAX 응답 내용:", xhr.responseText);
+                    alert('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
                 }
             });
-
-            // preventDefault()가 브라우저에 따라 작동하지 않을 경우를 대비해 메시지를 반환
-            return event.returnValue = "현재 창을 닫으시겠습니까?";
         });
-        
-        */
+    });
+  
     </script>
 </html>

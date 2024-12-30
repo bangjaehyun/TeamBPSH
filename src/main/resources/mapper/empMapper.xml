@@ -361,4 +361,14 @@
      	where report_date = TRUNC(SYSDATE) 
      	and emp_code = #{empCode}
      </select>
+     
+     <update id="dailyReportUpdate"
+     parameterType="string">
+     	 UPDATE tbl_daily_report
+    SET report_content = #{reportContent}
+    WHERE emp_code = #{empCode}
+      AND report_date = TRUNC(SYSDATE)
+     	
+     	
+     </update>
 </mapper>

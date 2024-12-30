@@ -307,101 +307,57 @@
 		
 		
 		$(document).ready(function () {
-		    // 버튼 상태 관리 변수
 		    let isUpdateMode = false;
 
-		    // 일일 업무일지 작성/수정 버튼 클릭
+		    // 작성/수정 버튼 클릭
 		    $('#dailyReport').on('click', function (e) {
-		        e.preventDefault(); // 기본 동작 방지
-
+		        e.preventDefault();
+		        const empCode = $('#empCode').val();
 		        const url = isUpdateMode
-		            ? '/emp/dailyReportUpdateForm.do' // 수정 폼 URL
-		            : '/emp/dailyReportWrite.do';    // 등록 폼 URL
+		            ? '/emp/dailyReportUpdateForm.do'
+		            : '/emp/dailyReportWrite.do';
 
-		        const data = { empCode: $('#empCode').val() };
-
-		        // AJAX 요청
 		        $.ajax({
 		            url: url,
 		            type: 'post',
-		            data: data,
+		            data: { empCode: empCode },
 		            success: function (response) {
-		                // 수정.jsp의 HTML 내용을 모달에 삽입
 		                $('#modalContent').html(response);
-
-		                // 모달 창 열기
 		                $('#controllerModal').addClass('show');
 		            },
 		            error: function () {
-		                alert('데이터를 불러오지 못했습니다.');
+		                alert('데이터를 불러오는 중 오류가 발생했습니다.');
 		            }
 		        });
 		    });
-
-		    // 폼 제출 (등록/수정 처리)
-		    $(document).on('submit', '#dailyReportForm', function (e) {
-		        e.preventDefault(); // 기본 동작 방지
-
-		        const formData = $(this).serialize(); // 폼 데이터 직렬화
-		        const url = isUpdateMode
-		            ? '/emp/dailyReportUpdate.do' // 수정 요청 URL
-		            : '/emp/dailyReportCreate.do'; // 등록 요청 URL
-
+		    
+		    // 상태 확인 (등록/수정 모드 설정)
+		    function checkDailyReportStatus(empCode) {
 		        $.ajax({
-		            url: url,
+		            url: '/emp/dailyReportCheck.do',
 		            type: 'post',
-		            data: formData,
-		            success: function () {
-		                alert(isUpdateMode
-		                    ? '업무일지가 성공적으로 수정되었습니다.'
-		                    : '업무일지가 성공적으로 등록되었습니다.');
-
-		                // 모달 닫기
-		                $('#controllerModal').removeClass('show');
-
-		                // 상태 업데이트
-		                if (!isUpdateMode) {
-		                    $('#dailyReport').text('일일 업무일지 수정'); // 버튼 텍스트 변경
-		                    isUpdateMode = true; // 수정 모드로 전환
+		            data: { empCode: empCode },
+		            dataType: 'json', // 서버가 JSON을 반환해야 함
+		            success: function (response) {
+		                if (response) { // true: 수정 가능 상태
+		                    $('#dailyReport').text('일일 업무일지 수정'); // 버튼 상태 변경
+		                    isUpdateMode = true; // 수정 모드 활성화
+		                } else { // false: 작성 가능 상태
+		                    $('#dailyReport').text('일일 업무일지 작성');
+		                    isUpdateMode = false; // 등록 모드 활성화
 		                }
 		            },
-		            error: function () {
-		                alert(isUpdateMode
-		                    ? '업무일지 수정에 실패했습니다.'
-		                    : '업무일지 등록에 실패했습니다.');
+		            error: function (xhr, status, error) {
+		                console.error("AJAX 오류:", status, error);
+		                alert('상태 확인에 실패했습니다. 다시 시도해주세요.');
 		            }
 		        });
-		    });
+		    }
 
-		    // 모달 창 닫기
-		    $('#closeModalController').on('click', function () {
-		        $('#controllerModal').removeClass('show');
-		    });
-
-		    // 상태 확인
+		    // 페이지 로드 시 상태 확인
 		    const empCode = $('#empCode').val();
-		    $.ajax({
-		        url: '/emp/dailyReportCheck.do',
-		        type: 'post',
-		        data: { empCode: empCode },
-		        dataType: 'json', // 서버가 JSON을 반환해야 함
-		        success: function (response) {
-		            console.log("서버 응답:", response);
-		            if (response) { // true 또는 false 값 체크
-		                $('#dailyReport').text('일일 업무일지 수정'); // 버튼 상태 변경
-		                isUpdateMode = true; // 수정 모드 활성화
-		            } else {
-		                $('#dailyReport').text('일일 업무일지 작성');
-		                isUpdateMode = false; // 등록 모드 활성화
-		            }
-		        },
-		        error: function (xhr, status, error) {
-		            console.error("AJAX 오류:", status, error);
-		            alert('상태 확인에 실패했습니다. 다시 시도해주세요.');
-		        }
-		    });
+		    checkDailyReportStatus(empCode);
 		});
-
 
 	</script>
 </body>

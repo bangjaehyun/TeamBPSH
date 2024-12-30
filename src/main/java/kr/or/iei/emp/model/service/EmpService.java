@@ -204,6 +204,11 @@ public class EmpService {
 		
 		return dao.empCheckReport(empCode) > 0;
 	}
+	//db에 update
+	public int dailyReportUpd(DailyReport dailyReport) {
+		
+		return dao.dailyReportUpd(dailyReport);
+	}
 
 
 

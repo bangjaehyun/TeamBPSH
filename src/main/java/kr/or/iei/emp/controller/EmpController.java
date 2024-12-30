@@ -287,28 +287,27 @@ public class EmpController {
     @PostMapping("dailyReportWrite.do")
     public String dailyReportWrite(String empCode, Model model) {
     	model.addAttribute("empCode",empCode);
-    	model.addAttribute("reportContent","test");
     	return "emp/dailyReportWrite";
     }
     
     //일일 업무일지 등록
     @PostMapping("dailyReportCreate.do")
+    @ResponseBody
     public Map<String, Object> reportCreate(DailyReport daily) {
-    	HashMap<String, Object> response = new HashMap<>();
-    	
-    	int result = service.reportCreate(daily);
-    	
-    	if(result >1) {
-    		response .put("success", true);
-    		response .put("message","일일 업무일지가 등록 되었습니다.");
-    	}else {
-    		response .put("success", false);
-    		response .put("message", "일일 업무일지 등록에 실패했습니다.");
-    	}
-    	
-    	return response;
+        Map<String, Object> response = new HashMap<>();
+        int result = service.reportCreate(daily);
+
+        if (result > 0) {
+            response.put("success", true);
+            response.put("message", "업무일지가 성공적으로 등록되었습니다.");
+        } else {
+            response.put("success", false);
+            response.put("message", "업무일지 등록에 실패했습니다.");
+        }
+        return response;
     }
-    //일일 업무일지  
+    
+    //일일 업무일지  수정 창
     @PostMapping("dailyReportUpdateForm.do")
     public String dailyReportUpdate(Model model, String empCode) {
     	DailyReport report = service.dailyReportUpdate(empCode);
@@ -316,17 +315,27 @@ public class EmpController {
     	return "emp/dailyReportUpdate";
     }
     //일일 업무일지 상태 확인 
-    @PostMapping("/dailyReportCheck.do")
+    @PostMapping("dailyReportCheck.do")
     @ResponseBody
     public boolean checkDailyReportExists(String empCode) {
     	boolean exist = service.empCheckReport(empCode);
     	return exist;
     }
-    
+    //일일 업무일지 수정 
     @PostMapping("dailyReportUpdate.do")
-    public String dailyReportUpdate(String empCode) {
-    	DailyReport report = service.dailyReportUpd(empCode);
-    	return null;
+    @ResponseBody
+    public Map<String, Object> updateDailyReport(DailyReport dailyReport) {
+        Map<String, Object> response = new HashMap<>();
+        int result = service.dailyReportUpd(dailyReport);
+
+        if (result > 0) {
+            response.put("success", true);
+            response.put("message", "업무일지가 성공적으로 수정되었습니다.");
+        } else {
+            response.put("success", false);
+            response.put("message", "업무일지 수정에 실패했습니다.");
+        }
+        return response; // JSON 응답 반환
     }
     
 

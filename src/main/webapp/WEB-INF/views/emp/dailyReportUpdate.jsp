@@ -7,43 +7,20 @@
 <title>Insert title here</title>
 </head>
 <style>
-    * {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-.container {
-    width: 100%;
-    max-width: 600px; /* 컨테이너 최대 너비 */
-    margin: 20px auto;
+ .container {
+    width: 100%; /* 부모 모달 창에 맞게 너비 조정 */
+    max-width: none; /* 최대 너비 제한 해제 */
+    height: auto; /* 높이는 콘텐츠에 따라 자동 조정 */
+    margin: 0; /* 모달 내부에 맞게 정렬 */
     border: 1px solid #ddd;
     padding: 20px;
     background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px; /* 모서리 둥글게 */
-    display: flex;
-    flex-direction: column; /* 세로 정렬 */
+    box-shadow: none; /* 중첩된 그림자를 제거 */
 }
 
-/* 제목 섹션 스타일 */
-.title-section {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-bottom: 2px solid #007bff;
-    padding: 10px 0;
-    margin-bottom: 20px;
-}
-
-.title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333333;
-}
-
-/* 내용 섹션 스타일 */
+/* 내용 섹션 */
 .content-section {
-    flex-grow: 1; /* 남은 공간을 모두 차지 */
+    height: 400px; /* 콘텐츠 높이 자동 조정 */
     border: 1px solid #ddd;
     background-color: #fefefe;
     color: #110708;
@@ -52,53 +29,40 @@
     line-height: 1.6;
     box-sizing: border-box;
     overflow-y: auto; /* 스크롤 가능 */
-    padding: 10px; /* 내부 여백 */
-    margin-bottom: 20px; /* 버튼과 간격 */
+    padding: 10px; /* 여백 추가 */
 }
 
-/* 텍스트 입력 스타일 */
+/* 텍스트 입력 */
 textarea {
     width: 100%;
-    height: 200px; /* 고정 높이 */
+    height:100%;
     border: none;
-    resize: none; /* 크기 조절 비활성화 */
+    resize: none;
     font-size: 14px;
     line-height: 1.6;
-    padding: 10px;
+    padding: 5px;
     background-color: transparent;
-    color: #333333;
-    outline: none; /* 포커스 시 외곽선 제거 */
-    box-sizing: border-box;
+    color: inherit;
+    outline: none;
 }
 
-/* 텍스트 입력 포커스 스타일 */
-textarea:focus {
-    background-color: #f0f8ff; /* 포커스 시 강조 배경 */
-    border: 1px solid #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* 포커스 시 외곽 강조 */
-}
-
-/* 버튼 스타일 */
+/* 버튼 */
 button {
-    width: 100%;
     border: none;
     background-color: #007bff;
     color: white;
-    padding: 15px;
+    padding: 10px 20px;
     border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
-
-button:hover {
-    background-color: #0056b3;
+    margin-top: 10px;
+    align-self: flex-end; /* 버튼을 오른쪽으로 정렬 */
 }
     </style>
     <body>
         <div class="container">
-            <form id="dailyReportForm" action="/emp/dailyReportUpdate.do" method="post">
+            <form id="dailyReportForm"  method="post">
             <input type="hidden" name="EmpCode" value="${loginEmp.empCode}">
                 <!-- Title Section -->
                 <div class="title-section">
@@ -111,5 +75,36 @@ button:hover {
                 <button id="btnSubmit" data-action="create">수정</button>
             </form>
         </div>
+        <script>
+        $(document).ready(function () {
+            // 폼 제출 이벤트
+            $('#dailyReportForm').on('submit', function (e) {
+                e.preventDefault();
+
+                const formData = $(this).serialize();
+
+                $.ajax({
+                    url: '/emp/dailyReportUpdate.do', // 또는 Context Path를 포함한 URL
+                    type: 'post',
+                    data: formData,
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            $('#controllerModal').removeClass('show');
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX 오류 상태:", status);
+                        console.error("AJAX 오류 메시지:", error);
+                        console.error("AJAX 응답 내용:", xhr.responseText);
+                        alert('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+                    }
+                });
+            });
+        });
+        </script>
     </body>
 </html>

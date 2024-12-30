@@ -152,6 +152,11 @@ public class EmpDao {
 		return sqlSession.selectOne("emp.checkReport",empCode);
 	}
 
+	public int dailyReportUpd(DailyReport dailyReport) {
+		
+		return sqlSession.update("emp.dailyReportUpdate", dailyReport);
+	}
+
 
 
 
