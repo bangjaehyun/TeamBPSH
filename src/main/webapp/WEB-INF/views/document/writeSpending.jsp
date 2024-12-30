@@ -5,9 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 
+<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
       
 
 <style>
@@ -22,6 +22,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-left:300px;
 }
 
 .container {
@@ -31,7 +32,9 @@
 	align-items: center;
 	box-sizing: border-box;
 }
-
+button:hover{
+	cursor:pointer;
+}
 
 
 
@@ -57,20 +60,47 @@
 	margin-left: 2%;
 }
 
-.main-container #title {
-	width: 450px;
-	font-size: 17px;
-}
 
-.doc-title {
+
+	.doc-title {
+	width: 550px;
 	display: flex;
-	justify-content: space-between;
+	border:none;
+	border: 1px solid #ccc;
+	
+	
+	border-radius: 8px;
+	align-items:center;	
 	margin: 0px;
 	margin-bottom: 10px;
 }
+	.doc-title input{
+		background:none;
+		width:550px;
+		border:none;
+		font-size: 18px;
+	}
 
 .ref {
 	display: flex;
+}
+.ref>button{
+	padding: 7px 4px;
+	border-radius: 4px;
+	background-color:gray;
+	border:none;
+	color:white;
+	
+	
+}
+
+.ref>button:hover{
+	scale:1.1;
+}
+
+.ref>button:active{
+	scale:1;
+	background-color:black;
 }
 
 .sign {
@@ -90,121 +120,137 @@
 
 
 
-form {
-	margin-bottom: 20px;
-}
-
-form * {
-	margin-bottom: 5px;
-}
-
-label {
-	font-weight: bold;
-	background-color: #ccc;
+	form {
+		margin-bottom: 20px;
+	}
 	
-	border: 1px solid black;
-}
-
-.form-content {
-            
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 10px;
-            
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-
-		.column-title{
-            margin-left: 1%;
-            display: grid;
-            grid-template-columns: 30% 30% 30% 7%;  
-            justify-items: center;
-            gap: 5px;  
-            align-items: center;
-		}
-
-		.column-title label{
-			background-color: white;
-			border: none;
-			font-size:22px;
-		}       
-
+	form * {
+		margin-bottom: 5px;
+	}
+	
+	label {
+		font-weight: bold;
+		background-color: #ccc;
 		
+		border: 1px solid black;
+	}
 
-        .column-row {
-            margin-left: 1%;
-            display: grid;
-            grid-template-columns: 30% 30% 30% 7%;  
-            gap: 5px;  
-            align-items: center;
-           margin-top: 3px;
-        }
+	.selectedBtn:hover{
+		cursor: pointer;
+		
+	}
 
-        .column-row input {
-            width: 100%;
-            padding: 8px 0px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
 
-        .column-row button {
-            width: 100%;  
-            padding: 8px 0px;
-            background-color: gray;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+	.form-content {
+	            
+	            margin-bottom: 6px;
+	            border: 1px solid #ccc;
+	            border-radius: 4px;
+	            padding: 10px;
+	            background-color:#f5f5f5;
+	            display: flex;
+	            flex-direction: column;
+	            gap: 10px;
+	        }
 
-        .add-btn{
-            padding: 8px;
-            background-color: gray;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
 
-.vac-content {
-	width: 550px;
-	height: 300px;
-}
+	.column-title{
+           margin-left: 1%;
+           display: grid;
+           grid-template-columns: 30% 30% 30% 7%;  
+           justify-items: center;
+           gap: 5px;  
+           align-items: center;
+	}
+	
+	.column-title label{
+		background-color: white;
+		border: none;
+		font-size:20px;
+	}       
 
-.vac-content textarea {
-	width: 100%;
-	height: 100%;
-	resize: none;
-}
+	.content-title{
+		background-color: white;
+		border: none;
+		font-size:18px;
+	}
+	
+       .column-row {
+           margin-left: 1%;
+           display: grid;
+           grid-template-columns: 30% 30% 30% 7%;  
+           gap: 5px;  
+          align-items:center;
+          margin-top: 3px;
+       }
 
-.buttons {
-	display: flex;
-	justify-content: flex-end;
-	gap: 20px;
-	margin-right: 3%;
-}
+       .column-row input {
+           width: 100%;
+           padding: 8px 0px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+           font-size: 16px;
+           height: 100%;
+       }
 
-.buttons button {
-	padding: 10px 20px;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 14px;
-}
+       .column-row button {
+           width: 100%;  
+           padding: 10px 4px;
+           background-color: gray;
+           color: white;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+       }
 
-.buttons .submit {
-	background-color: gray;
-	color: white;
-}
+       .add-btn{
+           padding: 8px;
+           background-color: gray;
+           color: white;
+           border: none;
+           border-radius: 4px;
+           cursor: pointer;
+       }
 
-.buttons .cancel {
-	background-color: gray;
-	color: white;
+	.add-btn:active{
+		scale:0.8;
+		background-color: black;
+	}
+
+	.vac-content {
+		width: 550px;
+		height: 300px;
+	}
+	
+	.vac-content textarea {
+		width: 100%;
+		height: 100%;
+		resize: none;
+	}
+	
+	.buttons {
+		display: flex;
+		justify-content: flex-end;
+		gap: 20px;
+		margin-right: 3%;
+	}
+	
+	.buttons button {
+		padding: 10px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 14px;
+	}
+	
+	.buttons .submit {
+		background-color: gray;
+		color: white;
+	}
+	
+	.buttons .cancel {
+		background-color: gray;
+		color: white;
 }
 </style>
 </head>
@@ -212,16 +258,12 @@ label {
 	<div class="board">
 	<div class="container">
 		<div class="header">
-			<h1>휴가 신청서</h1>
+			<h1>지출 결의서</h1>
 
 			<div class="main-container">
 				<form action="/doc/writeVacation.do" method="post" enctype="multipart/form-data">
 					<div class="doc-title">
-						<div>
-							<label for="title">제목</label> <input id="title" type="text"
-								name="title" placeholder="제목 입력" />
-						</div>
-
+						 <input id="title" type="text"name="title" placeholder="제목 입력" />
 					</div>
 					<div class="ref">
 						<button type="button" onclick="searchMan('sign')">결재자 검색</button>
@@ -237,11 +279,11 @@ label {
 						</div>
 					</div>
 
-			<div>
-                <label>내용</label>
+			<div class="spending">
+                <label class="content-title">지출내역</label>
                 <div class="form-content">
 						<div class="column-title">
-							<label>사용처</label>
+							<label>지출일</label>
 						
 							<label>금액</label>
 						
@@ -253,13 +295,13 @@ label {
                     <div id="spending" class="form-column">
 						<div  class="column-row">	
                             <div>
-                                <input type="text" name="usage" placeholder="사용처 입력">
+                                <input type="date" name="spendingDay" max="9999-12-31">
                             </div>
                             <div>
-                                <input type="text" name="amount" placeholder="금액 입력">
+                                <input type="text" name="spendingCost" placeholder="금액 입력">
                             </div>
                             <div>
-                                <input type="text" name="purpose" placeholder="사용용도 입력">
+                                <input type="text" name="spendingContent" placeholder="사용용도 입력">
                             </div>
                            <div></div>
 						</div>
@@ -272,7 +314,7 @@ label {
             </div>
 
 					<div>
-						<label for="vac-content">내용</label>
+						<label for="vac-content" class="content-title">내용</label>
 						<textarea  id="summernote" class="vac-content">
 							
 						</textarea>
@@ -283,7 +325,7 @@ label {
 				</form>
 				<div class="buttons">
 					<button class="submit" type="button" onclick="writeDocument()">작성</button>
-					<button class="cancel" type="button">취소</button>
+					<button class="cancel" type="button" onclick="cancel()">취소</button>
 				</div>
 			</div>
 		</div>
@@ -293,6 +335,30 @@ label {
 <script src="/resources/summernote/summernote-lite.js"></script>
 <script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
 <script>
+var checkDocument={
+		"docTitle":	false,
+		"sign":		false,
+		"spending": false,
+		"sameSign":	true,
+		"sameRef":	true,
+		"cost":		true
+		
+		
+};
+
+function msg(title, text, icon, callback){
+	swal({
+		title : title,
+		text : text,
+		icon : icon
+	}).then(function(){
+		if(callback != "0"){
+			location.href = "/";
+		}
+	});
+	
+}
+
 //작성조건이 맞는가?
 function addInput() {
         const column = document.querySelector('.form-column');
@@ -300,15 +366,15 @@ function addInput() {
         newRow.className = 'column-row';
         newRow.innerHTML = `
             <div>
-                <input type="text" name="usage" placeholder="사용처 입력">
+                <input type="date" name="spendingDay" max="9999-12-31">
             </div>
             <div>
-                <input type="text" name="amount" placeholder="금액 입력">
+                <input type="text" name="spendingCost" placeholder="금액 입력">
             </div>
             <div>
-                <input type="text" name="purpose" placeholder="사용용도 입력">
+                <input type="text" name="spendingContent" placeholder="사용용도 입력">
             </div>
-            <button type="button" onclick="deleteInput(event)">삭제</button>
+            <button type="button" class="add-btn" onclick="deleteInput(event)">삭제</button>
         `;
         column.appendChild(newRow);
     }
@@ -322,15 +388,7 @@ function addInput() {
     }
     
     
-var checkDocument={
-		"docTitle":	false,
-		"sign":		false,
-		"spending": false,
-		"sameSign":	true,
-		"sameRef":	true
-		
-		
-};
+
 
 
 
@@ -409,27 +467,27 @@ var checkDocument={
         const form = new FormData(); //<form> 태그
         form.append("uploadFile", file); //<input type="file" name="uploadFile">
         
-//         $.ajax ({
-//            url : "/doc/documentImage.do",
-//            type : "post", //post 필수
-//            data : form,  //전송 데이터
-//            processData : false, //기본 문자열 전송 세팅 해제
-//            contentType : false, //기본 form enctype 해제
-//            cache:false,
-//            success : function(savePath){
-//               //savePath : 파일 업로드 경로
-//               $(editor).summernote("insertImage", savePath); //에디터 본문에 이미지 표기
+        $.ajax ({
+           url : "/doc/documentImage.do",
+           type : "post", //post 필수
+           data : form,  //전송 데이터
+           processData : false, //기본 문자열 전송 세팅 해제
+           contentType : false, //기본 form enctype 해제
+           cache:false,
+           success : function(savePath){
+              //savePath : 파일 업로드 경로
+              $(editor).summernote("insertImage", savePath); //에디터 본문에 이미지 표기
               
-//               //게시글 작성 시, 이미지 중복 등록 방지
-//             //  $("input[id*=note-dialog]").remove();
-//            },
-//            error : function(){
-//               console.log("오류");
-//            }
-//         });
+              //게시글 작성 시, 이미지 중복 등록 방지
+            //  $("input[id*=note-dialog]").remove();
+           },
+           error : function(){
+              console.log("오류");
+           }
+        });
      }
 
-
+	
 
 
 $('#title').on('input',function(){
@@ -551,19 +609,30 @@ $('#title').on('input',function(){
 	    	
 	    });
 	    
-	    const spendingList=[];
 	    
-	    spendingList.length=0;
-	    
-	    spending.children().each(function(){
-	    	const detail=$(this);
-	    	const detailList=[];
-	    	detail.children().each(function(){
-	    		const item=$(this).val();
-	    		detailList.length=0;
-	    		detailList.push(item);
-	    	});
-	    	spendingList.push(detailList);
+	    //지출내역 확인
+	    const spendingList = [];
+
+	    spending.children().each(function() {
+	       checkDocument.cost=true;
+	       checkDocument.spending=true;
+	        const spendingDay = $(this).find('input[name="spendingDay"]').val();
+	        const spendingCost = $(this).find('input[name="spendingCost"]').val();
+	        const spendingContent = $(this).find('input[name="spendingContent"]').val();
+	        const regExp = /^[0-9]*$/;
+	        
+	        if(spendingDay.length==0||spendingCost.length==0||spendingContent.length==0){
+					checkDocument.spending=false;
+					return;
+	        }
+			
+			if(!regExp.test(spendingCost)){
+				checkDocument.cost=false;
+				return;
+			}
+	       const spend=spendingDay+' '+spendingCost+' '+spendingContent;
+	        spendingList.push(spend);
+	        
 	    });
 	    
 	    
@@ -572,12 +641,13 @@ $('#title').on('input',function(){
 	    for (let check in checkDocument) {
 	        if (!checkDocument[check]) {
 	            switch (check) {
-	                case "docTitle": alert("제목을 작성하시오."); break;
-	                case "sign": alert("최소 1명 이상의 결재자가 필요합니다"); break;
-	                case "spending": alert("지출내역은 적어도 1개 이상 작성해야 합니다"); break;
-	                case "sameSign": alert("중복된 결재자가 있습니다."); checkDocument.sameSign=true; break;  
-	                case "sameRef": alert("중복된 참조자가 있습니다.");  checkDocument.sameRef=true; break;
-	                case "overlap":	alert("한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다."); checkDocument.overlap=true; break;
+	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
+	                case "sign": msg("알림","최소1명의 결재자가 필요합니다.","error","0"); break;
+	                case "spending": msg("알림","지출내역을 전부 체워주세요.","error","0"); break;
+	                case "cost"	:msg("알림","금액은 숫자로만 입력해 주세요.","error","0");break;
+	                case "sameSign": msg("알림","중복된 결재자가 존재합니다.","error","0"); checkDocument.sameSign=true; break;  
+	                case "sameRef": msg("알림","중복된 참조자가 존재합니다.","error","0");  checkDocument.sameRef=true; break;
+	                case "overlap":	msg("알림","한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다.","error","0"); checkDocument.overlap=true; break;
 	                //중복체크는 확인시 다시 값 초기화
 	                
 	               
@@ -588,7 +658,7 @@ $('#title').on('input',function(){
 	    
 	    const formData = new FormData();
 	    formData.append("documentTitle", $('#title').val());
-	    formData.append("documentTypeCode","va");
+	    formData.append("documentTypeCode","sp");
 	    formData.append("half", $('#half').is(':checked') ? "true" : "false");
 	    formData.append("halfTime", $('input[name="select"]:checked').val());
 	    formData.append("start", $('#vacStart').val());
@@ -641,7 +711,20 @@ $('#title').on('input',function(){
 	        processData: false,  // 파일 업로드 시 필수
 	        contentType: false,  // 파일 업로드 시 필수
 	        success: function(res) {
-	            console.log("연결성공");
+	            if(res>3){
+	            	msg("알림","문서작성이 왼료되었습니다.","success","1")
+	            }else if(res==3){
+	            	msg("알림","지출내역 적용중 문제가 발생했습니다.","error","0")
+	            }
+	            else if(res==2){
+	            	msg("알림","결재자,참조자 적용중 문제가 발생했습니다.","error","0")
+	            }
+	            else if(res==1){
+	            	msg("알림","첨부파일 적용중에 문제가 발생했습니다.","error","0")
+	            }
+	            else{
+	            	msg("알림","문서내용 적용중 문제가 발생했습니다.","error","0")	
+	            }
 	        },
 	        error: function() {
 	            console.log("오류");
@@ -649,6 +732,9 @@ $('#title').on('input',function(){
 	    });
 	}
 
+	function cancel(){
+		location.href="/";
+	}
 	
 	
 </script>
