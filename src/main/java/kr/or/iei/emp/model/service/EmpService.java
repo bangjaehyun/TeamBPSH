@@ -1,6 +1,8 @@
 package kr.or.iei.emp.model.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -217,6 +219,26 @@ public class EmpService {
 
 	public int readAlarm(String alarmNo) {
 		return dao.readAlarm(alarmNo);
+	}
+
+	public int onWork(String empCode) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date date = new Date();
+		String toDay = sdf.format(date);
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("empCode", empCode);
+		map.put("day", toDay);
+		
+		int result = dao.chkOnWorkToday(map);
+		if(result > 0) {
+			return -1;
+		}else {
+			result = dao.insertOnWork(empCode);
+		}
+		
+		
+		return result;
 	}
 
 

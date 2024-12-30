@@ -18,7 +18,7 @@
 	width: calc(100vw - 55px);
 	height: calc(100vh - 50px);
 	overflow: scroll;
-	overflow-y: hidden
+	overflow-y: hidden;
 }
 
 .tbl {

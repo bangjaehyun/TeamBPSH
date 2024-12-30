@@ -86,7 +86,7 @@
        }
        
        .alarmMsg{
-       		margin : auto 0;
+       		margin : auto 1px;
        		text-decoration: none;
        		color : black;
        		font-size: 15px;	
@@ -95,7 +95,8 @@
        .alarmDiv{
        		height: 30px;
        		display: flex;
-       		justify-content: center;
+       		justify-content: flex-start;
+       		border-bottom: 1px solid black;
        }
     </style>
 </head>
@@ -121,6 +122,7 @@
 	
 	//server에서 메시지 올시 알람 count 증가 처리
 	eventSource.onmessage = (event) => { //데이터를 받아옴
+		console.log(event.data);
 		if(Number($('.notification-count').children().html()) < 99){
 		    if($('.notification-count').css('display') == "none"){
 		    	$('.notification-count').css('display', 'inline-block');
@@ -197,13 +199,17 @@
 	}
 	
 	function alarmChangeRead(alarmNo){
-		console.log(alarmNo)
 		$.ajax({
 			url : "/emp/alarmRead.do",
 			type : "post",
 			data : {"alarmNo" : alarmNo},
 			success : function(res){
-				console.log(res);
+				if(res == "1"){
+					$('.notification-count').children().html( Number($('.notification-count').children().html()) - 1);
+					if(Number($('.notification-count').children().html()) == 0){
+						$('.notification-count').css('display','none');
+					}
+				}
 			},error : function(){
 				console.log('ajax 오류');
 			}
@@ -234,12 +240,38 @@
 		});
 	}
 	
-	//기본 페이지 이동
+	<%--파라미터 없는 페이지 이동--%>
 	function pageMove(url){
 		$('.bgx').css('display','none');
 		$.ajax({
 	         url : url,
 	         type : "post",
+	         success : function(res) {
+	        	try {
+	        		const errMsg = JSON.parse(res);
+	        		if(errMsg.loc == null){
+	        			msg(errMsg.title, errMsg.msg,errMsg.icon);
+	        		}else{
+	        			callbackMsg(errMsg.title, errMsg.msg,errMsg.icon, errMsg.loc);
+	        		}
+	        		
+	        	} catch (e) {
+	        		 $('.page').html(res);
+	        	}
+	         },
+	         error : function() {
+	            console.log('ajax error');
+	         }
+	      });
+	}
+	
+	
+	function pageMoveParam(url, param){
+		$('.bgx').css('display','none');
+		$.ajax({
+	         url : url,
+	         type : "post",
+	         data : param,
 	         success : function(res) {
 	        	try {
 	        		const errMsg = JSON.parse(res);

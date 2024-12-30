@@ -474,4 +474,15 @@ public class EmpController {
     	  System.out.println(result);
     	  return String.valueOf(result);
       }
+      
+      @PostMapping("myPage.do")
+      public String myPage(String empCode, Model model) {
+    	  return "emp/myPage";
+      }
+      
+      @PostMapping(value="onWork.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String onWork(String empCode) {
+    	  return  String.valueOf(service.onWork(empCode));
+      }
 }
