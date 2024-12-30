@@ -45,11 +45,13 @@
         	display: flex;	
         }
         .header-my{
+        	cursor: pointer;
         	margin: auto 15px;
         	height: 40px;
         }
         
         .header-notification{
+        	cursor: pointer;
         	margin: auto 0;
         	height: 40px;
         }
@@ -73,6 +75,28 @@
        		color: white;
        }
        
+       .alarmAct {
+       	 visibility : visible;
+       	 height : 150px;
+  		 transition:.5s;
+       }
+       
+       .alarmNoRead{
+       	background: #fdf0b3;
+       }
+       
+       .alarmMsg{
+       		margin : auto 0;
+       		text-decoration: none;
+       		color : black;
+       		font-size: 15px;	
+       }
+       
+       .alarmDiv{
+       		height: 30px;
+       		display: flex;
+       		justify-content: center;
+       }
     </style>
 </head>
 
@@ -119,6 +143,72 @@
 			$('.myPage').addClass('act');
 		}
 	});
+	
+	$('.header-notification').on('click',function(){
+		if($('.alarm').hasClass('alarmAct')){
+			$('.alarm').removeClass('alarmAct');
+			$('.alarm').children().remove();
+		}else{
+			$('.alarm').addClass('alarmAct');
+			$.ajax({
+				url : "/emp/loadAlarmList.do",
+				type : "post",
+				data : {"empCode" : "${loginEmp.empCode}"},
+				success : function(res){
+					for(let i in res){
+						let	data = res[i];
+						let divEl = $('<div></div>');
+						let aEl = $('<a href=javascript:void(0)></a>');
+						aEl.attr('onclick', 'alarmMove('+'"'+data.alarmNo+'","'+data.refUrl+'","'+data.urlParam+'","' + data.alarmRead +'")');
+						 
+						
+						aEl.html(data.alarmComment);
+						aEl.attr('class', 'alarmMsg');
+						divEl.attr('class', 'alarmDiv');
+						if(data.alarmRead == "n"){
+							divEl.addClass("alarmNoRead");
+						}
+						divEl.append(aEl);
+						
+						$('.alarm').append(divEl);
+					}
+				},
+				error : function(){
+					console.log("ajax 오류");
+				}
+			});
+		}
+	});
+	
+	function alarmMove(alarmNo ,url, param, alarmRead){
+		if(alarmRead == 'n'){
+			alarmChangeRead(alarmNo);
+		}
+			$.ajax({
+				url : url,
+				type : "post",
+				data : {param},
+				success : function(res){
+					 $('.page').html(res);
+				},error : function(){
+					console.log("ajax 오류");
+				}
+			});
+	}
+	
+	function alarmChangeRead(alarmNo){
+		console.log(alarmNo)
+		$.ajax({
+			url : "/emp/alarmRead.do",
+			type : "post",
+			data : {"alarmNo" : alarmNo},
+			success : function(res){
+				console.log(res);
+			},error : function(){
+				console.log('ajax 오류');
+			}
+		});	
+	}
 
 	<%-- 콜백 있는 메시지 --%>
 	function callbackMsg(title,msg,icon, callback){

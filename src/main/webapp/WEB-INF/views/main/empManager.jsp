@@ -17,6 +17,8 @@
 .page-wrap {
 	width: calc(100vw - 55px);
 	height: calc(100vh - 50px);
+	overflow: scroll;
+	overflow-y: hidden
 }
 
 .tbl {
@@ -33,7 +35,11 @@
 }
 
 .salary-div {
-	min-width: 185px;
+	min-width: 165px;
+}
+
+.salary-div>input{
+	width: 100px;
 }
 
 .vacation-div {

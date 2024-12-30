@@ -553,7 +553,6 @@
 	
 	
 	function addFile(chat){
-		let date = getDay(chat.chatDate);
 		if(chat.empCode == ${loginEmp.empCode}){
 			let divEl = $('<div></div>');
 			let namDiv = $('<div></div>');

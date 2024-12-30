@@ -27,7 +27,7 @@ public class Emitter {
     }
     
     public SseEmitter connect(String empCode) {
-        SseEmitter sseEmitter = new SseEmitter(100_000L); //초기화및 타임아웃 설정
+        SseEmitter sseEmitter = new SseEmitter(300 * 1000L); //초기화및 타임아웃 설정 5분
 
         emps.put(empCode, sseEmitter);
 				sseEmitter.onCompletion(() -> {

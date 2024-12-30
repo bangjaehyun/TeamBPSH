@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
@@ -155,6 +156,14 @@ public class EmpDao {
 	public int dailyReportUpd(DailyReport dailyReport) {
 		
 		return sqlSession.update("emp.dailyReportUpdate", dailyReport);
+	}
+
+	public List<Alarm> loadAlarmList(String empCode) {
+		return sqlSession.selectList("emp.loadAlarmList", empCode);
+	}
+
+	public int readAlarm(String alarmNo) {
+		return sqlSession.update("emp.alarmRead", alarmNo);
 	}
 
 

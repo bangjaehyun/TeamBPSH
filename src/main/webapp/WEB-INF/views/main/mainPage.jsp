@@ -64,6 +64,22 @@
   		}
   		
   		
+  		.alarm{
+  			visibility : hidden;
+  			position : absolute;
+         	width : 300px;
+         	height:0px;
+         	top: 55px;
+         	right : 10px;
+    		background: white;
+    		border : 1px solid black; 
+    		border-radius:5px; 
+    		color: black;
+    		text-align: center;
+    		transition: .5s;
+    		overflow: hidden;
+  		}
+  		
   		
 </style>
 </head>
@@ -78,6 +94,11 @@
 			<div class="page">
 				<jsp:include page="/WEB-INF/views/main/main.jsp"></jsp:include>
 			</div>
+			<div>
+				<div class="alarm">
+					
+				</div>
+			</div>
 			 <div class="myPage">
             	 	<ul>
             	 		<li>
@@ -85,9 +106,7 @@
             	 			<c:if test="${loginEmp.deptCode eq dept.deptCode}">
             	 				${dept.deptName}(${loginEmp.empName})
             	 			</c:if>
-
             	 		</c:forEach>
-            	 		
             	 		</li>
             	 		<li><hr></li>
             	 		<li>내정보</li>
