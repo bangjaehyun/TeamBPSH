@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.dao.EmpDao;
+import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.DailyReport;
@@ -208,6 +209,14 @@ public class EmpService {
 	public int dailyReportUpd(DailyReport dailyReport) {
 		
 		return dao.dailyReportUpd(dailyReport);
+	}
+
+	public ArrayList<Alarm> loadAlarmList(String empCode) {
+		return (ArrayList<Alarm>)dao.loadAlarmList(empCode);
+	}
+
+	public int readAlarm(String alarmNo) {
+		return dao.readAlarm(alarmNo);
 	}
 
 

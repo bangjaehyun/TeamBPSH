@@ -41,6 +41,7 @@ import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.emp.model.service.EmpService;
+import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.DailyReport;
@@ -458,5 +459,19 @@ public class EmpController {
             }
       }
 
-
+      @PostMapping(value="loadAlarmList.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String loadAlarmList(String empCode) {
+    	  ArrayList<Alarm> alarmList = service.loadAlarmList(empCode);
+    	  System.out.println(alarmList);
+    	  return new Gson().toJson(alarmList);
+      }
+      
+      @PostMapping(value="alarmRead.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String alarmRead(String alarmNo) {
+    	  int result = service.readAlarm(alarmNo);
+    	  System.out.println(result);
+    	  return String.valueOf(result);
+      }
 }

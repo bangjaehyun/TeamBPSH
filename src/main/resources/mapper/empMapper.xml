@@ -367,8 +367,36 @@
      	 UPDATE tbl_daily_report
     SET report_content = #{reportContent}
     WHERE emp_code = #{empCode}
-      AND report_date = TRUNC(SYSDATE)
-     	
-     	
+      AND report_date = TRUNC(SYSDATE)	
+     </update>
+ 
+     <select id="loadAlarmList"
+     parameterType="string"
+     resultType="alarm">
+      select alarm_no as alarmNo,
+             alarm_comment as alarmComment,
+     		 ref_url as refUrl,
+     		 url_param as urlParam,
+     		 alarm_read as alarmRead,
+     		 alarm_date as alarmDate 
+       from 
+           (
+            select rownum rnum, a.* 
+              from 
+                  (
+                   select * 
+                     from tbl_alarm 
+                    where emp_code = #{empCode} 
+                    order by alarm_date desc
+                  ) a 
+            )
+           where rnum between 1 and 10
+     </select>
+     
+     <update id="alarmRead"
+     parameterType="string">
+     update tbl_alarm
+        set alarm_read = 'y'
+      where alarm_no = #{alarmNo}
      </update>
 </mapper>

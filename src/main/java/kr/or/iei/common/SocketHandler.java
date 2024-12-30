@@ -20,6 +20,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import kr.or.iei.common.emitter.Emitter;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Chat;
 
@@ -54,7 +55,6 @@ public class SocketHandler extends TextWebSocketHandler{
 		
 		try {
 			//수신 받은 메시지 형식 == Json 형식 => 파싱 처리
-			System.out.println(message.getPayload());
 			JsonElement element = JsonParser.parseString(message.getPayload());
 			JsonObject jsonObj = element.getAsJsonObject();
 			String type= jsonObj.get("type").getAsString();
@@ -133,7 +133,7 @@ public class SocketHandler extends TextWebSocketHandler{
 							jobject.addProperty("socket",  true);
 							toWs.sendMessage(new TextMessage(new Gson().toJson(jobject)));
 					}else {
-						//채팅방에 들어와 있지 않을경우에는 DB에만 저장
+							//채팅방에 들어와 있지 않을경우에는 DB에만 저장
 							JsonObject jobject = new JsonObject();
 							jobject.addProperty("type", "readCount");
 							jobject.addProperty("empCode",  fromEmpCode); //사원 번호
@@ -166,8 +166,9 @@ public class SocketHandler extends TextWebSocketHandler{
 		 for (String key : map.keySet()) {
 	            if (map.get(key) == session) {
 	                empGroup.remove(key);
+	                map.get(key).close();
 	            }
-	        }		
+	      }		
 		emps.remove(session);
 	}
 }
