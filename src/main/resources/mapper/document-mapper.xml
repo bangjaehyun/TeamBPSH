@@ -41,6 +41,11 @@
   		select to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,6,'0') as document_code from dual
   	</select>
 	
+	<select id="selectSpendingCode"
+	resultType="string">
+		select to_char(sysdate,'yyyymmdd')||lpad(seq_spending.nextVal,4,'0') as document_code from dual
+	</select>
+	
 	<insert id="insertDocument"
   	parameterType="document">
   		insert into tbl_document values(
@@ -103,6 +108,20 @@
   			#{documentCode},
   			#{empCode}
   		)
+  	</insert>
+  	
+  	
+  	
+  	<insert id="insertSpending"
+  	parameterType="map">
+  	insert into tbl_spending
+  	values(
+  		#{spendingCode},
+  		#{documentCode},
+  		#{spendingDay},
+  		#{spendingCost},
+  		#{spendingContent}
+  	)
   	</insert>
 
 	<select id="viewDocOne" parameterType="string" 

@@ -14,6 +14,9 @@
  		 body{
            
         }
+        button:hover{
+        	cursor: pointer;
+        }
         .container{
         	height: 500px; 
             height:500px;
@@ -70,6 +73,12 @@
        	
        
        }
+       
+       .selectedBtn:hover{
+		cursor: pointer;
+		
+	}
+       
        .filter::-webkit-scrollbar{
       		display: none;
 	   }
@@ -124,12 +133,20 @@
        	justify-content: center;
        	align-content: center;
        	padding: 0 auto;
-       	background-color: yellowgreen;
+       	background-color: gray;
        	color:white;
        	font-size:30px;
        	font-weight: bold;
-       	border: 1px solid gray;
+       	border: none;
        	
+       	
+       }
+       .done:hover{
+       	scale:1.1;
+       }
+       .done:active{
+       scale:0.9;
+        background-color: black;
        }
        
       
