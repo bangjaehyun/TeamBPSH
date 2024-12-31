@@ -44,6 +44,7 @@ import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Emp;
 
@@ -477,6 +478,10 @@ public class EmpController {
       
       @PostMapping("myPage.do")
       public String myPage(String empCode, Model model) {
+    	  Commute commute = service.selectCommute(empCode);
+    	  
+    	  model.addAttribute("commute", commute);
+    	  
     	  return "emp/myPage";
       }
       
@@ -484,5 +489,42 @@ public class EmpController {
       @ResponseBody
       public String onWork(String empCode) {
     	  return  String.valueOf(service.onWork(empCode));
+      }
+      
+      @PostMapping(value="offWork.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String offWork(String empCode) {
+    	  return  String.valueOf(service.offWork(empCode));
+      }
+      
+      @PostMapping(value="updateEmp.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String updateEmp(Emp emp, HttpSession session) {
+    	  Emp loginEmp = service.updateEmp(emp);
+    	  
+    	  if(loginEmp == null) {
+    		  return "0";
+    	  }else {
+    		  session.setAttribute("loginEmp", loginEmp);
+    	  }
+    	  
+    	  return "1";
+      }
+      
+      @PostMapping("empPwUpdateFrm.do")
+      public String empPwUpdateFrm() {
+    	  return "emp/pwUpdate";
+      }
+      
+      @PostMapping(value="updatePw.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String updatePw(Emp emp, String oldPw, String newPw, HttpSession session) {
+    	  int result = service.updatePw(emp,oldPw, newPw);
+    	  
+    	  if(result > 0) {
+    		  session.invalidate();
+    	  }
+    	  
+    	  return String.valueOf(result);
       }
 }

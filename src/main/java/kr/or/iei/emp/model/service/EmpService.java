@@ -16,6 +16,7 @@ import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
@@ -175,7 +176,7 @@ public class EmpService {
 
 	@Transactional
 	public int changeEmp(Emp emp) {
-		int result = dao.updateEmp(emp);
+		int result = dao.adminUpdateEmp(emp);
 		System.out.println(result);
 		if(result > 0) {
 			result = dao.updateSalary(emp);
@@ -243,7 +244,60 @@ public class EmpService {
 	}
 
 
+	public int offWork(String empCode) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date date = new Date();
+		String toDay = sdf.format(date);
 
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("empCode", empCode);
+		map.put("day", toDay);
 
+		Commute commute = dao.selectToday(map);
+		int result = 0;
+		if (commute == null) {
+			return -1;
+		} else {
+			result = dao.updateOffWork(map);
+		}
+
+		return result;
+	}
+
+	public Commute selectCommute(String empCode) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date date = new Date();
+		String toDay = sdf.format(date);
+
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("empCode", empCode);
+		map.put("day", toDay);
+
+		return dao.selectToday(map);
+	}
+
+	public Emp updateEmp(Emp emp) {
+		int result = dao.updateEmp(emp);
+
+		Emp loginEmp = null;
+		if (result > 0) {
+			loginEmp = dao.selectEmp(emp.getEmpCode());
+		}
+		return loginEmp;
+	}
+
+	public int updatePw(Emp emp, String oldPw, String newPw) {
+		boolean checkPw = BCrypt.checkpw(oldPw, emp.getEmpPw());
+		int result = 0;
+
+		if (checkPw) {
+			String newEmpPw = BCrypt.hashpw(newPw, BCrypt.gensalt());
+			emp.setEmpPw(newEmpPw);
+			result = dao.updatePw(emp);
+		} else {
+			result = -1;
+		}
+		return result;
+	}
 
 }
