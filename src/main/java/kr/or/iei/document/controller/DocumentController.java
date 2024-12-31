@@ -398,7 +398,8 @@ public class DocumentController {
 	@PostMapping("apiPageDocType")
 	public String apiPageDocType(Model model,String empCode) {
 		ArrayList<Document> documentList = service.apiPageDocType(empCode);
-		model.addAttribute(documentList);
+		System.out.println(documentList);
+		model.addAttribute("documentList",documentList);
 		return "docment/calendar";
 	}
 	

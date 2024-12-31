@@ -160,30 +160,13 @@
     
     //3번째 li 태그 달력으로 이동
     $('.side-li:nth-child(3)').on('click',function(){
-        $.ajax({
-            url : "/emp/calendar.do",
-            type: "post",
-            success : function(res) {
-                $('.page').html(res);
-            }
-            , error : function() {
-                console.log('ajax 통신 오류');
-            }
-        });
+    	pageMove('/emp/calendar.do');
     });
     
     //4번째 li 태그로 이동
      $('.side-li:nth-child(4)').on('click',function(){
-        $.ajax({
-            url : "/project/list.do",
-            type: "post",
-            success : function(res) {
-                $('.page').html(res);
-            }
-            , error : function() {
-                console.log('ajax 통신 오류');
-            }
-        });
+    	 pageMove('/project/list.do');
+        
     });
     
     //main 페이지로 이동

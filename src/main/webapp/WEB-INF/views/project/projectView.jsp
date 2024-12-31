@@ -9,18 +9,14 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    body {
-        margin: 20px;
-        padding: 0;
-    }
-
     .container {
-        width: 100%;
-        max-width: 1200px;
+        width: 800px;
+        gap : 10px;
         margin: 0 auto;
     }
 
     table {
+    	gap:10px;
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
@@ -79,10 +75,6 @@
             <tr>
                 <th>프로젝트 책임자</th>
                 <td>${project.teamLeader}</td>
-                <th>프로젝트 시작일</th>
-               
-            </tr>
-            <tr>
                 <th>프로젝트 마감일</th>
                 <td>${project.projectEnd}</td>
             </tr>
@@ -174,7 +166,8 @@
             console.error("Canvas 요소를 찾을 수 없습니다.");
         }
     }
-
+//     pageMoveParam('/project/view.do',{ projectNo: projectNo });
+    /*
     $.ajax({
         url: '/project/view.do',
         type: 'POST',
@@ -187,6 +180,7 @@
             console.error('에러 발생:', error);
         }
     });
+    */
     </script>
 </body>
 </html>

@@ -18,7 +18,7 @@
 		on tbl_document.document_type_code = tbl_document_type.document_type_code
         join tbl_document_sign
         on tbl_document_sign.emp_code = tbl_document.emp_code
-        where tbl_document.document_type_code != 'pj' and emp_code = #{empCode}
+        where tbl_document.document_type_code != 'pj' and tbl_document.emp_code = #{empCode}
 		
 	</select>
 
@@ -41,7 +41,7 @@
 			tbl_document.document_type_code
         join tbl_document_sign 
         on tbl_document.document_code = tbl_document_sign.document_code
-		where tbl_document.emp_code = #{empCode} and tbl_document_sign.sign_yn = 1
+		where tbl_document.emp_code = #{empCode} 
 	</select>
 	
 
@@ -144,12 +144,9 @@
 	</select>
 	
 	<select id="apiPageDocType" parameterType="string"
-	resultType="document">
+	resultType="documentType">
 		select document_type_name as documentTypeName
-		  from tbl_document
-		  join tbl_document_type
-		  on tbl_document.document_type_code = tbl_document_type.document_type_code
-		  where emp_code = #{empCode}
+		  from tbl_document_type
 	</select>
 
 </mapper>

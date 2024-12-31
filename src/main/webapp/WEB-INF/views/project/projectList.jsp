@@ -8,11 +8,7 @@
 <title>Insert title here</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
-* {
-	margin: 0px;
-	padding: 0px;
-	box-sizing: border-box;
-}
+
 
 /* 테이블 */
 .page-wrap {
@@ -87,8 +83,14 @@
 			document.body.appendChild(form);
 			form.submit();
 		}
+	
 	*/
 	  function projectView(projectNo) {
+		pageMoveParam('/project/view.do',{ projectNo: projectNo });
+		
+		
+		
+		  /*
         $.ajax({
             url: '/project/view.do',
             type: 'POST',
@@ -102,7 +104,11 @@
                 alert("프로젝트 정보를 가져오는 데 실패했습니다.");
             }
         });
+		  */
     }
+	  
+	  
+	  
 	
 	</script>
 </body>

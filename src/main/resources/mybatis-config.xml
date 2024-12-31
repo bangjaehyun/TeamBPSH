@@ -14,6 +14,7 @@
 		<typeAlias type="kr.or.iei.project.model.vo.ProjectPartemp" alias="projectPartemp"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.Chat" alias="chat"/>
 		<typeAlias type="kr.or.iei.document.model.vo.Document" alias="document"/>
+		<typeAlias type="kr.or.iei.document.model.vo.DocumentType" alias="documentType"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.DailyReport" alias="dailyReport"/>
 		<typeAlias type="kr.or.iei.document.model.vo.DocumentSelectDay" alias="selDay"/>
 		<typeAlias type="kr.or.iei.document.model.vo.VacationHalf" alias="vacHalf"/>

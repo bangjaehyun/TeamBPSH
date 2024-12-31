@@ -160,6 +160,7 @@ public class EmpService {
 
 	
 	 public ArrayList<Document> docMain(String empCode) {
+		 
 	        return (ArrayList<Document>) dao.docMain(empCode);
 	    }
 

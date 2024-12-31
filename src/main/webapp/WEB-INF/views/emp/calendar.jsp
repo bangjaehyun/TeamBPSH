@@ -210,19 +210,6 @@
 	<script>
 		
 		$(document).ready(function() {
-			var empCodeEl = $('#empCode').val();
-			$.ajax({
-				url : '/doc/apiPageDocType',
-				type : 'post',
-				data : {'empCode' : empCodeEl},
-				success : function(res){
-					console.log(res);
-				},
-				error : function(){
-					console.log('ajax오류');
-				}
-			});
-			
 			var calendarEl = document.getElementById('calendar');
 							// 공통 AJAX 처리 함수
 							function eventDoc(url, color, successCallback,failCallback) {
@@ -281,20 +268,6 @@
 																successCallback,failCallback);
 													}
 												}
-												//휴가 결제 완료 후 받아오기
-												/*
-										{
-											events: function (info, successCallback, failCallback) {
-												eventDoc(
-														'/doc/api/documentType.do?empCode=${loginEmp.empCode}',
-														'#222',
-														successCallback,failCallback
-												);
-												
-											}
-												
-										}
-												*/
 										 
 										],
 										navLinks : true,
@@ -303,10 +276,10 @@
 									});
 
 							calendar.render();
-						});
+						
 		
 		
-		$(document).ready(function () {
+		
 		    let isUpdateMode = false;
 
 		    // 작성/수정 버튼 클릭
