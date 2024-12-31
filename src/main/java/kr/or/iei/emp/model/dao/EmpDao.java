@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
@@ -118,8 +119,8 @@ public class EmpDao {
 		return sqlSession.insert("emp.insertVacation", empCode);
 	}
 
-	public int updateEmp(Emp emp) {
-		return sqlSession.update("emp.updateEmp", emp);
+	public int adminUpdateEmp(Emp emp) {
+		return sqlSession.update("emp.adminUpdateEmp", emp);
 	}
 
 	public int updateSalary(Emp emp) {
@@ -174,6 +175,31 @@ public class EmpDao {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("emp.insertOnWork", empCode);
 	}
+
+	public Commute selectToday(HashMap<String, String> map) {
+		return sqlSession.selectOne("emp.selectToday", map);
+	}
+
+	public int updateOffWork(HashMap<String, String> map) {
+		return sqlSession.update("emp.updateOffWork", map);
+	}
+
+	public int updateEmp(Emp emp) {
+		return sqlSession.update("emp.updateEmp", emp);
+	}
+
+	public Emp selectEmp(String empCode) {
+		return sqlSession.selectOne("emp.selectEmp", empCode);
+	}
+
+	public String selectPw(String empCode) {
+		return sqlSession.selectOne("emp.selectPw",empCode);
+	}
+
+	public int updatePw(Emp emp) {
+		return sqlSession.update("emp.updatePw", emp);
+	}
+
 
 
 

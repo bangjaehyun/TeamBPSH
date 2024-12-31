@@ -129,14 +129,12 @@
 		let f = document.createElement('form');
 		        f.setAttribute('method', 'post');
 		        f.setAttribute('action', '/emp/chatFrm.do');
-		        f.setAttribute('name', 'openForm');
-		        f.setAttribute('id', 'openForm');
 		popupWindow.document.body.appendChild(f);
 		f.submit();
 	}
 	
 	function myPage(){
-		pageMove( "/emp/myPage.do");
+		pageMoveParam("/emp/myPage.do", {"empCode" : "${loginEmp.empCode}"});
 	}
 	
 	<%--로그 아웃--%>

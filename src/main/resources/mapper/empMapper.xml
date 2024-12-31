@@ -285,7 +285,7 @@
  	)
  	</insert>
  	
- 	<update id="updateEmp"
+ 	<update id="adminUpdateEmp"
  	parameterType="emp">
  	update tbl_emp
  	   set team_code = #{teamCode},
@@ -423,4 +423,55 @@
      	TO_CHAR(SYSDATE, 'HH24MISS')
      )
      </insert>
+     
+      <select id="selectToday"
+     parameterType="map"
+     resultType="commute">
+     select att_date as attDate,
+     		emp_code as empCode,
+     		check_in as onWork,
+     		check_out as offWork,
+     		check_note as checkNote
+       from tbl_check
+      where att_date = #{day} and emp_code = #{empCode}
+     </select>
+     <update id="updateOffWork"
+     parameterType="map">
+     update tbl_check
+        set check_out = TO_CHAR(SYSDATE, 'HH24MISS')
+      where att_date = #{day} and emp_code = #{empCode}
+     </update>
+     
+     <update id="updateEmp"
+     parameterType="emp">
+     update tbl_emp
+        set emp_name = #{empName},
+         	emp_phone = #{empPhone}
+      where emp_code = #{empCode}
+     </update>
+     
+     <select id="selectEmp"
+     parameterType="string"
+     resultType="emp">
+     select emp_code as empCode,
+ 		   team_code as teamCode,
+ 		   rank_code as rankCode,
+ 		   emp_id as empId,
+ 		   emp_pw as empPw,
+ 		   emp_name as empName,
+ 		   emp_phone as empPhone,
+ 		   emp_retire as empRetire,
+ 		   emp_date as empDate,
+ 		   dept_code as deptCode
+ 	  from tbl_emp
+ 	  join tbl_team using(team_code) 
+ 	 where emp_code = #{empCode} 
+     </select>
+     
+     <update id="updatePw"
+     parameterType="emp">
+     update tbl_emp
+        set emp_pw = #{empPw}
+      where emp_code = #{empCode}
+     </update>
 </mapper>
