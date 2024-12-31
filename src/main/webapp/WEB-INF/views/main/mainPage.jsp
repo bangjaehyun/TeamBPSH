@@ -109,7 +109,7 @@
             	 		</c:forEach>
             	 		</li>
             	 		<li><hr></li>
-            	 		<li>내정보</li>
+            	 		<li><a href="javascript:void(0)" onclick="myPage()">내정보</a></li>
             	 		<li><a href="javascript:void(0)" onclick="chatOpen()">채팅</a></li>
             	 		<li><a href="javascript:void(0)" onclick="logOut()">로그아웃</a></li>
             	 	</ul>
@@ -135,6 +135,11 @@
 		f.submit();
 	}
 	
+	function myPage(){
+		pageMove( "/emp/myPage.do");
+	}
+	
+	<%--로그 아웃--%>
 	function logOut(){
 	       let f = document.createElement('form');
 		        f.setAttribute('method', 'post');
@@ -142,8 +147,10 @@
 		        document.body.appendChild(f);
 		        f.submit();
 	}
+	
+	<%-- 사이드바 toggle하여 숨기고 보여주기--%>
     function toggle(){
-   if($(".side").css('display') == "block"){
+  	 if($(".side").css('display') == "block"){
             $('.side').css('display','none');
          }else{
             $('.side').css('display','block');

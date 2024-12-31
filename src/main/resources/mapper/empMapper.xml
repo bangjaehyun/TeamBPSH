@@ -399,4 +399,28 @@
         set alarm_read = 'y'
       where alarm_no = #{alarmNo}
      </update>
+     
+     <select id="chkOnWorkToday"
+     parameterType="map"
+     resultType="_int">
+     select count(*)
+       from tbl_check
+      where att_date = #{day} and emp_code = #{empCode}
+     </select>
+     
+     <insert id="insertOnWork"
+     parameterType="string">
+     insert into tbl_check
+     (
+     	att_date,
+     	emp_code,
+     	check_in
+     )
+     values
+     (
+     	TO_CHAR(SYSDATE, 'YYYYMMDD'),
+     	#{empCode},
+     	TO_CHAR(SYSDATE, 'HH24MISS')
+     )
+     </insert>
 </mapper>

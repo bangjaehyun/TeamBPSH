@@ -166,6 +166,15 @@ public class EmpDao {
 		return sqlSession.update("emp.alarmRead", alarmNo);
 	}
 
+	public int chkOnWorkToday(HashMap<String, String> map) {
+		return sqlSession.selectOne("emp.chkOnWorkToday", map);
+	}
+
+	public int insertOnWork(String empCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.insertOnWork", empCode);
+	}
+
 
 
 
