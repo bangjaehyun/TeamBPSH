@@ -106,13 +106,13 @@
 
         <!-- Title Section -->
         <div class="title-section">
-            <div class="title">문서 제목</div>
+            <div class="title">타이틀</div>
         </div>
 
         <!-- Information Section -->
         <div class="info-section">
             <div class="info-box">
-                <div>시작일</div>
+                <div>${document.documentDate}</div>
                 <div>마감일</div>
             </div>
             <div class="info-box">
@@ -138,6 +138,8 @@
         box.textContent = approver;
         approverContainer.appendChild(box);
     });
+    
+    console.log()
 </script>
     
 </body>

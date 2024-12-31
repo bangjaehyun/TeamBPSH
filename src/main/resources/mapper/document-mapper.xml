@@ -133,20 +133,14 @@
   	)
   	</insert>
 
-	<select id="viewDocOne" parameterType="string" 
-	resultType="document">
-		select 
-			document_title as documentTitle,
-			document_content as documentContent,
-			document_date as documentDate
-		from tbl_document
-		where document_code = #{documentCode}
-	</select>
 	
-	<select id="apiPageDocType" parameterType="string"
+	<select id="apiPageDocType"
 	resultType="documentType">
 		select document_type_name as documentTypeName
 		  from tbl_document_type
 	</select>
+	
+
+	
 
 </mapper>

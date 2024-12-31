@@ -16,6 +16,7 @@ import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
+import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Emp;
@@ -115,8 +116,8 @@ public class DocumentService {
 		
 		return result;
 	}
-	public Document viewDocOne(String documentCode) {
-		Document document = dao.viewDocOne(documentCode);
+	public Document viewDocOne(Document documents) {
+		Document document = dao.viewDocOne(documents);
 		/*
 		if(document != null) {
 		//파일 LIST CHECK	
@@ -212,10 +213,12 @@ public class DocumentService {
 		return result;
 	}
 
-	public ArrayList<Document> apiPageDocType(String empCode) {
+	public ArrayList<DocumentType> apiPageDocType() {
 		
-		return (ArrayList<Document>) dao.apiPageDocType(empCode);
+		return (ArrayList<DocumentType>) dao.apiPageDocType();
 	}
+
+
 
 	
 }

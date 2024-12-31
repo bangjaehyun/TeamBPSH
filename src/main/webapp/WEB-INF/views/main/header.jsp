@@ -242,6 +242,7 @@
 	
 	<%--파라미터 없는 페이지 이동--%>
 	function pageMove(url){
+		console.log("222222222222222222");
 		$('.bgx').css('display','none');
 		$.ajax({
 	         url : url,

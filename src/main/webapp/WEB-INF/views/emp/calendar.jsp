@@ -194,12 +194,11 @@
 					</div>
 				</div>
 			</div>
-			<c:forEach var="docList" items="${documentList}">
+			<c:forEach var="documentList" items="${documentList}">
 			<div id="result">
-			<input type="checkbox" name="${docList.documentTypeCode}">${docList.documentTypeName}
+			<input type="checkbox" name="${documentList.documentTypeCode}">${documentList.documentTypeName}
 			</div>
 			</c:forEach>
-			
 		</div>
 		<div id="calendar"></div>
 	</div>
@@ -210,6 +209,19 @@
 	<script>
 		
 		$(document).ready(function() {
+			$.ajax({
+				url : '/doc/apiPageDocType',
+				type : 'post',
+				success : function(res){
+					console.log(res);
+				},
+				error : function(){
+					donsole.log('ajax오류');
+				}
+			});
+				
+			
+			
 			var calendarEl = document.getElementById('calendar');
 							// 공통 AJAX 처리 함수
 							function eventDoc(url, color, successCallback,failCallback) {

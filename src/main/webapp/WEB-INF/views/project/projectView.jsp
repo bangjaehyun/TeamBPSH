@@ -9,17 +9,22 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-    .container {
-        width: 800px;
-        gap : 10px;
-        margin: 0 auto;
+
+    #mainContainer {
+		justify-content: center;
+		width: calc(100vw - 55px);
+		height: calc(100vh - 50px);
+		gap:10px;
+        background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
+        border-radius: 10px;
     }
 
-    table {
+    #pjHeader, #pjBody {
     	gap:10px;
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
+        min-width: 100%;
     }
 
     th, td {
@@ -29,23 +34,24 @@
     }
 
     th {
-        background-color: #f4f4f4;
+        background-color: #C760E3; /* 헤더 배경: 진한 파랑 */
+        color: #ffffff; /* 헤더 텍스트: 흰색 */
         font-weight: bold;
     }
 
-    .section {
+    .pjSection {
         display: flex;
         margin-bottom: 20px;
     }
 
-    .section .box {
+    .pjSection .box {
         border: 1px solid #ddd;
         padding: 20px;
         flex: 1;
         margin-right: 20px;
     }
 
-    .section .box:last-child {
+    .pjSection .box:last-child {
         margin-right: 0;
     }
 
@@ -57,15 +63,16 @@
         border: 1px solid #ddd;
         padding: 20px;
         text-align: center;
+        background-color:#5A33D0;
     }
 </style>
 </head>
 <body>
-    <div class="container">
-    <input type="hidden" name="projectNo" value="${project.projectNo}">S
+    <div id="mainContainer">
+    
         <h1>프로젝트 상세 정보</h1>
         <!-- 프로젝트 기본 정보 -->
-        <table>
+        <table id="pjHeader">
             <tr>
                 <th>프로젝트 번호</th>
                 <td>${project.projectNo}</td>
@@ -83,7 +90,7 @@
         <!-- 참여 사원 리스트 -->
         <div class="participants">
             <h2>참여 사원 리스트</h2>
-            <table>
+            <table id="pjBody">
                 <thead>
                     <tr>
                         <th>사원 번호</th>
@@ -93,8 +100,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                
-                
                     <c:forEach var="projectPartempList" items="${projectPartempList}">
                         <tr>
                             <td class="empNo">${projectPartempList.empCode}</td>
@@ -109,7 +114,7 @@
         </div>
 
         <!-- 프로젝트 진행률 및 내용 -->
-        <div class="section">
+        <div class="pjSection">
             <div class="box">
                 <h2>프로젝트 진행률</h2>
                 <canvas id="progressChart" width="400" height="200"></canvas>
@@ -130,6 +135,7 @@
         </div>
     </div>
     <script>
+    
     const labels = ['Module 1', 'Module 2', 'Module 3']; // 데이터 확인
     const progressData = [75, 50, 90]; // 진행률 데이터 확인
 
@@ -166,21 +172,8 @@
             console.error("Canvas 요소를 찾을 수 없습니다.");
         }
     }
-//     pageMoveParam('/project/view.do',{ projectNo: projectNo });
-    /*
-    $.ajax({
-        url: '/project/view.do',
-        type: 'POST',
-        data: { projectNo: projectNo },
-        success: function (response) {
-            $('body').html(response);
-            loadChart(); // HTML이 갱신된 후 차트를 로드
-        },
-        error: function (xhr, status, error) {
-            console.error('에러 발생:', error);
-        }
-    });
-    */
+
+   
     </script>
 </body>
 </html>

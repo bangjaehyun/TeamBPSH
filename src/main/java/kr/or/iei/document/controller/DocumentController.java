@@ -34,6 +34,7 @@ import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
+import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.service.EmpService;
@@ -368,40 +369,24 @@ public class DocumentController {
 			        refList.add(ref);
 			    }
 			    document.setRefList(refList);
-			
-			   
-			   
-			    		
-			    				
 
-			
-			
-				
-				
 			int result=service.insertSpending(document,spendingList);
-			
 			
 			return result;
 		}
 		
 
 
-
-	//문서 상세보기 페이지
-	@PostMapping("viewDocOne.do")
-	public String viewDocOne(Model model, String documentCode) {
-		Document document = service.viewDocOne(documentCode);
-		model.addAttribute(document);
-		return "document/viewDocOne";
-	}
-
 	@PostMapping("apiPageDocType")
-	public String apiPageDocType(Model model,String empCode) {
-		ArrayList<Document> documentList = service.apiPageDocType(empCode);
-		System.out.println(documentList);
+	public String apiPageDocType(Model model) {
+		ArrayList<DocumentType> documentList = service.apiPageDocType();
 		model.addAttribute("documentList",documentList);
-		return "docment/calendar";
+		System.out.println(documentList);
+		return "document/calendar";
 	}
+	
+	
+	
 	
 
 	

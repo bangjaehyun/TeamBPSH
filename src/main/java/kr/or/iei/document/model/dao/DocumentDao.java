@@ -1,20 +1,16 @@
 package kr.or.iei.document.model.dao;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
-import kr.or.iei.document.model.vo.Spending;
+import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Emp;
 
@@ -76,15 +72,14 @@ public class DocumentDao {
 			return sqlSession.insert("document.insertDocumentRef", ref);
 		}
 
-	public Document viewDocOne(String documentCode) {
+	public Document viewDocOne(Document documents) {
 		
-		return sqlSession.selectOne("document.viewDocOne",documentCode);
+		return sqlSession.selectOne("document.viewDocOne",documents);
 	}
 
 
-	public List<Document> apiPageDocType(String empCode) {
-		
-		return sqlSession.selectList("docment.apiPageDocType", empCode);
+	public List<DocumentType> apiPageDocType() {
+		return sqlSession.selectList("document.apiPageDocType");
 	}
 
 	public int insertSpending(HashMap<String, String> map) {
@@ -98,7 +93,5 @@ public class DocumentDao {
 
 	}
 
-	
-	
 
 }

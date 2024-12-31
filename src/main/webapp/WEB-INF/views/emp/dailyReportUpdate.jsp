@@ -96,10 +96,7 @@ button {
                             alert(response.message);
                         }
                     },
-                    error: function (xhr, status, error) {
-                        console.error("AJAX 오류 상태:", status);
-                        console.error("AJAX 오류 메시지:", error);
-                        console.error("AJAX 응답 내용:", xhr.responseText);
+                    error: function () {
                         alert('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
                     }
                 });

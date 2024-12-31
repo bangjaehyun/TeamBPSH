@@ -328,7 +328,7 @@ public class EmpController {
     public Map<String, Object> updateDailyReport(DailyReport dailyReport) {
         Map<String, Object> response = new HashMap<>();
         int result = service.dailyReportUpd(dailyReport);
-
+        
         if (result > 0) {
             response.put("success", true);
             response.put("message", "업무일지가 성공적으로 수정되었습니다.");

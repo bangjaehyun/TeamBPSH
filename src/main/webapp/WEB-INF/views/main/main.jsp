@@ -242,6 +242,8 @@ table tr:hover {
 			$.each(data,function(type, documents) {
 								var documentTypeName = documents[0] ? documents[0].documentTypeName
 										: type;
+								var documentTypeCode = documents[0] ? documents[0].documentTypeCode
+										: typeCode;
 								//각 조건 추가할 함수
 								var singue = type !== 'pj';
 								
@@ -267,7 +269,7 @@ table tr:hover {
 								var tbody = tableEl.find('tbody');
 								// 해당 문서 타입의 문서 데이터를 테이블에 추가
 								$.each(documents,function(index, doc) {
-													var row = '<tr data-documentCode="'+ doc.documentCode +'">' + '<td>'
+													var row = '<tr class="viewDoc" data-documentTypeCode="'+ doc.documentTypeCode +'"data-documentCode="'+ doc.documentCode +'">' + '<td>'
 															+ doc.empName
 															+ '</td>' + '<td>'
 															+ doc.documentTitle
@@ -296,10 +298,19 @@ table tr:hover {
 		
 		
 		
-		//문서 클릭 이벤트
-		$(document).on('click', 'tbody tr', function() {
-	        var documentCode = $(this).attr('data-documentCode'); // 고유 코드 읽기
+		//문서 클릭 이벤트 
+		$(document).on('click', '.viewDoc', function() {
+	        var documentCode = $(this).attr('data-documentCode'); // 문서 코드 읽기
+	        var documentTypeCode = $(this).attr('data-documentTypeCode'); // 문서 타입 코드 읽기
+	        var empCode = $('input[name="empCode"]').val();
+	        pageMoveParam('/doc/viewDocOne.do',{ documentCode: documentCode ,
+	        								   	 documentTypeCode: documentTypeCode,
+	        								   	 empCode : empCode
+	        								   });
 	        
+	        
+	        
+	        /*
 	        if (documentCode) {
 	            //동적으로 form 생성
 	            var form = $('<form>',{
@@ -316,10 +327,10 @@ table tr:hover {
 	            //form을 DOM에 추가하고 전송
 	            $('body').append(form);
 	            form.submit();
-	        } else {
-	            console.error("문서 코드가 비어 있습니다.");
 	        }
+	        */
 	    });
+		
 		
 		//문서 페이지 이동
 		
