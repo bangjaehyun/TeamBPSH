@@ -46,6 +46,7 @@ import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
+import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 
 
@@ -526,5 +527,33 @@ public class EmpController {
     	  }
     	  
     	  return String.valueOf(result);
+      }
+      
+      @PostMapping(value="empDevelopPrice", produces="application/json; charset=utf-8")
+      @AdminChk
+      public String empDevelopPrice(Model model) {
+          ArrayList<DevelopPrice> developPrice = service.selectDevelopsPrice();
+          
+          model.addAttribute("developPrice", new Gson().toJson(developPrice));
+          return "emp/empDevelopPrice";
+      }
+      
+      @PostMapping("changePrice.do")
+      public String chagePrice(DevelopPrice price, Model model) {
+          int result = service.changePrice(price);
+          
+          if(result < 1) {
+              CommonException ex = new CommonException("관리자 변경중 오류 발생");
+              ex.setErrorCode("SE001");
+              Object msgParam[] = {"가격 설정"};
+              ex.setUserMsg(message.getMessage(ex.getErrorCode(), msgParam, Locale.KOREA));
+              throw ex;
+          }
+          
+          ArrayList<DevelopPrice> developPrice = service.selectDevelopsPrice();
+          
+          model.addAttribute("developPrice", new Gson().toJson(developPrice));
+          
+          return "emp/empDevelopPrice";
       }
 }

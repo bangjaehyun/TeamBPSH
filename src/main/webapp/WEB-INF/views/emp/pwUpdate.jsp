@@ -26,6 +26,14 @@
 	height: 70%;
 }
 
+form{
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .pw-btn {
 	width: 80px;
 	height: 35px;
@@ -70,25 +78,27 @@
 </head>
 <body>
 	<div class="pw-wrap">
-		<table class="pw-tbl">
-			<tr>
-				<td><span class="title">기존 비밀번호</span></td>
-				<td><input type="password" name="oldPw" autocomplete="off"></td>
-			</tr>
-			<tr>
-				<td><span class="title">새 비밀번호</span></td>
-				<td><input type="password" name="newPw" autocomplete="off"></td>
-			</tr>
-			<tr>
-				<td><span class="title">새 비밀번호 확인</span></td>
-				<td><input type="password" name="newPwChk" autocomplete="off"></td>
-			</tr>
-			<tr>
-				<td colspan="2" class="btn-td">
-					<button class="pw-btn" onclick="update()">변경</button>
-				</td>
-			</tr>
-		</table>
+		<form action="/emp/updatePw.do" method="post">
+			<table class="pw-tbl">
+				<tr>
+					<td><span class="title">기존 비밀번호</span></td>
+					<td><input type="password" name="oldPw" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td><span class="title">새 비밀번호</span></td>
+					<td><input type="password" name="newPw" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td><span class="title">새 비밀번호 확인</span></td>
+					<td><input type="password" name="newPwChk" autocomplete="off"></td>
+				</tr>
+				<tr>
+					<td colspan="2" class="btn-td">
+						<button type="button" class="pw-btn" onclick="update()">변경</button>
+					</td>
+				</tr>
+			</table>
+		</form>
 	</div>
 	<script>
 		function update() {

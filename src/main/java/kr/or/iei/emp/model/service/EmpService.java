@@ -19,6 +19,7 @@ import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
+import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
 import kr.or.iei.emp.model.vo.Team;
@@ -298,6 +299,21 @@ public class EmpService {
 			result = -1;
 		}
 		return result;
+	}
+
+	public ArrayList<DevelopPrice> selectDevelopsPrice() {
+		return ( ArrayList<DevelopPrice>)dao.selectDevelopsPrice();
+	}
+
+	public int changePrice(DevelopPrice price) {
+		System.out.println(price);
+		int result =  dao.selectDevelopPriceChk(price);
+		if(result > 0) {
+			result = dao.updateDevelopPrice(price);
+		}else {
+			result = dao.insertDevelopPrice(price);
+		}
+		return 1;
 	}
 
 }

@@ -474,4 +474,51 @@
         set emp_pw = #{empPw}
       where emp_code = #{empCode}
      </update>
+     
+     <select id="selectDevelopsPrice"
+     resultType="developPrice">
+     select dept_code as deptCode, 
+             dept_name as deptName, 
+             team_code as teamCode, 
+             team_name as teamName, 
+             rank_code as rankCode, 
+             rank_name as rankName, 
+             price as price 
+       from tbl_day_price 
+       join tbl_team using(team_code) 
+       join tbl_rank using(rank_code) 
+       join tbl_dept using(dept_code)
+       where dept_code in ('RI','DD') 
+     </select>
+     
+     <select id="selectDevelopPriceChk"
+     parameterType="developPrice"
+     resultType="int">
+     select count(*)
+       from tbl_day_price
+      where team_code = #{teamCode} and rank_code = #{rankCode}
+     </select>
+     
+     <update id="updateDevelopPrice"
+     parameterType="developPrice">
+     update tbl_day_price
+        set price = #{price}
+      where team_code = #{teamCode} and rank_code = #{rankCode} 
+     </update>
+     
+     <insert id="insertDevelopPrice"
+     parameterType="developPrice">
+     insert into tbl_day_price
+     (
+     team_code,
+     rank_code,
+     price
+     )
+     values
+     (
+     #{teamCode},
+     #{rankCode},
+     #{price}
+     )
+     </insert>
 </mapper>

@@ -39,6 +39,7 @@
         }
         .header-left{
         	width: 300px;
+        	min-width: 280px;
         }
         .header-right{
         	margin-right : 10px;

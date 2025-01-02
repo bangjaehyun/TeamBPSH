@@ -129,26 +129,33 @@
 				<ul class="side-sub">
 					<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
 					<li>매출관리</li>
 				</ul>
 			</li>
 		</ul>
     </div>
     <script>
+    <%--회원 관리 --%>
     function empManager(){
     	pageMove("/emp/empManager.do");	
     }
+    <%--신규 회원 관리 --%>
     function empWait(){
     	pageMove("/emp/empWait.do");
     }
+    <%--개발 단가 관리 --%>
+    function empDevelopPrice(){
+        pageMove("/emp/empDevelopPrice.do");
+    }
     
-  //sub메뉴클릭시 숨기기 위한 이벤트
+  	<%--sub메뉴클릭시 숨기기 위한 이벤트--%>
     $('.side-div').next().find('li').click(function(){
     	$('.side-div').next().css('display','none');
     	$('.bgx').css('display','none');
     })
     
-    	//sub메뉴 보여주기 위함
+    	<%--sub메뉴 보여주기 위함--%>
     	$('.side-div').click(function(e){
     		  $('.bgx').css('display','block');
     		  $('.side-div').next().css('display','none');
@@ -158,18 +165,18 @@
     		  $(this).next().css('display','block');
     	});
     
-    //3번째 li 태그 달력으로 이동
+    <%--3번째 li 태그 달력으로 이동--%>
     $('.side-li:nth-child(3)').on('click',function(){
     	pageMove('/emp/calendar.do');
     });
     
-    //4번째 li 태그로 이동
+    <%--4번째 li 태그로 이동--%>
      $('.side-li:nth-child(4)').on('click',function(){
     	 pageMove('/project/list.do');
         
     });
     
-    //main 페이지로 이동
+    <%--main 페이지로 이동--%>
     $('.mainPage').on('click',function(){
     	pageMove("/emp/empMain.do");
     });
@@ -188,7 +195,7 @@
     	});
     }
     
-    <!--리스트 목록-->
+    <%--리스트 목록--%>
     function selectList(e){
     	$.ajax({
     		url:"/doc/selectList.do",
