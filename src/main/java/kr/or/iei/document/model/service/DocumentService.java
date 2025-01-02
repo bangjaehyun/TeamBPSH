@@ -16,6 +16,7 @@ import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
+import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Emp;
@@ -42,6 +43,55 @@ public class DocumentService {
 		String documentCode=dao.selectDocumentCode();
 		return documentCode;
 	}
+	
+	//리스트조회
+		public ArrayList<Document> selectList(String type, int page) {
+			// TODO Auto-generated method stub
+			
+			HashMap<String,String>paging=new HashMap<String, String>();
+			paging.put("type", type);
+			
+			
+			ArrayList<Document>list=(ArrayList<Document>)dao.selectDocList(paging);
+			System.out.println(list);
+			for(int i=0;i<list.size();i++) {
+				int check=1;
+				ArrayList<DocumentSign>signList=(ArrayList<DocumentSign>)dao.selectDocSign(list.get(i).getDocumentCode());
+				System.out.println(signList);
+				list.get(i).setSignList(signList);
+				System.out.println(list);
+				for(int j=0;j<signList.size();j++) {
+					
+					int res=Integer.parseInt(signList.get(j).getSignYn());
+					if(res==-1) {
+						check=-1;
+						break;
+					}else if(res==0) {
+						check=0;
+						break;
+					}
+				}
+				if(check==0) {
+					list.get(i).setProgress("진행중");
+				}else if(check==-1) {
+					list.get(i).setProgress("기각");
+				}else {
+					list.get(i).setProgress("승인");
+				}
+			}
+			
+			
+			
+			//전체 카운트
+		
+				
+					
+						
+			
+			return list;
+		}
+	
+	
 
 	@Transactional
 	public int insertVacation(Document document, DocumentSelectDay selDay, VacationHalf vacHalf) {
@@ -215,6 +265,12 @@ public class DocumentService {
 	public ArrayList<Document> apiPageDocType(String empCode) {
 		
 		return (ArrayList<Document>) dao.apiPageDocType(empCode);
+	}
+
+	public ArrayList<DocumentType> selectDocType() {
+		// TODO Auto-generated method stub
+		return (ArrayList<DocumentType>)dao.selectDocType();
+		
 	}
 
 	
