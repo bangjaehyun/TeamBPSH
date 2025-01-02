@@ -101,7 +101,7 @@
 					<p class="side-text">문서</p>
 				</div>
 				<ul class="side-sub">
-				<li><a href="javascript:void(0)" >문서조회예정</a></li>
+					<li><a href="javascript:void(0)" onclick="selectList('all')">문서조회예정</a></li>
 					<li><a href="javascript:void(0)"onclick="writeDoc('va')">휴가신청서 작성</a></li>
 					<li><a href="javascript:void(0)"onclick="writeDoc('co')">협조문 작성</a></li>
 					<li><a href="javascript:void(0)"onclick="writeDoc('es')">견적서 작성</a></li>
@@ -185,6 +185,23 @@
     error:function(){
     	console.log("오류");
     }
+    	});
+    }
+    
+    <%--리스트 목록--%>
+    function selectList(e){
+    	$.ajax({
+    		url:"/doc/selectList.do",
+    		type:"post",
+    		data:{"type":e},
+    		success:function(res){
+    			$('.page').html(res);
+    		},
+    		error:function(){
+    			console.log("오류");
+    		}
+    		
+    		
     	});
     }
     
