@@ -177,5 +177,64 @@
 		where document_code = #{documentCode}
 			
 	</select>
+	
+	<select id="selectDocList"
+	parameterType="map"
+	resultType="document">
+	select 
+    document_code as documentCode,
+    emp_name as empName,
+    document_date as documentDate,
+    document_title as documentTitle,
+    document_type_name as documentTypeName
+	from (
+    select rownum as rnum, a.* 
+    from (
+        select 
+            d.document_code, 
+            e.emp_name, 
+            d.document_date, 
+            d.document_title, 
+            t.document_type_name
+        from 
+            tbl_document d 
+        join 
+            tbl_emp e 
+        using (emp_code) 
+        join 
+            tbl_document_type t 
+        using (document_type_code)
+            <choose>
+                <when test='!type.equals("all")'>
+                    where document_type_code = #{type}
+                </when>
+            </choose>
+        order by d.document_date desc
+    ) a
+) 
+
+	</select>
+	
+	<select id="selectDocType"
+	resultType="documentType">
+		select
+		document_type_code as documentTypeCode,
+		document_type_name as documentTypeName
+		from
+		tbl_document_type
+	</select>
+	
+	<select id="selectSignList"
+	parameterType="string"
+	resultType="sign">
+		select
+		document_code as documentCode,
+		emp_code as empCode,
+		sign_yn as signYn,
+		document_seq as documentSeq
+		from tbl_document_sign
+		where document_code=#{_string} order by document_seq  
+	</select> 
+	
 
 </mapper>

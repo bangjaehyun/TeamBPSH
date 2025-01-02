@@ -252,15 +252,20 @@ if(empId.val().length < 1){
 		
 		if (empPw.val() == empPwConfirm.val()) {
 		    // 비밀번호 값 == 비밀번호 확인 값
+		    const regExp = /^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
 		    if (empPwConfirm.val().length < 8 || empPwConfirm.val().length > 20) {
 		    pwMessage.addClass('invalid');
 		    pwMessage.html('비밀번호의 길이를 다시 확인해주세요.');
 		    checkObj.empPwConfirm = false;
-		    }
-		    else{
+		    }else if(regExp.test(empPw.val())){
 		    pwMessage.addClass('valid');
 		    pwMessage.html("");
-		    checkObj.empPwConfirm = true;
+		    checkObj.empPwConfirm = true;		    	
+		    }
+		    else{
+		    	pwMessage.html("영어, 숫자,특수문자를 적어도 1개포함 8~20글자 사이로 입력하세요.");
+				pwMessage.addClass("invalid");
+				checkObj.empPwConfirm = false;
 		    }
 		} else {
 		    pwMessage.addClass('invalid');

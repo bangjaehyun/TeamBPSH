@@ -89,6 +89,32 @@ public class DocumentController {
 		return result;
 	}
 	
+	//전체리스트 추가
+		@PostMapping("selectList.do")
+		public String selectList(String type,String reqPage,Model m) {
+			int page=reqPage==null?1:Integer.parseInt(reqPage);
+			ArrayList<Document> documentList=service.selectList(type,page);
+			ArrayList<DocumentType> docTypeList=service.selectDocType();
+			m.addAttribute("docList", documentList);
+			m.addAttribute("docTypeList",docTypeList);
+			return "document/documentList";
+		}
+		
+		//type으로 보낸 값(결재자 or 참조자)구분
+		@PostMapping(value="searchMan.do", produces ="application/text; charset=utf-8")
+		public String srchMan( String type, Model m) {
+
+		   
+
+		    // 모델에 값 추가
+		    m.addAttribute("type", type);
+		   
+
+		    return "document/searchMan";
+		}
+	
+	
+	
 	//type으로 보낸 값(결재자 or 참조자)구분
 	@PostMapping("searchMan.do")
 	public String searchMan( String type, Model m) {

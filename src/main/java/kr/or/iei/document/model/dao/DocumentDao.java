@@ -12,6 +12,7 @@ import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Emp;
 
@@ -94,6 +95,7 @@ public class DocumentDao {
 
 	}
 
+
 	public List<DocumentFile> selectFileList(HashMap<String, Object> map) {
 		return sqlSession.selectList("document.selectFileList",map);
 	}
@@ -102,6 +104,27 @@ public class DocumentDao {
 		
 		return sqlSession.selectList("document.selectSignList",map);
 	}
+
+
+	public List<Document> selectDocList(HashMap<String, String> paging) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectDocList",paging);
+	}
+
+	
+
+	public List<DocumentType> selectDocType() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectDocType");
+	}
+
+	public List<DocumentSign> selectDocSign(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectSignList",documentCode);
+	}
+
+	
+	
 
 
 }
