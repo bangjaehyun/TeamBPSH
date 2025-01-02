@@ -134,13 +134,48 @@
   	</insert>
 
 	
-	<select id="apiPageDocType"
+	<select id="apiPageDocType" parameterType="string"
 	resultType="documentType">
-		select document_type_name as documentTypeName
-		  from tbl_document_type
+		select DISTINCT
+			document_type_name as documentTypeName,
+			document_type_code as documentTypeCode
+		from tbl_document_type
+		
 	</select>
 	
-
-	
+	<select id="viewDocOne" parameterType="map"
+	resultType="document">
+		select 
+			document_code as documentCode,
+			emp_code as empCode,
+			document_title as documentTitle,
+			document_content as documentContent,
+			document_date as documentDate,
+			document_type_code as documentTypeCode
+		from tbl_document
+		where document_code = #{documentCode} and emp_code = #{empCode} and document_type_code = #{documentTypeCode}
+		
+	</select>
+	<select id="selectFileList" parameterType="map"
+	resultType="file">
+		select
+			file_no as fileNo,
+			document_code as documentCode,
+			file_name as fileName,
+			file_fath as fileFath
+		from tbl_file
+		where document_code = #{documentCode}
+	</select>
+	<select id="selectSignList" parameterType="map"
+	resultType="sign">
+		select 
+			document_code as documentCode,
+			emp_code as empCode,
+			sign_yn as signYn,
+			document_seq as documentSeq
+		from tbl_document_sign
+		where document_code = #{documentCode}
+			
+	</select>
 
 </mapper>

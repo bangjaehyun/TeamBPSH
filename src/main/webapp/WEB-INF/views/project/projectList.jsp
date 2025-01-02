@@ -87,24 +87,7 @@
 	*/
 	  function projectView(projectNo) {
 		pageMoveParam('/project/view.do',{ projectNo: projectNo });
-		
-		
-		
-		  /*
-        $.ajax({
-            url: '/project/view.do',
-            type: 'POST',
-            data: { projectNo: projectNo },
-            success: function(response) {
-                // 성공 시 서버에서 받은 HTML을 body에 렌더링
-                $('body').html(response);
-            },
-            error: function(xhr, status, error) {
-                console.error("에러 발생:", error);
-                alert("프로젝트 정보를 가져오는 데 실패했습니다.");
-            }
-        });
-		  */
+
     }
 	  
 	  

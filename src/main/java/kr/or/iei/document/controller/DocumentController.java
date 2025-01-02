@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.apache.catalina.connector.Response;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.maven.classrealm.ClassRealmRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -378,11 +380,24 @@ public class DocumentController {
 
 
 	@PostMapping("apiPageDocType")
-	public String apiPageDocType(Model model) {
-		ArrayList<DocumentType> documentList = service.apiPageDocType();
-		model.addAttribute("documentList",documentList);
-		System.out.println(documentList);
-		return "document/calendar";
+	@ResponseBody
+	public List<DocumentType> apiPageDocType(String empCode) {
+		ArrayList<DocumentType> documentList = service.apiPageDocType(empCode);
+		
+		
+		return documentList;
+	}
+	
+	@PostMapping("viewDocOne.do")
+	public String viewDocOne(Model model, String empCode,String documentTypeCode,String documentCode) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("empCode", empCode);
+		map.put("documentTypeCode", documentTypeCode);
+		map.put("documentCode", documentCode);
+		Document document = service.viewDocOne(map);
+		model.addAttribute("document",document);
+		
+		return "document/viewDocOne";
 	}
 	
 	

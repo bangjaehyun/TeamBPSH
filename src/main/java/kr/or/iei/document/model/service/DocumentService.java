@@ -116,13 +116,18 @@ public class DocumentService {
 		
 		return result;
 	}
-	public Document viewDocOne(Document documents) {
-		Document document = dao.viewDocOne(documents);
-		/*
+	public Document viewDocOne(HashMap<String, Object> map) {
+		 Document document =  dao.viewDocOne(map);
+		 
 		if(document != null) {
-		//파일 LIST CHECK	
+			/*
+			ArrayList<DocumentFile> fileList = (ArrayList<DocumentFile>) dao.selectFileList(map);
+			document.setFileList(fileList);
+			*/
+			ArrayList<DocumentSign> signList = (ArrayList<DocumentSign>) dao.selectSignList(map);
+			document.setSignList(signList);
 		}
-		*/
+		
 		
 		return document;
 
@@ -213,9 +218,9 @@ public class DocumentService {
 		return result;
 	}
 
-	public ArrayList<DocumentType> apiPageDocType() {
+	public ArrayList<DocumentType> apiPageDocType(String empCode) {
 		
-		return (ArrayList<DocumentType>) dao.apiPageDocType();
+		return (ArrayList<DocumentType>) dao.apiPageDocType(empCode);
 	}
 
 

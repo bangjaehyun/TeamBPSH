@@ -307,28 +307,7 @@ table tr:hover {
 	        								   	 documentTypeCode: documentTypeCode,
 	        								   	 empCode : empCode
 	        								   });
-	        
-	        
-	        
-	        /*
-	        if (documentCode) {
-	            //동적으로 form 생성
-	            var form = $('<form>',{
-	            	'action' : '/doc/viewDocOne.do',
-	            	'method' : 'post'
-	            });
-	            form.append($('<input>',{
-	            	'type' : 'hidden',
-	            	'name' : 'documentCode',
-	            	'value' : documentCode
-	            	
-	            }));
-	            
-	            //form을 DOM에 추가하고 전송
-	            $('body').append(form);
-	            form.submit();
-	        }
-	        */
+
 	    });
 		
 		

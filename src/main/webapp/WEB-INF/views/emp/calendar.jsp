@@ -1,35 +1,98 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-
-
-<%-- 달력 오픈소스 주소 --%>
 <style>
+/* 전체 레이아웃 스타일 */
+/* 전체 레이아웃 스타일 */
 .calDiv {
-	display: flex;
-	justify-content: center;
-	width: calc(100vw - 55px);
-	height: calc(100vh - 50px);
-	gap:10px;
+    display: flex;
+    justify-content: center;
+    width: calc(100vw - 55px);
+    height: calc(100vh - 50px);
+    gap: 10px;
 }
 
 #calendar {
-	margin: auto 0;
-	width: 80%;
+    margin: auto 0;
+    width: 80%;
 }
 
-.divEl{
-	display:flex;
-	
+/* 사이드바 스타일 */
+.divEl {
+    display: flex;
+    flex-direction: column; /* 세로 정렬 */
+    gap: 15px; /* 항목 간 간격 */
+    width: 250px; /* 고정된 너비 */
+    background-color: #fff; /* 사이드바 배경색 */
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    font-size: 18px;
+    color: #ffffff;
 }
 
+/* 공통 버튼 및 label 스타일 */
+.button-style {
+	width: 210px;
+    display: block; /* 세로 배치 */
+    padding: 10px 20px; /* 버튼 및 label의 패딩 */
+    margin: 0; /* 기본 마진 제거 */
+    background-color: #C760E3; /* 기본 배경색 */
+    color: #007bff; /* 기본 글자색 */
+    border-radius: 10px;
+    font-size: 14px; /* 글자 크기 */
+    font-weight: bold; /* 글자 굵기 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    cursor: pointer; /* 마우스 커서 스타일 */
+    box-sizing: border-box; /* 크기 계산 방식 */
+    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 효과 */
+}
+
+/* 버튼 및 label 간 간격 */
+.button-style + .button-style {
+    margin-top: 10px;
+}
+
+/* 호버 상태 */
+.button-style:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* 클릭 상태 초기화 */
+.button-style:active {
+    background-color: #ffffff;
+    color: #007bff;
+    transform: none; /* 크기 변화 방지 */
+    padding: 10px 20px; /* 패딩 초기화 */
+    outline: none; /* 클릭 시 테두리 제거 */
+    box-shadow: none; /* 클릭 시 그림자 제거 */
+}
+
+/* 체크박스 숨기기 */
+#result input[type="checkbox"] {
+    display: none;
+}
+
+/* 체크박스 선택 시 label 스타일 변경 */
+#result input[type="checkbox"]:checked + label {
+    background-color: #007bff;
+    color: #ffffff; /* 체크 상태에서도 기본 글자색 유지 */
+    border-color: #007bff; /* 테두리 색상 유지 */
+}
+/* 호버 상태 */
+.button-style:hover {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* 모달 스타일 */
 .modal {
     display: none; /* 기본적으로 숨김 */
     position: fixed; /* 화면 중앙에 고정 */
@@ -52,14 +115,6 @@
     display: block; /* 보이도록 변경 */
 }
 
-/* 모달 내용 정렬 */
-.modal-dialog {
-    padding: 20px;
-    height: 100%; /* 모달 내부 높이 100% */
-    display: flex;
-    flex-direction: column; /* 세로 정렬 */
-}
-
 /* 모달 헤더 */
 .modal-header {
     display: flex;
@@ -67,11 +122,9 @@
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd; /* 하단 구분선 */
-    margin: 0;
     font-size: 20px;
     color: #333;
 }
-
 
 /* 닫기 버튼 스타일 */
 .close {
@@ -98,82 +151,6 @@
     color: #333;
 }
 
-/* 문서 종류 사이드바 */
-.divEl {
-	display:flex;
-    width: 250px; /* 고정된 너비 */
-    background-color: #007bff; /* 사이드바 배경색 */
-    color: white;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
-    display: flex;
-    flex-direction: column; /* 세로 정렬 */
-    gap: 15px; /* 항목 간 간격 */
-}
-
-.divEl  {
-    font-size: 18px;
-    margin-bottom: 20px;
-    color: #ffffff;
-}
-
-/* 공통 버튼 스타일 */
-.documentType,
-#dailyReport {
-    background-color: #ffffff; /* 기본 배경색 */
-    color: #007bff; /* 기본 글자색 */
-    padding: 10px 20px;
-    border: 2px solid #007bff; /* 테두리 */
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    display: inline-block; /* 체크박스와 버튼의 동일한 배치 */
-    text-align: center;
-}
-
-/* 호버 상태 */
-.documentType:hover,
-#dailyReport:hover {
-    background-color: #007bff;
-    color: #ffffff;
-}
-
-/* 클릭(활성화) 상태에서도 스타일 유지 */
-.documentType:active,
-#dailyReport:active {
-    background-color: #ffffff;
-    color: #007bff;
-    transform: none; /* 눌렸을 때 변형되지 않도록 */
-}
-
-/* 체크박스 스타일 조정 (documentType 내부) */
-.documentType input[type="checkbox"] {
-    margin-right: 10px; /* 체크박스와 텍스트 간의 간격 */
-    transform: scale(1.2); /* 체크박스 크기 조정 */
-    cursor: pointer;
-}
-/* 버튼 크기와 위치를 고정 */
-#dailyReport {
-    position: relative; /* 버튼의 위치를 고정 */
-    display: block; /* 인라인 요소의 크기를 명확히 지정 */
-    margin: 0 auto; /* 수평 중앙 정렬 */
-    width: auto; /* 버튼 너비를 고정 */
-    height: auto; /* 버튼 높이를 고정 */
-}
-
-/* 버튼의 클릭 후에도 스타일이 유지되도록 설정 */
-#dailyReport:focus,
-#dailyReport:active {
-    outline: none; /* 클릭 후 발생하는 윤곽선을 제거 */
-    box-shadow: none; /* 클릭 시 버튼 주변 그림자를 제거 */
-    background-color: #ffffff; /* 활성화 상태에서도 배경 유지 */
-    color: #007bff; /* 텍스트 색상 유지 */
-}
-
-
-
 </style>
 </head>
 <body>
@@ -181,7 +158,9 @@
 		<input id="empCode" type="hidden" name="empCode" value="${loginEmp.empCode}">
 		<input type="hidden" name="teamCode" value="${loginEmp.teamCode}">
 		<div class="divEl">
-			<button type="button"  class="documentType" id="dailyReport">일일 업무일지 작성</button>
+			<div id="result">
+			<span class="button-style" id="dailyReport">일일 업무일지 작성</span>
+			</div>
 			<div class="modal" id="controllerModal">
 				<div class="modal-dialog">
 					<div class="modal-header">
@@ -194,11 +173,7 @@
 					</div>
 				</div>
 			</div>
-			<c:forEach var="documentList" items="${documentList}">
-			<div id="result">
-			<input type="checkbox" name="${documentList.documentTypeCode}">${documentList.documentTypeName}
-			</div>
-			</c:forEach>
+			
 		</div>
 		<div id="calendar"></div>
 	</div>
@@ -210,16 +185,41 @@
 		
 		$(document).ready(function() {
 			$.ajax({
-				url : '/doc/apiPageDocType',
-				type : 'post',
-				success : function(res){
-					console.log(res);
-				},
-				error : function(){
-					donsole.log('ajax오류');
-				}
-			});
-				
+		        url: '/doc/apiPageDocType',
+		        type: 'POST',
+		        success: function (response) {
+		            var container = document.getElementById('result');
+		            if (!container) {
+		                console.error("컨테이너 요소를 찾을 수 없습니다.");
+		                return;
+		            }
+					
+		            var dynamicElements = container.querySelectorAll('input[type="checkbox"], label');
+		            dynamicElements.forEach(function (element) {
+		                element.remove(); // 기존 체크박스와 label 제거
+		            });
+		            
+
+		            response.forEach(function (doc) {
+		            	var input = document.createElement('input');
+		                input.type = 'checkbox';
+		                input.id = doc.documentTypeCode;
+		                input.name = doc.documentTypeCode;
+		                
+
+		                var label = document.createElement('label');
+		                label.htmlFor = doc.documentTypeCode; // input과 연결
+		                label.className = 'button-style'; // 공통 버튼 스타일 추가
+		                label.textContent = doc.documentTypeName; // 텍스트 추가
+						
+		                container.appendChild(input);
+		                container.appendChild(label);
+		            });
+		        },
+		        error: function () {
+		            console.error('AJAX 요청 오류');
+		        }
+		    });
 			
 			
 			var calendarEl = document.getElementById('calendar');
@@ -230,7 +230,9 @@
 										type : 'POST',
 										dataType : 'json',
 										success : function(data) {
+												
 											var events = data.map(function(item) {
+												
 												return {
 													id : item.projectNo|| item.documentCode,
 													title : item.projectTitle|| item.documentTitle,
@@ -273,24 +275,98 @@
 													}
 												},
 												{
-													events : function(info,successCallback,failCallback) {
-														eventDoc(
-																'/doc/api/documentType.do?empCode=${loginEmp.empCode}',
-																'#CCCCFF',
-																successCallback,failCallback);
-													}
+													// 두 번째 이벤트 소스 (색상 동적 설정)
+										            events: function(info, successCallback, failCallback) {
+										                $.ajax({
+										                    url: '/doc/api/documentType.do?empCode=${loginEmp.empCode}',
+										                    type: 'POST',
+										                    dataType: 'json',
+										                    success: function(data) {
+										                        const documentTypeColors = {
+										                            "va": "#FFCCCC",
+										                            "co": "#CCCCFF",
+										                            "es": "#CCFFCC",
+										                            "bt": "#FFCCFF",
+										                            "sp": "#DDCCFF"
+										                        };
+
+										                        var events = data.map(function(item) {
+										                            const color = documentTypeColors[item.documentTypeCode] || '#FFFFFF';
+										                            return {
+										                                id: item.documentCode,
+										                                title: item.documentTitle,
+										                                start: item.documentDate,
+										                                end: item.documentEnd || null,
+										                                color: color,
+										                                extendedProps: {
+										                                    documentTypeCode: item.documentTypeCode,
+										                                    empCode : item.empCode,
+										                                	documentCode : item.documentCode    
+										                                }
+										                            };
+										                        });
+										                        console.log(events);
+										                        successCallback(events);
+										                    },
+										                    error: function() {
+										                        console.error("두 번째 이벤트 소스 AJAX 요청 실패");
+										                        failCallback("오류");
+										                    }
+										                });
 												}
+											}
 										 
 										],
 										navLinks : true,
 										nowIndicator : true,
-										locale : 'ko'
-									});
+										locale : 'ko',
+										eventClick: function(info) {
+										        const empCode = info.event.extendedProps.empCode;
+										        const documentTypeCode = info.event.extendedProps.documentTypeCode;
+										        const documentCode = info.event.extendedProps.documentCode;
+
+										        if (empCode && documentCode) {
+										            // URL과 파라미터 준비
+										            const targetUrl = '/doc/viewDocOne.do';
+										            const params = {
+										                empCode: empCode,
+										                documentTypeCode: documentTypeCode,
+										                documentCode: documentCode
+										            };
+
+										            // 페이지 이동 메서드 호출
+										            pageMoveParam(targetUrl, params);
+										        } else {
+										            alert('필요한 정보가 없습니다.');
+										        }
+										    }
+										});
 
 							calendar.render();
-						
+	
+	//사이드 바에서 문서타입 클릭시 fullcalendar에서 이벤트 제거
+    // 체크박스 change 이벤트
+    $('#result').on('change', 'input[type="checkbox"]', function() {
+        const documentType = $(this).attr('id'); // 체크박스의 데이터 타입 가져오기
+        const isChecked = $(this).is(':checked'); // 체크 상태 확인
+        const events = calendar.getEvents(); // FullCalendar의 모든 이벤트 가져오기
 		
-		
+        if (!isChecked) {
+            // 체크박스 체크 시 이벤트 표시
+            events.forEach(event => {
+                if (event.extendedProps.documentTypeCode === documentType) {
+                    event.setProp('display', 'auto'); // 이벤트 표시
+                }
+            });
+        } else {
+            // 체크박스 해제 시 이벤트 숨기기
+            events.forEach(event => {
+                if (event.extendedProps.documentTypeCode === documentType) {
+                    event.setProp('display', 'none'); // 이벤트 숨기기
+                }
+            });
+        }
+    });
 		
 		    let isUpdateMode = false;
 
@@ -309,6 +385,8 @@
 		            success: function (response) {
 		                $('#modalContent').html(response);
 		                $('#controllerModal').addClass('show');
+		                $('#dailyReport').blur(); // 클릭 후 포커스 제거
+		                
 		            },
 		            error: function () {
 		                alert('데이터를 불러오는 중 오류가 발생했습니다.');
@@ -342,6 +420,11 @@
 		    // 페이지 로드 시 상태 확인
 		    const empCode = $('#empCode').val();
 		    checkDailyReportStatus(empCode);
+		    
+		    $('#closeModalController').on('click', function() {
+		        $('#controllerModal').removeClass('show');
+		        $('#dailyReport').blur(); // 닫기 시 포커스 제거
+		    });
 		});
 
 	</script>
