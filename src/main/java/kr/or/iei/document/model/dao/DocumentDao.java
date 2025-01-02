@@ -102,7 +102,7 @@ public class DocumentDao {
 
 	public List<DocumentSign> selectSignList(HashMap<String, Object> map) {
 		
-		return sqlSession.selectList("document.selectSignList",map);
+		return sqlSession.selectList("document.viewSignList",map);
 	}
 
 
