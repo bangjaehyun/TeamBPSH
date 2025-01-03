@@ -163,7 +163,7 @@
 						let	data = res[i];
 						let divEl = $('<div></div>');
 						let aEl = $('<a href=javascript:void(0)></a>');
-						aEl.attr('onclick', 'alarmMove('+'"'+data.alarmNo+'","'+data.refUrl+'","'+data.urlParam+'","' + data.alarmRead +'")');
+						aEl.attr("onclick", "alarmMove("+"'"+data.alarmNo+"','"+data.refUrl+"','"+data.urlParam+"','" + data.alarmRead +"')");
 						 
 						
 						aEl.html(data.alarmComment);
@@ -188,10 +188,13 @@
 		if(alarmRead == 'n'){
 			alarmChangeRead(alarmNo);
 		}
+		
+		 let paramObj = JSON.parse(param);
+		
 			$.ajax({
 				url : url,
 				type : "post",
-				data : {param},
+				data : paramObj,
 				success : function(res){
 					 $('.page').html(res);
 				},error : function(){
@@ -244,7 +247,6 @@
 	
 	<%--파라미터 없는 페이지 이동--%>
 	function pageMove(url){
-		console.log("222222222222222222");
 		$('.bgx').css('display','none');
 		$.ajax({
 	         url : url,

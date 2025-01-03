@@ -16,27 +16,28 @@
 	height: calc(100vh - 50px);
 	display: flex;
 	justify-content: center;
+	overflow: auto;
 }
 
 .my-wrap {
 	margin : auto 0;
 	width: calc(100vw - 300px);
 	height: calc(100vh - 100px);
-	overflow: hidden;
+/* 	overflow: scroll; */
 }
 
 .my-name{
 	margin : 0 auto;
-	display: flex;
- 	justify-content: center; 
- 	height: 50px; 
+ 	height: 100px; 
 	width: 80%;
 	min-width: 1000px;
-}
-.my-name div{
+	
 	display: flex;
-	align-items: center;
+    justify-content: space-between; /* 양쪽으로 정렬 */
+    align-items: center; /* 세로 정렬 */
+    position: relative; /* 자식 요소의 배치를 위해 설정 */
 }
+
 .my-name span{
 	font-size: 25px; 
 	font-weight: bold; 
@@ -46,8 +47,8 @@
 	margin: 0 auto;
 	width: 60%;
 	min-width: 1000px;
-	height: 90%;
-	min-height: 800px;
+/* 	height: 90%; */
+/* 	min-height: 800px; */
 	display: flex;
 /* 	justify-content: center; */
 }
@@ -55,7 +56,7 @@
 .emp-div {
 	height: 80px;
 	align-items: center;
-	margin: 30px 0;
+	margin: 20px 0;
 }
 
 .emp-div>p {
@@ -82,14 +83,18 @@
 	color : white;
 	font-weight: bold;
 	font-size: 20px;
+	margin: 3px 0;
 }
-
+.name-div{
+	  position: absolute;
+    left: 50%; /* 부모의 가로 중앙으로 이동 */
+    transform: translateX(-50%); /* 가운데 정렬 */
+    text-align: center;
+}
 .work{
-	display : flex;
-	justify-content : space-between;
-	width : 170px;
-	min-width : 170px;
-	margin-left: 50px;
+/* 	margin-left: 300px;; /* 오른쪽으로 정렬 */ 
+	margin-left: auto; /* 오른쪽으로 정렬 */
+    text-align: right; /* 내부 요소 오른쪽 정렬 */
 }
 
 .upd-div{
@@ -146,8 +151,8 @@
 	<div class="my-page">
 		<div class="my-wrap">
 			<div class="my-name">
-				<div>
-					<span>${loginEmp.empName}</span>
+				<div class="name-div">
+					<span>${loginEmp.empName}${loginEmp.rankName}</span>
 				</div>
 				<div class="work">
 					<div class="onWork">
@@ -239,12 +244,13 @@
 	$(document).ready(function(){
 		let chk = false;
 		if(${!empty commute.onWork}){
-			let pEl = $('<p></p>');
+			let spanEl = $('<span>');
 		 	let str = '${commute.onWork}';
 		    let hour = str.slice(0, 2);
 			let min = str.slice(2, 4);
 			let sec = str.slice(4, 6);
-			pEl.html(hour+":"+min+":"+sec);
+			spanEl.html(hour+":"+min+":"+sec);
+			$('.onWork').append(spanEl);
 			$('.onWork').children('.work-btn').css('background','#7bc9fd');
 		}else{
 			$('.onWork').children('.work-btn').css('background','#fc2f2f');
@@ -252,13 +258,13 @@
 		}
 		
 		if(${!empty commute.offWork}){
-			let pEl = $('<p></p>');
+			let spanEl = $('<span>');
 			let str = '${commute.offWork}';
 		    let hour = str.slice(0, 2);
 			let min = str.slice(2, 4);
 			let sec = str.slice(4, 6);
-			pEl.html(hour+":"+min+":"+sec);
-			
+			spanEl.html(hour+":"+min+":"+sec);
+			$('.offWork').append(spanEl);
 			$('.offWork').children('.work-btn').css('background','#7bc9fd');
 		}else{
 			if(chk == false){

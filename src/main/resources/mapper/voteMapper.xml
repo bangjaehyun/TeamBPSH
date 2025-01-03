@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="vote">
+
+<select id="selectList"
+resultType="vote">
+select vote_no as voteNo,
+	   emp_name as empName,
+	   vote_title as voteTitle,
+	   vote_content as voteContent,
+	   vote_start as voteStart,
+	   vote_end as voteEnd
+  from tbl_vote
+  join tbl_emp using(emp_code)
+</select>
+
+<select id="getVoteNo"
+resultType="string">
+select TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_vote.NEXTVAL, 4, '0') from dual
+</select>
+
+<insert id="insertVote"
+parameterType="vote">
+insert into tbl_vote
+(
+	vote_no,
+	emp_code,
+	vote_title,
+	vote_content,
+	vote_end
+)
+values
+(
+	#{voteNo},
+	#{empCode},
+	#{voteTitle},
+	#{voteContent},
+	#{voteEnd}
+)
+</insert>
+
+<insert id="insertVoteVal"
+parameterType="map">
+insert into tbl_votelist
+(
+	votelist_no,
+	vote_no,
+	vote_name
+)
+values
+(
+	TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_votelist.NEXTVAL, 4, '0'),
+	#{voteNo},
+	#{voteVal}
+)
+
+</insert>
+
+<select id="selectVote"
+parameterType="vote"
+resultType="vote">
+select vote_no as voteNo,
+	   emp_code as empCode,
+	   emp_name as empName,
+	   vote_title as voteTitle,
+	   vote_content as voteContent,
+	   vote_start as voteStart,
+	   vote_end as voteEnd
+  from tbl_vote
+  join tbl_emp using(emp_code)
+ where vote_no = #{voteNo}
+</select>
+
+<select id="selectVoteValList"
+parameterType="vote"
+resultType="voteList">
+select votelist_no as voteListNo,
+	   vote_no as voteNo,
+	   vote_name as voteName,
+	   vote_count as voteCount
+  from tbl_voteList
+ where vote_no = #{voteNo}
+</select>
+
+<insert id="insertDoVoteEmp"
+parameterType="voteList">
+insert into tbl_participation
+(
+	vote_no,
+	emp_code,
+	votelist_no
+)
+values
+(
+	#{voteNo},
+	#{empCode},
+	#{voteListNo}
+)
+</insert>
+<update id="voteListCountAdd"
+parameterType="voteList">
+update tbl_voteList
+   set vote_count = vote_count +1
+ where vote_no = #{voteNo} and votelist_no = #{voteListNo}
+</update>
+
+<select id="selectDoVoteEmp"
+parameterType="vote"
+resultType="string">
+select votelist_no
+  from tbl_participation
+ where vote_no = #{voteNo} and emp_code = #{empCode}
+</select>
+
+<select id="selectVoteEmpList"
+parameterType="string"
+resultType="VoteEmpList">
+select emp_name as empName, 
+       (
+        select p.votelist_no 
+          from tbl_participation p 
+         where p.emp_code = e.emp_code and vote_no = #{voteNo}
+       ) as voteListNo 
+  from tbl_emp e
+</select>
+</mapper>
