@@ -1,6 +1,7 @@
 package kr.or.iei.project.model.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.dao.ProjectDao;
 import kr.or.iei.project.model.vo.Project;
+import kr.or.iei.project.model.vo.ProjectPartemp;
 
 @Service("projectService")
 public class ProjectService {
@@ -27,9 +29,9 @@ public class ProjectService {
 		return (ArrayList<Project>)dao.getProjects(teamCode);
 	}
 
-	public ArrayList<Project> projectList(String teamCode) {
+	public ArrayList<Project> projectList() {
 		
-		return  (ArrayList<Project>)dao.projectList(teamCode);
+		return  (ArrayList<Project>)dao.projectList();
 	}
 
 	public Project projectView(String projectNo) {
@@ -45,10 +47,14 @@ public class ProjectService {
 	public int projectWrite(Project project, List<String> teamCode) {
 		String projectNo = dao.projectNo();
 		project.setProjectNo(projectNo);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("projectNo", projectNo);
+		map.put("teamCode", teamCode);
+		
 		
 		int result = dao.projectWrite(project);
 		if(result > 0) {
-			result =  dao.projectTeam(teamCode);
+			result =  dao.projectTeam(map);
 		}
 		 
 		return result;

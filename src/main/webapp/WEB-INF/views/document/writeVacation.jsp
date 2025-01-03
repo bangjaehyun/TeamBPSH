@@ -39,163 +39,202 @@
 	align-items: center;
 }
 
+/* 제목 */
 .header h1 {
-	display: flex;
-	justify-content: center;
-	font-size: 24px;
-	margin: 0;
+	font-size: 26px;
+	color: #333;
+	margin-bottom: 20px;
+	text-align: center;
 }
 
+/* 메인 입력 컨테이너 */
 .main-container {
+	width: 100%;
+	padding: 20px;
 	border: 1px solid #ccc;
-	padding: 10px;
 	border-radius: 8px;
+	background-color: #ffffff;
 }
 
-.main-container>* {
-	margin-left: 2%;
-}
-
-.main-container #title {
-	width: 450px;
-	font-size: 17px;
-}
-
+/* 제목 입력 필드 */
 .doc-title {
-	width: 550px;
+	width: 100%;
 	display: flex;
-	border:none;
-	border: 1px solid #ccc;
-	
-	
+	align-items: center;
+	border: 1px solid #ddd;
 	border-radius: 8px;
-	align-items:center;	
-	margin: 0px;
-	margin-bottom: 10px;
+	padding: 10px;
+	margin-bottom: 15px;
+	background: #f9f9f9;
 }
-	.doc-title input{
-		background:none;
-		width:550px;
-		border:none;
-		font-size: 18px;
-	}
 
+.doc-title input {
+	width: 100%;
+	border: none;
+	background: transparent;
+	font-size: 18px;
+	outline: none;
+}
+
+/* 결재자 및 참조자 버튼 스타일 */
 .ref {
 	display: flex;
-}
-	.ref>button{
-	padding: 7px 4px;
-	border-radius: 4px;
-	background-color:gray;
-	border:none;
-	color:white;
-	
-	
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 15px;
 }
 
-	.ref>button:hover{
-	scale:1.1;
+.ref > button {
+	padding: 8px 12px;
+	border-radius: 6px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
+	transition: all 0.3s;
 }
 
-.ref>button:active{
-	scale:1;
-	background-color:black;
+.ref > button:hover {
+	background-color: #0056b3;
+	transform: scale(1.05);
 }
 
-.sign {
+.ref > button:active {
+	background-color: #003f80;
+	transform: scale(1);
+}
+
+/* 선택된 버튼 스타일 */
+.selectedBtn {
+	border: none;
+	background: none;
+	font-size: 16px;
+	padding: 3px;
+	cursor: pointer;
+	color: #007bff;
+}
+
+.selectedBtn:hover {
+	text-decoration: underline;
+}
+
+/* 날짜 선택 */
+.set-date {
 	display: flex;
-}
-
-.reference {
-	display: flex;
-}
-
- .selectedBtn{
-       	border:none;
-       	background:none;
-       	font-size:16px;
-       	padding:3px;
-       }
-
-
-
-form {
+	gap: 10px;
 	margin-bottom: 20px;
+	align-items: center;
 }
 
-form * {
+.date {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.date label {
+	background: none;
+	border: none;
+	color: #333;
+	font-weight: bold;
 	margin-bottom: 5px;
 }
 
-label {
-	font-weight: bold;
-	background-color: #ccc;
-	
-	border: 1px solid black;
+.date input {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 16px;
 }
 
-	.selectedBtn:hover{
-		cursor: pointer;
-		
-	}
+/* 결과 출력 */
+.set-date .result {
+	font-size: 16px;
+	font-weight: bold;
+	color: #007bff;
+	margin-top: 10px;
+}
+
+/* 반차 선택 */
 .half-time {
 	display: none;
-	gap: 10px;
+	gap: 15px;
+	margin-bottom: 15px;
 }
 
-.set-date {
+.half-time div {
 	display: flex;
-	gap:5px;
+	align-items: center;
+	gap: 5px;
 }
 
-.set-date>.date{
-	height: 100%;
-	box-sizing:border-box;
-}
-.date *{
-	padding:4px 8px;
-}
-
-
-.set-date .result {
-	background-color: white;
+.half-time label {
+	border: none;
+	background: none;
+	font-size: 16px;
+	color: #333;
+	cursor: pointer;
 }
 
+/* 휴가 내용 입력 */
 .vac-content {
-	width: 550px;
-	height: 300px;
-}
-
-.vac-content textarea {
 	width: 100%;
-	height: 100%;
+	height: 200px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	padding: 10px;
+	font-size: 16px;
 	resize: none;
+	background: #f9f9f9;
 }
 
+/* 파일 업로드 */
+.insert-file input {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	cursor: pointer;
+	background: #fff;
+	width: 100%;
+}
+
+/* 버튼 스타일 */
 .buttons {
 	display: flex;
 	justify-content: flex-end;
-	gap: 20px;
-	margin-right: 3%;
+	gap: 15px;
+	margin-top: 20px;
 }
 
 .buttons button {
 	padding: 10px 20px;
 	border: none;
-	border-radius: 4px;
+	border-radius: 6px;
+	font-size: 16px;
 	cursor: pointer;
-	font-size: 14px;
+	transition: all 0.3s;
 }
 
 .buttons .submit {
-	background-color: gray;
+	background-color: #28a745;
 	color: white;
 }
 
+.buttons .submit:hover {
+	background-color: #218838;
+	transform: scale(1.05);
+}
+
 .buttons .cancel {
-	background-color: gray;
+	background-color: #dc3545;
 	color: white;
 }
+
+.buttons .cancel:hover {
+	background-color: #c82333;
+	transform: scale(1.05);
+}
+
 </style>
 </head>
 <body>

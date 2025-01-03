@@ -1,6 +1,7 @@
 package kr.or.iei.project.model.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -26,9 +27,9 @@ public class ProjectDao {
 		
 	}
 
-	public List<Project> projectList(String teamCode) {
+	public List<Project> projectList() {
 		
-		return sqlSession.selectList("project.projectList", teamCode);
+		return sqlSession.selectList("project.projectList");
 	}
 
 	public Project projectView(String projectNo) {
@@ -51,10 +52,11 @@ public class ProjectDao {
 		return sqlSession.insert("project.projectWrite", project);
 	}
 
-	public int projectTeam(@Param("teamCode") List<String> teamCode) {
+	public int projectTeam(HashMap<String, Object> map) {
 		
-		return sqlSession.insert("project.insertTeam",teamCode);
+		return sqlSession.insert("project.insertTeam",map);
 	}
+
 
 	
 	

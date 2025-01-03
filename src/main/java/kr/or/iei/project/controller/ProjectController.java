@@ -40,8 +40,8 @@ public class ProjectController {
 	}
 	
 	@PostMapping("list.do")
-	public String projectListPage(Model model, String teamCode) {
-		ArrayList<Project> project = service.projectList(teamCode);
+	public String projectListPage(Model model) {
+		ArrayList<Project> project = service.projectList();
 		model.addAttribute("projectList",project);
 		return "project/projectList";
 	}
@@ -61,11 +61,11 @@ public class ProjectController {
 		return "project/writeProject";
 	}
 	
-	@PostMapping("write.do")
+	@PostMapping(value="write.do", produces="application/json; charset=utf-8")
+	@ResponseBody
 	public String projectWrite(Project project,@RequestParam(name="teamCode") List<String> teamCode) {
 		int result = service.projectWrite(project,teamCode);
-		System.out.println(teamCode);
-		return "project/projectList";
+		return String.valueOf(result);
 	}
 	
 

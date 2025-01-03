@@ -37,15 +37,8 @@
 			tbl_project.project_no as projectNo,
 			tbl_project.project_title as projectTitle,
 			tbl_project.project_content as projectContent,
-			tbl_project.project_end as projectEnd,
-			tbl_emp.emp_name as teamLeader
-		from tbl_project_team  
-			join tbl_project 
-			on tbl_project_team.project_no = tbl_project.project_no
-			join tbl_team_leader 
-			on tbl_project_team.team_code = tbl_team_leader.team_code
-			join tbl_emp
-			on tbl_emp.emp_code = tbl_team_leader.emp_code
+			tbl_project.project_end as projectEnd
+		from tbl_project 
 	</select>
 	
 	<select id="projectView"
@@ -113,13 +106,12 @@
 		)
 	</insert>
 	
-	<insert id="insertTeam" parameterType="list">
-		insert into tbl_project_partemp
-		
-		<foreach collection="teamCode" item="code" separator=",">
-        (#{projectNo}, #{code})
-    	</foreach>
-		
-	</insert>
-	
+	<insert id="insertTeam" parameterType="map">
+    INSERT ALL
+    <foreach collection="teamCode" item="code">
+        INTO tbl_project_team (project_no, team_code)
+        VALUES (#{projectNo}, #{code})
+    </foreach>
+    SELECT 1 FROM DUAL
+</insert>
 </mapper>

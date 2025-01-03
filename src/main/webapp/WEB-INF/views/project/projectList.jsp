@@ -87,7 +87,7 @@
 				<tr>
 					<th>프로젝트 번호</th>
 					<th>프로젝트 이름</th>
-					<th>프로젝트 책임자</th>
+<!-- 					<th>프로젝트 책임자</th> -->
 					<th>프로젝트 공정률</th>
 					<th>프로젝트 마감일</th>
 				</tr>
@@ -97,8 +97,8 @@
 					<tr onclick="projectView('${project.projectNo}')">
 						<td>${project.projectNo}</td>
 						<td>${project.projectTitle}</td>
-						<td>${project.teamLeader}</td>
-						<td>0</td>
+<%-- 						<td>${project.teamLeader}</td> --%>
+						<td>공정률</td>
 						<td>${project.projectEnd}</td>
 					</tr>
 				</c:forEach>
