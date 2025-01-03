@@ -11,13 +11,46 @@
 
 
 /* 테이블 */
-.page-wrap {
-	width: calc(100vw - 55px);
-	height: calc(100vh - 50px);
-	padding: 50px;
-}
 
+.page-wrap {
+	
+    justify-content: center;
+    margin-left: 50px;
+    width:100%;
+    
+    gap: 10px;
+	
+	
+}
+#pjHead{
+	margin : 0 auto;
+    height: 100px; 
+    width: 80%;
+    min-width: 1000px;
+    display: flex;
+    justify-content: space-between; /* 양쪽으로 정렬 */
+    align-items: center; /* 세로 정렬 */
+    position: relative; /* 자식 요소의 배치를 위해 설정 */
+	
+	}
+#pjHead>h1 {
+	position: absolute;
+    left: 50%; /* 부모의 가로 중앙으로 이동 */
+    transform: translateX(-50%); /* 가운데 정렬 */
+    text-align: center;
+}
+#pjBtn {
+   margin-left: 300px;; /* 오른쪽으로 정렬 */ 
+   margin-left: auto; /* 오른쪽으로 정렬 */
+   text-align: right; /* 내부 요소 오른쪽 정렬 */
+   border:1px solid #fff;
+   background: #007EF7;
+   border-radius: 15px;
+   padding:15px;
+   color:#fff;
+}
 .tbl {
+
 	min-width: 100%;
 	width: 100%;
 	border-spacing: 0;
@@ -44,6 +77,11 @@
 	<div class="page-wrap">
 	<input type="hidden" name="teamCode" value="${loginEmp.teamCode}">
 	<input type="hidden" name="projectNo" value="${project.projectNo}">
+	<div id="pjHead">
+	<h1>프로젝트 리스트</h1>
+	<div id="pjBtn">신규</div>
+	</div>
+	
 		<table class="tbl tbl-hover">
 			<thead>
 				<tr>
@@ -87,10 +125,11 @@
 	*/
 	  function projectView(projectNo) {
 		pageMoveParam('/project/view.do',{ projectNo: projectNo });
-
     }
 	  
-	  
+	 $('#pjBtn').on('click',function(){
+		 pageMove('/project/writeFrm.do');
+	 });
 	  
 	
 	</script>

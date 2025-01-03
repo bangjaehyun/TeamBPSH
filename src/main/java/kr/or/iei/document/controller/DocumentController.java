@@ -415,9 +415,8 @@ public class DocumentController {
 	}
 	
 	@PostMapping("viewDocOne.do")
-	public String viewDocOne(Model model, String empCode,String documentTypeCode,String documentCode) {
+	public String viewDocOne(Model model,String documentTypeCode,String documentCode) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("empCode", empCode);
 		map.put("documentTypeCode", documentTypeCode);
 		map.put("documentCode", documentCode);
 		Document document = service.viewDocOne(map);
@@ -425,10 +424,5 @@ public class DocumentController {
 		
 		return "document/viewDocOne";
 	}
-	
-	
-	
-	
 
-	
 }

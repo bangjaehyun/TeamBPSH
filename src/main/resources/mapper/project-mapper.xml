@@ -87,4 +87,39 @@
         on tbl_project_partemp.emp_code = tbl_emp.emp_code
         where tbl_project_partemp.project_no = #{projectNo}
 	</select>
+	
+	<select id="projectNo" resultType="string">
+		select to_char(sysdate,'yyyymmdd')||lpad(seq_project.nextVal,4,'0') as project_no from dual
+	</select>
+	
+	<insert id="projectWrite" parameterType="project">
+		insert into tbl_project
+		(
+			project_no,
+			document_type_code,
+			emp_code,
+			project_title,
+			project_content,
+			project_end
+		)
+		values
+		(
+			#{projectNo},
+			'pj',
+			#{empCode},
+			#{projectTitle},
+			#{projectContent},
+			#{projectEnd}
+		)
+	</insert>
+	
+	<insert id="insertTeam" parameterType="list">
+		insert into tbl_project_partemp
+		
+		<foreach collection="teamCode" item="code" separator=",">
+        (#{projectNo}, #{code})
+    	</foreach>
+		
+	</insert>
+	
 </mapper>

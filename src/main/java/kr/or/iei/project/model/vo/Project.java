@@ -8,9 +8,9 @@ public class Project {
 	private String projectTitle;
 	private String projectContent;
 	private String projectEnd;
+	private String empCode;
 	
 	//종속 변수
-	private String empCode;
 	private String documentDate;
 	private String teamLeader;
 	private ArrayList<ProjectPartemp> projectPartemp;

@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.dao.ProjectDao;
@@ -37,6 +39,19 @@ public class ProjectService {
 
 	public List<Emp> projectEmpList(String projectNo) {
 		return  dao.projectEmpList(projectNo);
+	}
+	
+	@Transactional
+	public int projectWrite(Project project, List<String> teamCode) {
+		String projectNo = dao.projectNo();
+		project.setProjectNo(projectNo);
+		
+		int result = dao.projectWrite(project);
+		if(result > 0) {
+			result =  dao.projectTeam(teamCode);
+		}
+		 
+		return result;
 	}
 
 
