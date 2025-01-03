@@ -46,6 +46,7 @@ import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
+import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 
@@ -555,5 +556,23 @@ public class EmpController {
           model.addAttribute("developPrice", new Gson().toJson(developPrice));
           
           return "emp/empDevelopPrice";
+      }
+      
+      @PostMapping("deptLeaderApPoint.do")
+      @AdminChk
+      public String deptLeaderApPoint(Model model) {
+    	  DeptLeader deptLeader = service.selectDeptLeaderList();
+    	  model.addAttribute("leaderList", new Gson().toJson(deptLeader.getLeaderList()));
+    	  model.addAttribute("empList",deptLeader.getEmpList());
+    	  
+    	  return "emp/deptReaderApPoint";
+      }
+      
+      @PostMapping(value="changeLeader.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String changeLeader(Emp emp) {
+    	  int result = service.chageLeader(emp);
+    	  
+    	  return String.valueOf(result);
       }
 }

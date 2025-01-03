@@ -136,12 +136,17 @@
 					<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="salesManager()">매출관리</a></li>
 				</ul>
 			</li>
 		</ul>
     </div>
     <script>
+    <%-- 부서장 관리 --%>
+    function deptLeaderApPoint(){
+    	pageMove("/emp/deptLeaderApPoint.do");	
+    }
     <%--매출 관리 페이지 이동--%>
     function salesManager(){
     	pageMove("/document/salesManager.do");	

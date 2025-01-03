@@ -19,6 +19,7 @@ import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
+import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -314,6 +315,25 @@ public class EmpService {
 			result = dao.insertDevelopPrice(price);
 		}
 		return 1;
+	}
+
+	public DeptLeader selectDeptLeaderList() {
+		ArrayList<Emp> leaderList = (ArrayList<Emp>)dao.selectDeptLeaderList();
+		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
+		
+		return new DeptLeader(leaderList, empList);
+	}
+
+	public int chageLeader(Emp emp) {
+		int result = dao.selectLeader(emp);
+		
+		if(result > 0) {
+			result = dao.updateLeader(emp);
+		}else {
+			result = dao.insertLeader(emp);
+		}
+		
+		return result;
 	}
 
 }
