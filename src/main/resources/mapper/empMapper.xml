@@ -521,4 +521,60 @@
      #{price}
      )
      </insert>
+     
+     <select id="selectDeptLeaderList"
+     resultType="emp">
+     select dept_code as deptCode, 
+     		emp_code as empCode,
+     		emp_name as empName 
+       from tbl_dept_leader 
+       join tbl_emp using(emp_code)
+     </select>
+     
+     <select id="selectEmpList"
+     resultType="emp">
+     select emp_code as empCode,
+     		emp_name as empName,
+     		(
+     		select rank_name 
+     		  from tbl_rank 
+     		 where rank_code = e.rank_code 
+     		) as rankName,
+        	(
+        	select dept_code 
+        	  from tbl_dept 
+        	 where dept_code = t.dept_code
+        	)as deptCode
+       from tbl_emp e
+       join tbl_team t using(team_code)
+     </select>
+     
+     <select id="selectLeader"
+     parameterType="emp"
+     resultType="int">
+     select count(*)
+       from tbl_dept_leader
+      where dept_code = #{deptCode}
+     </select>
+     
+     <update id="updateLeader"
+     parameterType="emp">
+     update tbl_dept_leader
+        set emp_code = #{empCode}
+      where dept_code = #{deptCode}
+     </update>
+     
+     <insert id="insertLeader"
+     parameterType="emp">
+     insert into tbl_dept_leader
+     (
+     	dept_code,
+     	emp_code
+     )
+     values
+     (
+     	#{deptCode},
+     	#{empCode}
+     )
+     </insert>
 </mapper>
