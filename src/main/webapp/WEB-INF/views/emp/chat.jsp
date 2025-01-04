@@ -307,7 +307,6 @@
 				console.log("연결종료");
 				ws.close();
 				ws = null
-				setTimeout(fn.init(), 5000);
 			};
 		}	
 		,sendValidate : function (enter) {
@@ -355,7 +354,6 @@
 		    const files = e.originalEvent.dataTransfer.files; // 드롭된 파일 가져오기
 
 		    if (files.length > 0) {
-		      console.log("드롭된 파일:", files);
 		      uploadFile(files[0]);
 		    } else {
 		      console.warn("드롭된 파일이 없습니다.");
@@ -365,7 +363,6 @@
 		  
 		// 파일 업로드 함수
 		  function uploadFile(file) {
-			console.log(file);
 		    const formData = new FormData();
 		    formData.append("file", file); // 서버에서 받을 파일 필드 이름
 			
@@ -628,7 +625,7 @@
 	
 	<%-- 사이즈 변경 못하게 고정 --%>
 	$(window).resize(function () {
-	    window.resizeTo(600, 800);
+	    window.resizeTo(700, 850);
 	});
 	
 	function getDay(chatDate){

@@ -123,6 +123,12 @@
 			</li>
 			<li class="side-li">
 				<div class="side-div">
+					<div class="img-div"><img class="side-img" src="/resources/images/side-vote.png" /></div>
+					<p class="side-text">투표</p>
+				</div>
+			</li>
+			<li class="side-li">
+				<div class="side-div">
 					<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
 					<p class="side-text">관리자</p>
 				</div>
@@ -130,12 +136,16 @@
 					<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
-					<li>매출관리</li>
+					<li><a href="javascript:void(0)" onclick="salesManager()">매출관리</a></li>
 				</ul>
 			</li>
 		</ul>
     </div>
     <script>
+    <%--매출 관리 페이지 이동--%>
+    function salesManager(){
+    	pageMove("/document/salesManager.do");	
+    }
     <%--회원 관리 --%>
     function empManager(){
     	pageMove("/emp/empManager.do");	
@@ -174,6 +184,11 @@
      $('.side-li:nth-child(4)').on('click',function(){
     	 pageMove('/project/list.do');
         
+    });
+     
+     <%--5번째 li 태그로 이동--%>
+     $('.side-li:nth-child(5)').on('click',function(){
+    	 pageMove('/vote/list.do');
     });
     
     <%--main 페이지로 이동--%>

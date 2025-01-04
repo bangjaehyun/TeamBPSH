@@ -118,14 +118,13 @@
 	</div>
 	<script>
 	function chatOpen(){
-		let popupWidth = 600;
-		let popupHeight = 800;
+		let popupWidth = 700;
+		let popupHeight = 850;
 		
 		let top = (window.innerHeight - popupHeight) / 2 + window.screenY;
 		let left = window.innerWidth + window.screenX; 
 
 		let popupWindow = window.open("", "windowName", "width="+popupWidth+", height=" + popupHeight + ", top=" + top + ", left=" + left + ",resizable=0");
-		popupWindow.resizeTo(500, 500);
 		let f = document.createElement('form');
 		        f.setAttribute('method', 'post');
 		        f.setAttribute('action', '/emp/chatFrm.do');
