@@ -7,7 +7,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
     <style>
-       
+       li{
+       list-style-type: none;
+       }
     </style>
 </head>
 <body>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
@@ -19,6 +20,7 @@ import com.google.gson.Gson;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.service.ProjectService;
 import kr.or.iei.project.model.vo.Project;
+import kr.or.iei.project.model.vo.ProjectPartemp;
 
 @Controller("projectController")
 @RequestMapping("/project/")
@@ -38,8 +40,8 @@ public class ProjectController {
 	}
 	
 	@PostMapping("list.do")
-	public String projectListPage(Model model, String teamCode) {
-		ArrayList<Project> project = service.projectList(teamCode);
+	public String projectListPage(Model model) {
+		ArrayList<Project> project = service.projectList();
 		model.addAttribute("projectList",project);
 		return "project/projectList";
 	}
@@ -52,6 +54,18 @@ public class ProjectController {
 		 model.addAttribute("projectPartempList", projectPartempList);
 	    
 	    return "project/projectView";
+	}
+	
+	@PostMapping("writeFrm.do")
+	public String projectWriteFrm(Model model) {
+		return "project/writeProject";
+	}
+	
+	@PostMapping(value="write.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String projectWrite(Project project,@RequestParam(name="teamCode") List<String> teamCode) {
+		int result = service.projectWrite(project,teamCode);
+		return String.valueOf(result);
 	}
 	
 

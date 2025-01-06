@@ -7,20 +7,22 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
 <style>
 /* 전체 레이아웃 스타일 */
 /* 전체 레이아웃 스타일 */
 .calDiv {
     display: flex;
     justify-content: center;
-    width: calc(100vw - 55px);
+    margin-left: 50px;
+    width:100%;
     height: calc(100vh - 50px);
     gap: 10px;
 }
 
 #calendar {
     margin: auto 0;
-    width: 80%;
+    width: 1300px;
 }
 
 /* 사이드바 스타일 */
@@ -43,7 +45,7 @@
     display: block; /* 세로 배치 */
     padding: 10px 20px; /* 버튼 및 label의 패딩 */
     margin: 0; /* 기본 마진 제거 */
-    background-color: #C760E3; /* 기본 배경색 */
+    background-color: #cf91e0; /* 기본 배경색 */
     color: #007bff; /* 기본 글자색 */
     border-radius: 10px;
     font-size: 14px; /* 글자 크기 */
@@ -179,11 +181,12 @@
 	</div>
 	
 
-	<script
-		src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
+	
 	<script>
 		
 		$(document).ready(function() {
+			
 			$.ajax({
 		        url: '/doc/apiPageDocType',
 		        type: 'POST',
@@ -249,7 +252,7 @@
 											}
 										});
 							}
-
+								
 							var calendar = new FullCalendar.Calendar(
 									calendarEl,
 									{
@@ -289,7 +292,7 @@
 										                            "bt": "#FFCCFF",
 										                            "sp": "#DDCCFF"
 										                        };
-
+																	
 										                        var events = data.map(function(item) {
 										                            const color = documentTypeColors[item.documentTypeCode] || '#FFFFFF';
 										                            return {
@@ -305,6 +308,7 @@
 										                                }
 										                            };
 										                        });
+																	
 										                        console.log(events);
 										                        successCallback(events);
 										                    },
@@ -343,6 +347,7 @@
 										});
 
 							calendar.render();
+		
 	
 	//사이드 바에서 문서타입 클릭시 fullcalendar에서 이벤트 제거
     // 체크박스 change 이벤트
@@ -426,6 +431,8 @@
 		        $('#dailyReport').blur(); // 닫기 시 포커스 제거
 		    });
 		});
+		    
+		
 
 	</script>
 </body>

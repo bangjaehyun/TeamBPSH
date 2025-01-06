@@ -17,6 +17,7 @@
     <link rel="stylesheet"
    href="https://fonts.googleapis.com/icon?family=Material+Icons"
    type="text/css;" />
+   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
         *{
             padding: 0px;
@@ -39,6 +40,7 @@
         }
         .header-left{
         	width: 300px;
+        	min-width: 280px;
         }
         .header-right{
         	margin-right : 10px;
@@ -161,7 +163,7 @@
 						let	data = res[i];
 						let divEl = $('<div></div>');
 						let aEl = $('<a href=javascript:void(0)></a>');
-						aEl.attr('onclick', 'alarmMove('+'"'+data.alarmNo+'","'+data.refUrl+'","'+data.urlParam+'","' + data.alarmRead +'")');
+						aEl.attr("onclick", "alarmMove("+"'"+data.alarmNo+"','"+data.refUrl+"','"+data.urlParam+"','" + data.alarmRead +"')");
 						 
 						
 						aEl.html(data.alarmComment);
@@ -186,10 +188,13 @@
 		if(alarmRead == 'n'){
 			alarmChangeRead(alarmNo);
 		}
+		
+		 let paramObj = JSON.parse(param);
+		
 			$.ajax({
 				url : url,
 				type : "post",
-				data : {param},
+				data : paramObj,
 				success : function(res){
 					 $('.page').html(res);
 				},error : function(){
@@ -242,7 +247,6 @@
 	
 	<%--파라미터 없는 페이지 이동--%>
 	function pageMove(url){
-		console.log("222222222222222222");
 		$('.bgx').css('display','none');
 		$.ajax({
 	         url : url,

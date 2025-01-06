@@ -25,5 +25,9 @@
 		<typeAlias type="kr.or.iei.document.model.vo.DocumentReference" alias="ref"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.DailyReport" alias="dailyReport"/>
 		<typeAlias type="kr.or.iei.document.model.vo.Spending" alias="spending"/>
+		<typeAlias type="kr.or.iei.emp.model.vo.DevelopPrice" alias="developPrice"/>
+		<typeAlias type="kr.or.iei.vote.model.vo.Vote" alias="vote"/>
+		<typeAlias type="kr.or.iei.vote.model.vo.VoteList" alias="voteList"/>
+		<typeAlias type="kr.or.iei.vote.model.vo.VoteEmpList" alias="VoteEmpList"/>
 	</typeAliases>
 </configuration>

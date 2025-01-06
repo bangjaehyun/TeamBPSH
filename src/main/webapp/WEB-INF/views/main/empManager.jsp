@@ -17,7 +17,7 @@
 .page-wrap {
 	width: calc(100vw - 55px);
 	height: calc(100vh - 50px);
-	overflow: scroll;
+	overflow: auto;
 	overflow-y: hidden;
 }
 

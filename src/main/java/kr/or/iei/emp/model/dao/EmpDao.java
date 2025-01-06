@@ -16,6 +16,8 @@ import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
+import kr.or.iei.emp.model.vo.DeptLeader;
+import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
 import kr.or.iei.emp.model.vo.Team;
@@ -198,6 +200,42 @@ public class EmpDao {
 
 	public int updatePw(Emp emp) {
 		return sqlSession.update("emp.updatePw", emp);
+	}
+
+	public List<DevelopPrice> selectDevelopsPrice() {
+		return sqlSession.selectList("emp.selectDevelopsPrice");
+	}
+
+	public int selectDevelopPriceChk(DevelopPrice price) {
+		return sqlSession.selectOne("emp.selectDevelopPriceChk", price);
+	}
+
+	public int updateDevelopPrice(DevelopPrice price) {
+		return sqlSession.update("emp.updateDevelopPrice", price);
+	}
+
+	public int insertDevelopPrice(DevelopPrice price) {
+		return sqlSession.insert("emp.insertDevelopPrice", price);
+	}
+
+	public List<Emp> selectDeptLeaderList() {
+		return sqlSession.selectList("emp.selectDeptLeaderList");
+	}
+
+	public List<Emp> selectEmpList() {
+		return sqlSession.selectList("emp.selectEmpList");
+	}
+
+	public int selectLeader(Emp emp) {
+		return sqlSession.selectOne("emp.selectLeader");
+	}
+
+	public int updateLeader(Emp emp) {
+		return sqlSession.update("emp.updateLeader", emp);
+	}
+
+	public int insertLeader(Emp emp) {
+		return sqlSession.insert("emp.insertLeader",emp);
 	}
 
 

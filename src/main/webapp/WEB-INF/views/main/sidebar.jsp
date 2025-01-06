@@ -123,32 +123,54 @@
 			</li>
 			<li class="side-li">
 				<div class="side-div">
+					<div class="img-div"><img class="side-img" src="/resources/images/side-vote.png" /></div>
+					<p class="side-text">투표</p>
+				</div>
+			</li>
+			<li class="side-li">
+				<div class="side-div">
 					<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
 					<p class="side-text">관리자</p>
 				</div>
 				<ul class="side-sub">
 					<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
-					<li>매출관리</li>
+					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="salesManager()">매출관리</a></li>
 				</ul>
 			</li>
 		</ul>
     </div>
     <script>
+    <%-- 부서장 관리 --%>
+    function deptLeaderApPoint(){
+    	pageMove("/emp/deptLeaderApPoint.do");	
+    }
+    <%--매출 관리 페이지 이동--%>
+    function salesManager(){
+    	pageMove("/document/salesManager.do");	
+    }
+    <%--회원 관리 --%>
     function empManager(){
     	pageMove("/emp/empManager.do");	
     }
+    <%--신규 회원 관리 --%>
     function empWait(){
     	pageMove("/emp/empWait.do");
     }
+    <%--개발 단가 관리 --%>
+    function empDevelopPrice(){
+        pageMove("/emp/empDevelopPrice.do");
+    }
     
-  //sub메뉴클릭시 숨기기 위한 이벤트
+  	<%--sub메뉴클릭시 숨기기 위한 이벤트--%>
     $('.side-div').next().find('li').click(function(){
     	$('.side-div').next().css('display','none');
     	$('.bgx').css('display','none');
     })
     
-    	//sub메뉴 보여주기 위함
+    	<%--sub메뉴 보여주기 위함--%>
     	$('.side-div').click(function(e){
     		  $('.bgx').css('display','block');
     		  $('.side-div').next().css('display','none');
@@ -158,18 +180,23 @@
     		  $(this).next().css('display','block');
     	});
     
-    //3번째 li 태그 달력으로 이동
+    <%--3번째 li 태그 달력으로 이동--%>
     $('.side-li:nth-child(3)').on('click',function(){
     	pageMove('/emp/calendar.do');
     });
     
-    //4번째 li 태그로 이동
+    <%--4번째 li 태그로 이동--%>
      $('.side-li:nth-child(4)').on('click',function(){
     	 pageMove('/project/list.do');
         
     });
+     
+     <%--5번째 li 태그로 이동--%>
+     $('.side-li:nth-child(5)').on('click',function(){
+    	 pageMove('/vote/list.do');
+    });
     
-    //main 페이지로 이동
+    <%--main 페이지로 이동--%>
     $('.mainPage').on('click',function(){
     	pageMove("/emp/empMain.do");
     });
@@ -188,7 +215,7 @@
     	});
     }
     
-    <!--리스트 목록-->
+    <%--리스트 목록--%>
     function selectList(e){
     	$.ajax({
     		url:"/doc/selectList.do",

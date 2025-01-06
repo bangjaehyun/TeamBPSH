@@ -34,177 +34,213 @@
 	box-sizing: border-box;
 }
 
-.preamble {
+.header {
 	margin : auto 0;
 	align-items: center;
 }
 
-.preamble h1 {
-	display: flex;
-	justify-content: center;
-	font-size: 24px;
-	margin: 0;
+/* 제목 */
+.header h1 {
+	font-size: 26px;
+	color: #333;
+	margin-bottom: 20px;
+	text-align: center;
 }
 
+/* 메인 입력 컨테이너 */
 .main-container {
+	width: 100%;
+	padding: 20px;
 	border: 1px solid #ccc;
-	padding: 10px;
 	border-radius: 8px;
+	background-color: #ffffff;
 }
 
-.main-container>* {
-	margin-left: 2%;
-}
-
-
-
+/* 제목 입력 필드 */
 .doc-title {
-	width: 550px;
+	width: 100%;
 	display: flex;
-	border:none;
-	border: 1px solid #ccc;
-	
-	
+	align-items: center;
+	border: 1px solid #ddd;
 	border-radius: 8px;
-	align-items:center;	
-	margin: 0px;
-	margin-bottom: 10px;
+	padding: 10px;
+	margin-bottom: 15px;
+	background: #f9f9f9;
 }
-	.doc-title input{
-		background:none;
-		width:100%;
-		border:none;
-		font-size: 17px;
-	}
-	.doc-title input:focus{
-		outline: none;
-	}
 
+.doc-title input {
+	width: 100%;
+	border: none;
+	background: transparent;
+	font-size: 18px;
+	outline: none;
+}
+
+/* 결재자 및 참조자 버튼 스타일 */
 .ref {
 	display: flex;
-}
-	.ref>button{
-	padding: 7px 4px;
-	border-radius: 4px;
-	background-color:gray;
-	border:none;
-	color:white;
-	
-	
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 15px;
 }
 
-	.ref>button:hover{
-	scale:1.1;
+.ref > button {
+	padding: 8px 12px;
+	border-radius: 6px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
+	transition: all 0.3s;
 }
 
-.ref>button:active{
-	scale:1;
-	background-color:black;
+.ref > button:hover {
+	background-color: #0056b3;
+	transform: scale(1.05);
 }
 
-.sign {
+.ref > button:active {
+	background-color: #003f80;
+	transform: scale(1);
+}
+
+/* 선택된 버튼 스타일 */
+.selectedBtn {
+	border: none;
+	background: none;
+	font-size: 16px;
+	padding: 3px;
+	cursor: pointer;
+	color: #007bff;
+}
+
+.selectedBtn:hover {
+	text-decoration: underline;
+}
+
+/* 날짜 선택 */
+.set-date {
 	display: flex;
-}
-
-.reference {
-	display: flex;
-}
-
- .selectedBtn{
-       	border:none;
-       	background:none;
-       	font-size:16px;
-       	padding:3px;
-       }
-
-
-
-form {
+	gap: 10px;
 	margin-bottom: 20px;
+	align-items: center;
 }
 
-form * {
+.date {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.date label {
+	background: none;
+	border: none;
+	color: #333;
+	font-weight: bold;
 	margin-bottom: 5px;
 }
 
-label {
-	font-weight: bold;
-	background-color: #ccc;
-	
-	border: 1px solid black;
+.date input {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	font-size: 16px;
 }
 
-	.selectedBtn:hover{
-		cursor: pointer;
-		
-	}
+/* 결과 출력 */
+.set-date .result {
+	font-size: 16px;
+	font-weight: bold;
+	color: #007bff;
+	margin-top: 10px;
+}
+
+/* 반차 선택 */
 .half-time {
 	display: none;
-	gap: 10px;
+	gap: 15px;
+	margin-bottom: 15px;
 }
 
-.set-date {
+.half-time div {
 	display: flex;
-	gap:5px;
-}
-	.set-date *{
-		gap:0px;
-	}
-
-.set-date>.date{
-	height: 100%;
-	box-sizing:border-box;
-}
-.date *{
-	padding:4px 8px;
+	align-items: center;
+	gap: 5px;
 }
 
-
-.set-date .result {
-	background-color: white;
+.half-time label {
+	border: none;
+	background: none;
+	font-size: 16px;
+	color: #333;
+	cursor: pointer;
 }
 
+/* 휴가 내용 입력 */
 .vac-content {
-	width: 550px;
-	height: 300px;
-}
-
-.vac-content textarea {
 	width: 100%;
-	height: 100%;
+	height: 200px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	padding: 10px;
+	font-size: 16px;
 	resize: none;
+	background: #f9f9f9;
 }
 
+/* 파일 업로드 */
+.insert-file input {
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	cursor: pointer;
+	background: #fff;
+	width: 100%;
+}
+
+/* 버튼 스타일 */
 .buttons {
 	display: flex;
 	justify-content: flex-end;
-	gap: 20px;
-	margin-right: 3%;
+	gap: 15px;
+	margin-top: 20px;
 }
 
 .buttons button {
 	padding: 10px 20px;
 	border: none;
-	border-radius: 4px;
+	border-radius: 6px;
+	font-size: 16px;
 	cursor: pointer;
-	font-size: 14px;
+	transition: all 0.3s;
 }
 
 .buttons .submit {
-	background-color: gray;
+	background-color: #28a745;
 	color: white;
 }
 
+.buttons .submit:hover {
+	background-color: #218838;
+	transform: scale(1.05);
+}
+
 .buttons .cancel {
-	background-color: gray;
+	background-color: #dc3545;
 	color: white;
 }
+
+.buttons .cancel:hover {
+	background-color: #c82333;
+	transform: scale(1.05);
+}
+
 </style>
 </head>
 <body>
 	<div class="board">
 	<div class="container">
-		<div class="preamble">
+		<div class="header">
 			<h1>휴가 신청서</h1>
 
 			<div class="main-container">
@@ -283,16 +319,14 @@ label {
 
 <script>
 //작성조건이 맞는가?
-var signList = [];
-var refList = [];
-	
-		
-		
+
 var checkDocument={
 		"docTitle":	false,
 		"sign":		false,
 		"date":		false,
-		
+		"sameSign":	true,
+		"sameRef":	true,
+		"ovarlap":	true,
 		"past":		false
 		
 		
@@ -412,44 +446,7 @@ function msg(title, text, icon, callback){
      }
 
 
-function searchMan(e) {
-		
-		let popupWidth = 800;
-		let popupHeight = 800;
 
-		let left = (window.innerWidth - popupWidth) / 2;
-		let top = (window.innerHeight - popupHeight) / 2;
-
-		let popup = window
-				.open("", "searchMan", "width=" + popupWidth + ", height="
-						+ popupHeight + ", top=" + top + ", left=" + left);
-		 const signButtons = $("#sign button").map(function () {
-		        return {
-		            value: $(this).val(),
-		            text: $(this).text(),
-		        };
-		    }).get();
-		 const refButtons = $("#ref button").map(function () {
-		        return {
-		            value: $(this).val(),
-		            text: $(this).text(),
-		        };
-		    }).get();
-		let form = document.createElement('form');
-		form.setAttribute("action", "/doc/searchMan.do");
-		form.setAttribute("method", "post");
-		//form.setAttribute("data":e);
-		let inputType = document.createElement('input');
-		    inputType.setAttribute("type", "hidden"); 
-		    inputType.setAttribute("name", "type");
-		    inputType.setAttribute("value", e);	  
-		    form.appendChild(inputType);
-
-		popup.document.body.appendChild(form);
-
-		form.submit();
-
-	}
 
 $('#title').on('input',function(){
 	let title=$('#title').val();
@@ -547,15 +544,9 @@ function onDateChange() {
     const endDate = document.querySelector('#endDate');
    
     if (halfChecked) {
-    	var today = new Date();
-        today.setHours(0, 0, 0, 0);
         //날짜 세팅
         document.getElementById('vacEnd').value = start;
-        if(start<today.getTime()){
-    		checkDocument.past=false;
-    	}else{
-    		checkDocument.past=true;
-    	}
+        
 
        
 
@@ -565,55 +556,36 @@ function onDateChange() {
     }
 }
 
-//결재자
-    
-    var sign=$('#sign');
-function chkSignList(){
-    signList.length=0;
-    sign.children().each(function() {
-        const signValue = $(this).val();
-       
-            signList.push(signValue);
-        
-    });
-}
+	function searchMan(e) {
+		
+		let popupWidth = 800;
+		let popupHeight = 800;
 
-// 참조자 확인
-    
-    var ref=$('#ref');
- function chkRefList(){
-    refList.length=0;
-    ref.children().each(function() {
-        const refValue = $(this).val();
-      
-            refList.push(refValue);
-        
-    });
-}
+		let left = (window.innerWidth - popupWidth) / 2;
+		let top = (window.innerHeight - popupHeight) / 2;
 
+		let popup = window
+				.open("", "searchMan", "width=" + popupWidth + ", height="
+						+ popupHeight + ", top=" + top + ", left=" + left);
 
-//결재자 참조자
-// const overlapList=[];
-// function chkOverlap(){
-// checkDocument.overlap=true;
-// overlapList.length=0;
-// sign.children().each(function() {
-// 	const signOverLap=$(this).val();
-// 	ref.children().each(function(){
-// 			 refOverLap=$(this).val();
-			
-// 				overlapList.push(refOverLap);
-			
-			
-// 	});
-// 	if(overlapList.includes(e)){
-// 			checkDocument.overlap=false;
-// 		}
-	
-// });
-// }
+		let form = document.createElement('form');
+		form.setAttribute("action", "/doc/searchMan.do");
+		form.setAttribute("method", "post");
+		//form.setAttribute("data":e);
+		let inputType = document.createElement('input');
+		    inputType.setAttribute("type", "hidden"); 
+		    inputType.setAttribute("name", "type");
+		    inputType.setAttribute("value", e);
+		    form.appendChild(inputType);
+		   
+		  
+		    
+		    
+		popup.document.body.appendChild(form);
 
-	
+		form.submit();
+
+	}
 	
 	function deleteEmp(obj){
 		$(obj).remove();
@@ -632,18 +604,60 @@ function chkSignList(){
 	});
 	
 	
-function writeDocument() {
-    const sign = $('#sign');
-    const ref=$('#ref');
-    const list = sign.children().length;
-    if (list > 0) {
-        checkDocument.sign = true;
-    } else {
-        checkDocument.sign = false;
-    }
-    
-  
+	function writeDocument() {
+	    const sign = $('#sign');
+	    const ref=$('#ref');
+	    const list = sign.children().length;
+	    if (list > 0) {
+	        checkDocument.sign = true;
+	    } else {
+	        checkDocument.sign = false;
+	    }
+	    
+	    const signList = [];
+	    signList.length=0;
+	    sign.children().each(function() {
+	        const signValue = $(this).val();
+	        if (signList.includes(signValue)) {
+	            checkDocument.sameSign = false; 
+	           
+	        } else {
+	            signList.push(signValue);
+	        }
+	    });
+	   
 
+	    // 참조자 확인
+	    const refList = [];
+	    refList.length=0;
+	    ref.children().each(function() {
+	        const refValue = $(this).val();
+	        if (refList.includes(refValue)) {
+	            checkDocument.sameRef = false;
+	            
+	        } else {
+	            refList.push(refValue);
+	        }
+	    });
+		
+	    const overlapList=[];
+	    checkDocument.overlap=true;
+	    overlapList.length=0;
+	    sign.children().each(function() {
+	    	const signOverLap=$(this).val();
+	    	ref.children().each(function(){
+   				 refOverLap=$(this).val();
+   				
+   					overlapList.push(refOverLap);
+   				
+	    			
+	    	});
+	    	if(overlapList.includes(signOverLap)){
+					checkDocument.overlap=false;
+				}
+	    	
+	    });
+	    
 
 	    // 제목, 결재자, 날짜 검증
 	    for (let check in checkDocument) {
@@ -652,7 +666,9 @@ function writeDocument() {
 	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
 	                case "sign":msg("알림","결재자는 최소 1명 이상이어야 합니다.","error","0"); break;
 	                case "date":msg("알림","날짜형식이 잘못되었습니다.","error","0"); break;
-	               
+	                case "sameSign":msg("알림","중복된 결재자가 존재합니다.","error","0"); checkDocument.sameSign=true; break;  
+	                case "sameRef": msg("알림","중복된 참조자가 존재합니다.","error","0");  checkDocument.sameRef=true; break;
+	                case "overlap":msg("알림","한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다.","error","0"); checkDocument.overlap=true; break;
 	                case "past":msg("알림","오늘보다 이전 날짜는 선택이 불가능 합니다.","error","0"); checkDocument.past=false; break;
 	                //중복체크는 확인시 다시 값 초기화
 	                
@@ -696,7 +712,7 @@ function writeDocument() {
 		if (selectedFiles.length > 0) {
 		        for (let i = 0; i < selectedFiles.length; i++) {
 		            formData.append("files", selectedFiles[i]);
-		           
+		            console.log('파일 전송:', selectedFiles[i]);
 		        }
 		    }
 	
@@ -712,11 +728,10 @@ function writeDocument() {
 	        	  if(res>3){
 		            	msg("알림","문서작성이 왼료되었습니다.","success","1")
 		            }else if(res==3){
-		            	
-		            	msg("알림","결재자,참조자 적용중 문제가 발생했습니다.","error","0")
+		            	msg("알림","휴가 날짜 적용중 문제가 발생했습니다.","error","0")
 		            }
 		            else if(res==2){
-		            	msg("알림","휴가 날짜 적용중 문제가 발생했습니다.","error","0")
+		            	msg("알림","결재자,참조자 적용중 문제가 발생했습니다.","error","0")
 		            }
 		            else if(res==1){
 		            	msg("알림","첨부파일 적용중에 문제가 발생했습니다.","error","0")
