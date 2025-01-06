@@ -188,8 +188,7 @@
 	    <div class="results">
 		    <span>결제 순서대로 체크해 주세요.</span>
 		    <form id="selectedEmp">
-		      
-		    
+		      	
 		    </form>
 	    </div>
 	    	<div class="submit">
@@ -197,7 +196,13 @@
 			</div>	     
 	</div>
 <script>
-
+	
+	var checkMan={
+			"sameSign":	true,
+			"sameRef":	true,
+			"ovarlap":	true
+	};
+	
 	function srchTeam(e){
 		$('#team').empty();
         $('#emp').empty();
@@ -279,22 +284,58 @@
     	
 	}
 	
-	//결재자 및 참조자 추가
+
+	
+	
+	
 	function addEmp(e){
 		const div=document.createElement('div');
 		 const selectEmp = document.getElementById('selectedEmp');
 		 const empContainer = document.getElementById('emp');
-		
 		 
+				window.opener.chkSignList();
+				
+				  opener.parent.chkRefList();
+				
+
+			    console.log(window.opener.signList);
+			if('${type}'=='sign'){
+				if ( opener.parent.signList.includes(e.empCode)) {
+			        alert('이미 중복된 결재자가 있습니다.');
+			        return;
+
+ 				}if ( opener.parent.refList.includes(e.empCode)) {
+			        alert('한 사원이 동시에 참조 및 결재를 할 수 없습니다.');
+			        return;
+
+ 				}
+			}else{
+				
+				if ( opener.parent.refList.includes(e.empCode)) {
+			        alert('이미 중복된 참조자가 있습니다.');
+					return;
+			    }
+				if ( opener.parent.signList.includes(e.empCode)) {
+			        alert('한 사원이 동시에 참조 및 결재를 할 수 없습니다.');
+			        return;
+
+ 				}
+
+
+			}
 		$('#selectedEmp').children().each(function(){
-			if(e.empCode == $(this).attr('id')){
+		var emp=$(this).attr('id');
+			if(e.empCode == emp){
 				 alert('이미 추가된 사람입니다.');
 // 				 return;
 				exit();
 			}
+			
+				
+			
+			
 		});	 
 		
-		 
 	
 		const select= $("<button onclick='deleteEmp(this)'></button>")
 		 $(select).type="button";
@@ -314,15 +355,22 @@
 	
 	//결재자, 참조자 선택 완료
 	function done(e){
-		$('#selectedEmp').children().each(function(){
 		
+		
+		
+		$('#selectedEmp').children().each(function(){
+			
 			if(e=="sign"){
+				
 				window.opener.$("#sign").append($(this));	
+ 				
 			}else{
-				window.opener.$("#ref").append($(this));	
+			
+ 				window.opener.$("#ref").append($(this));
 			}
 		});
-		self.close();
+ 				self.close();
+		
 	}
 	
 	

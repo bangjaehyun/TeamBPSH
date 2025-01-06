@@ -92,8 +92,8 @@ public class DocumentController {
 	//전체리스트 추가
 		@PostMapping("selectList.do")
 		public String selectList(String type,String reqPage,Model m) {
-			int page=reqPage==null?1:Integer.parseInt(reqPage);
-			ArrayList<Document> documentList=service.selectList(type,page);
+			
+			ArrayList<Document> documentList=service.selectList(type);
 			ArrayList<DocumentType> docTypeList=service.selectDocType();
 			m.addAttribute("docList", documentList);
 			m.addAttribute("docTypeList",docTypeList);
@@ -425,6 +425,86 @@ public class DocumentController {
 		
 		return "document/viewDocOne";
 	}
+	
+	//휴가신청서 불러오기
+	@PostMapping("selectOneVa.do")
+	public String SelectOneVacation(String documentCode, Model model) {
+		Document doc=service.selectOneDoc(documentCode);
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
+		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
+		model.addAttribute("fileList",fileList);
+		model.addAttribute("signList",signList);
+		model.addAttribute("doc",doc);
+		String vacType;
+		DocumentSelectDay selDay=service.selectAnnual(documentCode);
+		if(selDay!=null) {
+			vacType="annual";
+			model.addAttribute("vacType",vacType);
+			model.addAttribute("annual",selDay);
+		}else {
+			vacType="half";
+			VacationHalf half=service.selectHalf(documentCode);
+		}
+		return "document.viewVacaton";
+	}
+	
+	//지출결의서 불러오기
+	@PostMapping("selectOneSp.do")
+	public String SelectOneSpending(String documentCode, Model model) {
+		Document doc=service.selectOneDoc(documentCode);
+		
+		ArrayList<Spending>spendingList= service.selectOneDocSpending(documentCode);
+		
+		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
+		
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
+	
+		doc.setFileList(fileList);
+		model.addAttribute("doc",doc);
+		model.addAttribute("signList", signList);
+		model.addAttribute("spendingList",spendingList);
+		//결재 정보 불러와야 함.
+		
+		return "document/viewSpending";
+	}
+	
+	//출장보고서 불러오기
+	@PostMapping("selectOneBt.do")
+	public String SelectOneBuisinessTrip(String documentCode) {
+		Document doc=service.selectOneDoc(documentCode);
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
+		
+		
+		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
+		return "";
+	}
+	
+	//협조전 불러오기
+	@PostMapping("selectOneCo.do")
+	public String SelectOneCooperation(String documentCode) {
+		Document doc=service.selectOneDoc(documentCode);
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
+		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
+		return "";
+	}
+	
+	//견적서 불러오기
+	@PostMapping("selectOneEs.do")
+	public String SelectOneEstimate(String documentCode) {
+		Document doc=service.selectOneDoc(documentCode);
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
+		
+		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
+		return "";
+	}
+	
+//	프로젝트 관련 문서 불러오기 (태욱형님 기능에 따라 달라질 예정)
+//	@PostMapping("selectOneVa.do")
+//	public String SelectOneVacation(String documentCode) {
+//		
+//		return "";
+//	}
+	
 	
 	
 	

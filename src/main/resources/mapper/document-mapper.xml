@@ -179,19 +179,22 @@
 	</select>
 	
 	<select id="selectDocList"
-	parameterType="map"
+	parameterType="string"
 	resultType="document">
 	select 
     document_code as documentCode,
     emp_name as empName,
     document_date as documentDate,
     document_title as documentTitle,
+    document_type_code as documentTypeCode,
     document_type_name as documentTypeName
 	from (
     select rownum as rnum, a.* 
     from (
         select 
-            d.document_code, 
+        
+            d.document_code,
+            document_type_code, 
             e.emp_name, 
             d.document_date, 
             d.document_title, 
@@ -206,7 +209,7 @@
         using (document_type_code)
             <choose>
                 <when test='!type.equals("all")'>
-                    where document_type_code = #{type}
+                    where document_type_code = #{_string}
                 </when>
             </choose>
         order by d.document_date desc
@@ -231,10 +234,75 @@
 		document_code as documentCode,
 		emp_code as empCode,
 		sign_yn as signYn,
-		document_seq as documentSeq
-		from tbl_document_sign
+		document_seq as documentSeq,
+		emp_name as empName,
+		rank_name as empRank
+		from tbl_document_sign join tbl_emp using(emp_code) join tbl_rank using(rank_code)
 		where document_code=#{_string} order by document_seq  
 	</select> 
 	
+	
+	<select id="selectOneDoc"
+	parameterType="string"
+	resultType="document">
+	select 
+			document_code as documentCode,
+			emp_code as empCode,
+			emp_name as empName,
+			document_title as documentTitle,
+			document_content as documentContent,
+			document_date as documentDate,
+			document_type_code as documentTypeCode,
+			document_type_name as documentTypeName
+	from tbl_document join tbl_emp using(emp_code)
+	join tbl_document_type using(document_type_code)		
+	where document_code = #{documentCode}
+	
+	</select>
 
+	<select id="selectOneDocSpending"
+	parameterType="string"
+	resultType="spending">
+		select 
+			spending_code as spendingCode,
+			spending_cost as spendingCost,
+			spending_day as spendingDay,
+			spending_content as spendingContent,
+			document_code as documentCode
+		from tbl_spending
+		where document_code =#{_stirng}	
+	</select>
+	
+	<select id="selectOneDocFile"
+	parameterType="string"
+	resultType="file">
+	select
+		file_no as fileNo,
+		document_code as documentCode,
+		file_name as fileName,
+		file_path as filePath
+	from tbl_files
+	where document_code =#{_string}
+	</select>
+	
+	<select id="selectAnnual"
+	parameterType="string"
+	resultType="selDay">
+	select 
+		annual_start as start,
+		annual_end as end,
+		document_code as documentCode
+	from tbl_annual
+	where document_code =#{_string}
+	</select>
+	<select id="selectHalf"
+	parameterType="string"
+	resultType="vacHalf">
+		select
+			document_code as documentCode,
+			half_day as vacDate,
+			Half_time as halfTime
+		from tbl_half
+		where document_code=#{_string} 
+	</select>
 </mapper>

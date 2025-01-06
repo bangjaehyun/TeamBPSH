@@ -106,9 +106,9 @@ public class DocumentDao {
 	}
 
 
-	public List<Document> selectDocList(HashMap<String, String> paging) {
+	public List<Document> selectDocList(String type) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("document.selectDocList",paging);
+		return sqlSession.selectList("document.selectDocList",type);
 	}
 
 	
@@ -121,6 +121,31 @@ public class DocumentDao {
 	public List<DocumentSign> selectDocSign(String documentCode) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("document.selectSignList",documentCode);
+	}
+
+	public Document selectOneDoc(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectOneDoc", documentCode);
+	}
+
+	public List<Spending> selectOneDocSpending(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectOneDocSpending", documentCode);
+	}
+
+	public List<DocumentFile> selectOneDocFile(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectOneDocFile", documentCode);
+	}
+
+	public DocumentSelectDay selectAnnual(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectAnnual",documentCode);
+	}
+
+	public VacationHalf selectHalf(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectHalf", documentCode);
 	}
 
 	

@@ -339,12 +339,38 @@ var checkDocument={
 		"docTitle":	false,
 		"sign":		false,
 		"spending": false,
-		"sameSign":	true,
-		"sameRef":	true,
 		"cost":		true
 		
 		
 };
+
+var signList = [];
+var refList = [];
+
+//결재자
+var sign=$('#sign');
+function chkSignList(){
+signList.length=0;
+sign.children().each(function() {
+    const signValue = $(this).val();
+   
+        signList.push(signValue);
+    
+});
+}
+
+//참조자 확인
+var ref=$('#ref');
+function chkRefList(){
+refList.length=0;
+ref.children().each(function() {
+    const refValue = $(this).val();
+  
+        refList.push(refValue);
+    
+});
+}
+
 
 function msg(title, text, icon, callback){
 	swal({
@@ -563,51 +589,7 @@ $('#title').on('input',function(){
 	        checkDocument.sign = false;
 	    }
 	    
-	    //결재자가 중복되는가
-	    const signList = [];
-	    signList.length=0;
-	    sign.children().each(function() {
-	        const signValue = $(this).val();
-	        if (signList.includes(signValue)) {
-	            checkDocument.sameSign = false; 
-	           
-	        } else {
-	            signList.push(signValue);
-	        }
-	    });
 	   
-
-	    // 참조자 확인
-	    const refList = [];
-	    refList.length=0;
-	    ref.children().each(function() {
-	        const refValue = $(this).val();
-	        if (refList.includes(refValue)) {
-	            checkDocument.sameRef = false;
-	            
-	        } else {
-	            refList.push(refValue);
-	        }
-	    });
-		
-	    //한 사원이 결재자, 참조자 모두에 들어가 있는가
-	    const overlapList=[];
-	    checkDocument.overlap=true;
-	    overlapList.length=0;
-	    sign.children().each(function() {
-	    	const signOverLap=$(this).val();
-	    	ref.children().each(function(){
-   				 refOverLap=$(this).val();
-   				
-   					overlapList.push(refOverLap);
-   				
-	    			
-	    	});
-	    	if(overlapList.includes(signOverLap)){
-					checkDocument.overlap=false;
-				}
-	    	
-	    });
 	    
 	    
 	    //지출내역 확인

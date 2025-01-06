@@ -8,13 +8,41 @@
 <title>Insert title here</title>
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
-
+	.container{
+		
+	}
+	.head-title{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.head-title h1{
+		font-size:30px;
+	}
 
 	
 	.title-container{
   		background-color:gray;
   		color:white;
 	}
+	.filter-container{
+		width:100%;
+		display: flex;
+		justify-content: center;
+	}
+	.type-filter{
+		display: flex;
+		justify-content: space-around;
+		width:60%;
+	}
+	.type-filter button{
+		padding:2px 3px;
+		border-radius: 5px;
+		background-color: gray;
+		color:white;
+		font-size:16px;
+	}
+	
 	
 	.detail{
 		display: flex;
@@ -22,17 +50,36 @@
 	}
 	
 	#grid{
-		width: 1210px;
-		height: 500px;
+		width: 1200px;
+		height: 900px;
+		overflow: scroll;
 	}
+	::-webkit-scrollbar{
+	 width: 0;  /* remove scrollbar space */
+     background: transparent;
+	}
+	
+	
 	
 </style>
 </head>
 <body>
+<div class="container">
+	<div class="head-title">
+		<h1>문서목록</h1>
+	</div>
+	<div class="filter-container">
+	<div class="type-filter">
+		<button type="button" onclick="typeFilter('all')" value="all">전체</button>
+		<c:forEach var="type" items="${docTypeList }">
+			<button type="button" onclick="typeFilter('${type.documentTypeCode }')" value="${type.documentTypeCode }">${type.documentTypeName }</button>
+		</c:forEach>
+	</div>
+	</div>
 	<div>
 		<div id="grid"></div>
 	</div>
-
+</div>
 
 
 <script>
@@ -48,7 +95,8 @@ $(document).ready(function(){
             progress: '${doc.progress}',
             documentTitle: '${doc.documentTitle}',
             empName: '${doc.empName}',
-            documentDate: '${doc.documentDate}'
+            documentDate: '${doc.documentDate}',
+            documentTypeCode: '${doc.documentTypeCode}',
         };
         obj.push(rowData);
     </c:forEach>
@@ -57,16 +105,18 @@ $(document).ready(function(){
         rowData: obj,
         pagention:true,
         rowSelection:"single",
-        enableRangeSelection: true,
+        enableRangeSelection: true,//이거 수정 예정
         suppressRowClickSelection: false,
-        onRowClicked : function(event){
-        	viewOneDoc(event.data.documentCode);
+        onRowDoubleClicked : function(event){
+        	viewOneDoc(event.data);
         },
-        
-        paginationPageSize: 3,        
+        pagination: true,
+        paginationPageSize: 10,        
         paginationPageSizeSelector: [10, 20, 50],
+        scrollbarWidth:0,
         defaultColDef: {
-       		editable: true,
+        	
+       		editable: false,
             resizable: false,
             sortable: true,
             
@@ -84,6 +134,11 @@ $(document).ready(function(){
             { field: "empName", headerName: "작성자" },
             { field: "documentDate", headerName: "작성일" }
         ],
+        
+        onGridReady: function (event) {
+            event.api.sizeColumnsToFit();
+
+        }
        
     };
 
@@ -93,14 +148,71 @@ $(document).ready(function(){
     console.log(obj);
 });
 
-//상세페이지 이동
-function viewOneDoc(e){
-	console.log(e);
+<%-- 필터링 기능--%>
+function typeFilter(e){
 	$.ajax({
-		url:"/doc/selectOneDoc.do",
+		url:"/doc/selectList.do",
 		type:"post",
-		data:{"documentCode":documentCode},
+		data:{"type":e},
 		success:function(res){
+			$('.page').html(res);
+		},
+		error:function(){
+			console.log("오류");
+		}
+		
+		
+	});
+}
+
+
+
+
+
+
+<%--상세페이지 이동--%>
+function viewOneDoc(e){
+	
+	var type=e.documentTypeCode;
+	var urls="/doc/";
+	
+	switch(type){
+	case 'va':{
+		urls+="selectOneVa.do";
+		break;
+	}
+	case 'sp':{
+		urls+="selectOneSp.do";
+		break;
+	}
+	
+	case 'co':{
+		urls+="selectOneCo.do";
+		break;
+	}
+	case 'es':{
+		urls+="selectOneEs.do";
+		break;
+	}
+	case 'bt':{
+		urls+="selectOneBt.do";
+		break;
+	}
+	
+	case 'pt':{
+		urls+="selectOnePt.do";
+		break;
+	}
+	
+	}
+	
+	
+	$.ajax({
+		url:urls,
+		type:"post",
+		data:{"documentCode":e.documentCode},
+		success:function(res){
+			console.log(res);
 			$('.page').html(res);
 		},
 		error:function(){

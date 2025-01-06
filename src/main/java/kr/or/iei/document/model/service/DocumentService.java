@@ -45,14 +45,13 @@ public class DocumentService {
 	}
 	
 	//리스트조회
-		public ArrayList<Document> selectList(String type, int page) {
+		public ArrayList<Document> selectList(String type) {
 			// TODO Auto-generated method stub
 			
-			HashMap<String,String>paging=new HashMap<String, String>();
-			paging.put("type", type);
 			
 			
-			ArrayList<Document>list=(ArrayList<Document>)dao.selectDocList(paging);
+			
+			ArrayList<Document>list=(ArrayList<Document>)dao.selectDocList(type);
 			System.out.println(list);
 			for(int i=0;i<list.size();i++) {
 				int check=1;
@@ -277,6 +276,36 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		return (ArrayList<DocumentType>)dao.selectDocType();
 		
+	}
+
+	public Document selectOneDoc(String documentCode) {
+		
+		return dao.selectOneDoc(documentCode);
+	}
+
+	public ArrayList<Spending> selectOneDocSpending(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<Spending>)dao.selectOneDocSpending(documentCode);
+	}
+
+	public ArrayList<DocumentFile> selectOneDocFile(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<DocumentFile>)dao.selectOneDocFile(documentCode);
+	}
+
+	public ArrayList<DocumentSign> selectSignList(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<DocumentSign>)dao.selectDocSign(documentCode);
+	}
+
+	public DocumentSelectDay selectAnnual(String documentCode) {
+		// TODO Auto-generated method stub
+		return dao.selectAnnual(documentCode);
+	}
+
+	public VacationHalf selectHalf(String documentCode) {
+		// TODO Auto-generated method stub
+		return dao.selectHalf(documentCode);
 	}
 
 
