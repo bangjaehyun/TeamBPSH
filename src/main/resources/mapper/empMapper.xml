@@ -577,4 +577,12 @@
      	#{empCode}
      )
      </insert>
+     
+     <select id="selectAlarmCount"
+     parameterType="string"
+     resultType="int">
+     select count(*)
+       from tbl_alarm
+      where emp_code = #{empCode} and alarm_read = 'n'
+     </select>
 </mapper>

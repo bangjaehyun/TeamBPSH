@@ -119,12 +119,20 @@
     </div>
 </header>
 <script>
+	$(document).ready(function(){
+		let alarmCount = ${loginEmp.alarmCount}
+		if(alarmCount > 0){
+		    if($('.notification-count').css('display') == "none"){
+		    	$('.notification-count').css('display', 'inline-block');
+		    	$('.notification-count').children().html(alarmCount);
+		    }
+		}
+	});
 	//login시 sse로 empCode 전달하여 관리
 	const eventSource = new EventSource("/emitter?empCode=${loginEmp.empCode}");//controller 경로
 	
 	//server에서 메시지 올시 알람 count 증가 처리
 	eventSource.onmessage = (event) => { //데이터를 받아옴
-		console.log(event.data);
 		if(Number($('.notification-count').children().html()) < 99){
 		    if($('.notification-count').css('display') == "none"){
 		    	$('.notification-count').css('display', 'inline-block');
@@ -169,6 +177,7 @@
 						aEl.html(data.alarmComment);
 						aEl.attr('class', 'alarmMsg');
 						divEl.attr('class', 'alarmDiv');
+						divEl.attr('id',data.alarmNo);
 						if(data.alarmRead == "n"){
 							divEl.addClass("alarmNoRead");
 						}
@@ -204,6 +213,7 @@
 	}
 	
 	function alarmChangeRead(alarmNo){
+		console.log(alarmNo)
 		$.ajax({
 			url : "/emp/alarmRead.do",
 			type : "post",
@@ -211,6 +221,7 @@
 			success : function(res){
 				if(res == "1"){
 					$('.notification-count').children().html( Number($('.notification-count').children().html()) - 1);
+					$('#'+alarmNo).removeClass('alarmNoRead');
 					if(Number($('.notification-count').children().html()) == 0){
 						$('.notification-count').css('display','none');
 					}

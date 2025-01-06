@@ -9,11 +9,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.JsonObject;
+
+import kr.or.iei.common.emitter.Emitter;
+import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.vote.model.dao.VoteDao;
 import kr.or.iei.vote.model.vo.Vote;
 import kr.or.iei.vote.model.vo.VoteEmpList;
@@ -25,6 +31,10 @@ public class VoteService {
 	@Autowired
 	@Qualifier("voteDao")
 	private VoteDao dao;
+	
+	@Autowired
+	@Qualifier("emitter")
+	private Emitter emitter;
 
 	public ArrayList<Vote> selectVoteList() {
 		return (ArrayList<Vote>)dao.selectVoteList();
@@ -45,6 +55,29 @@ public class VoteService {
 				result = dao.insertVoteVal(map);
 				if(result < 1) {
 					break;
+				}
+			}
+			
+			if(result > 0) {
+				ArrayList<String> allEmpList = (ArrayList<String>)dao.selectAllEmp(vote.getEmpCode());
+				Alarm alarm = new Alarm();
+				alarm.setAlarmComment("투표 : " + vote.getVoteTitle());
+				alarm.setRefUrl("/vote/voteDetail.do");
+				
+				for(String empCode : allEmpList) {
+					alarm.setEmpCode(empCode);
+					
+					JSONObject json = new JSONObject();
+					json.put("voteNo", voteNo);
+					json.put("empCode", empCode);
+					
+					alarm.setUrlParam(json.toJSONString());
+					result = dao.insertAlarm(alarm);
+					if(result < 1) {
+						break;
+					}else {
+						emitter.sendEvent(empCode, alarm.getAlarmComment());
+					}
 				}
 			}
 		}

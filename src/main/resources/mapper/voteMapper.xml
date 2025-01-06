@@ -123,4 +123,32 @@ select emp_name as empName,
        ) as voteListNo 
   from tbl_emp e
 </select>
+
+<select id="selectEmpNoList"
+parameterType="string"
+resultType="string">
+select emp_code
+  from tbl_emp
+ where emp_code != #{empCode} and emp_retire = 'n' and team_code is not null
+</select>
+
+<insert id="insertAlarm"
+parameterType="alarm">
+insert into tbl_alarm
+   (
+   	alarm_no,
+   	emp_code,
+   	alarm_comment,
+   	ref_url,
+   	url_param
+   )
+values
+	(
+	TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS') || LPAD(seq_alarm.NEXTVAL, 4, '0'),
+	#{empCode},
+	#{alarmComment},
+	#{refUrl},
+	#{urlParam}
+	)
+</insert>
 </mapper>
