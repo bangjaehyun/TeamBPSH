@@ -627,9 +627,7 @@ $('#title').on('input',function(){
 	                case "sign": msg("알림","최소1명의 결재자가 필요합니다.","error","0"); break;
 	                case "spending": msg("알림","지출내역을 전부 체워주세요.","error","0"); break;
 	                case "cost"	:msg("알림","금액은 숫자로만 입력해 주세요.","error","0");break;
-	                case "sameSign": msg("알림","중복된 결재자가 존재합니다.","error","0"); checkDocument.sameSign=true; break;  
-	                case "sameRef": msg("알림","중복된 참조자가 존재합니다.","error","0");  checkDocument.sameRef=true; break;
-	                case "overlap":	msg("알림","한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다.","error","0"); checkDocument.overlap=true; break;
+	               
 	                //중복체크는 확인시 다시 값 초기화
 	                
 	               
@@ -646,7 +644,7 @@ $('#title').on('input',function(){
 	    formData.append("start", $('#vacStart').val());
 	    formData.append("end", $('#vacEnd').val());
 	    formData.append("documentContent",$('#summernote').val());
-	    
+	   
 	    //현재 작성자
 		formData.append("empCode",${loginEmp.empCode});
 		

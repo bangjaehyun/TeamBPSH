@@ -5,11 +5,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
@@ -19,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.catalina.connector.Response;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.maven.classrealm.ClassRealmRequest;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -30,6 +35,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
+
+import kr.or.iei.common.emitter.Emitter;
 import kr.or.iei.document.model.service.DocumentService;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
@@ -40,6 +47,8 @@ import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.service.EmpService;
+import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Team;
@@ -54,6 +63,10 @@ public class DocumentController {
 	@Qualifier("documentService")
 	private DocumentService service;
 	
+	
+	@Autowired
+	@Qualifier("emitter")
+	private Emitter emitter;
 	@PostMapping("writeDoc.do")//작성창 이동 메소드
 	public String writeDoc(String type) {
 		String folder="/document/";
@@ -211,6 +224,33 @@ public class DocumentController {
 		@PostMapping(value="writeVacation.do",produces="application/json; charset=utf-8")
 		@ResponseBody
 		public int writeVacation(HttpSession session,HttpServletRequest request,Document document,@RequestParam MultipartFile[] files,@RequestParam List<String> signEmpList, @RequestParam List<String> refEmpList,DocumentSelectDay selDay,VacationHalf vacHalf,Model m ) {
+	
+			if(vacHalf.isHalf()==true) {
+				double remainVac=service.selectRemainRealVac(document.getEmpCode());
+				if(remainVac==0.0) {
+					return -1;
+				}
+			}else {
+				try {
+					System.out.println(selDay.getStartDay());
+					System.out.println(selDay.getEndDay());
+					Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay().replace("-", ""));
+					Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay().replace("-", ""));
+					long diffInMillies = endDay.getTime() - startDay.getTime();
+					int time = (int) (diffInMillies / (1000 * 60 * 60 * 24))+1; 
+					double remainVac=service.selectRemainVac(document.getEmpCode());
+					if(time>remainVac) {
+						return -1;
+					}
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			
+			
+			
 			String root=request.getSession().getServletContext().getRealPath("/resources/");
 			
 			//파일관련 기능
@@ -293,16 +333,16 @@ public class DocumentController {
 			
 			   
 			   
-			    		String start= selDay.getStart().replace("-","");
+			    		String start= selDay.getStartDay().replace("-","");
 			    				
 
 			if(vacHalf.isHalf()==true) {
 				vacHalf.setDocumentCode(documentCode);
 				vacHalf.setVacDate(start);
 			}else {
-				String end= selDay.getEnd().replace("-", "");
-				selDay.setStart(start);
-				selDay.setEnd(end);
+				String end= selDay.getEndDay().replace("-", "");
+				selDay.setStartDay(start);
+				selDay.setEndDay(end);
 				selDay.setDocumentCode(documentCode);
 				
 			}
@@ -310,6 +350,20 @@ public class DocumentController {
 				
 				
 			int result=service.insertVacation(document,selDay, vacHalf);
+			ArrayList<DocumentSign> signs=service.selectSignList(documentCode);
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
+			alarm.setEmpCode(signs.get(0).getEmpCode());
+			alarm.setRefUrl("/doc/selectOneVa.do");
+			
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			int res=service.insertAlarm(alarm);
+			if(result>0) {
+				emitter.sendEvent(signList.get(0).getEmpCode(), alarm.getAlarmComment());
+			}
 			return result;
 		}
 		
@@ -400,6 +454,22 @@ public class DocumentController {
 
 			int result=service.insertSpending(document,spendingList);
 			
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment(signList.get(0).getEmpName()+"님 결재할 차례입니다");
+			alarm.setEmpCode(signList.get(0).getEmpCode());
+			alarm.setRefUrl("/doc/selectOneVa.do");
+			
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			int res=service.insertAlarm(alarm);
+			if(result>0) {
+				emitter.sendEvent(signList.get(0).getEmpCode(), alarm.getAlarmComment());
+			}
+			
+			
+			
 			return result;
 		}
 		
@@ -435,17 +505,61 @@ public class DocumentController {
 		model.addAttribute("fileList",fileList);
 		model.addAttribute("signList",signList);
 		model.addAttribute("doc",doc);
-		String vacType;
+		model.addAttribute("documentCode", documentCode);
+		System.out.println(signList);
 		DocumentSelectDay selDay=service.selectAnnual(documentCode);
+		
+		String signableEmp="";
+		for(int i=0;i<signList.size();i++) {
+			if(Integer.parseInt(signList.get(i).getSignYn())==0) {
+				signableEmp=signList.get(i).getEmpCode();
+				break;
+			}else if(Integer.parseInt(signList.get(i).getSignYn())==-1) {
+				break;
+			}
+		}
+		model.addAttribute("signableEmp",signableEmp);
+		
+		String vacType;
 		if(selDay!=null) {
+			System.out.println(selDay);
 			vacType="annual";
 			model.addAttribute("vacType",vacType);
-			model.addAttribute("annual",selDay);
+			try {
+				SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
+				Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
+				Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay());
+				String StartDay = format.format(startDay);
+				String EndDay = format.format(endDay);
+				model.addAttribute("endDay", EndDay);
+				model.addAttribute("startDay",StartDay);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+			
+			
 		}else {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 			vacType="half";
 			VacationHalf half=service.selectHalf(documentCode);
+			System.out.println(half);
+			model.addAttribute("vacType",vacType);
+			
+			try {
+				Date vacDate = new SimpleDateFormat("yyyyMMdd").parse(half.getVacDate());
+				String VacDate=format.format(vacDate);
+				model.addAttribute("vacDate", VacDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String time=half.getHalfTime();
+			model.addAttribute("time",time);
+			
 		}
-		return "document.viewVacaton";
+		return "document/viewVacation";
 	}
 	
 	//지출결의서 불러오기
@@ -518,32 +632,237 @@ public class DocumentController {
 	
 	
 	
-	//결재하기
+	//결재하기(결재 최종여부시 문서마다 기능 추가중) sysout은 알람 기능으로 변경예정
 	@PostMapping("approveDoc.do")
 	@ResponseBody
-	public int approveDoc(String check,String empCode,String documentCode) {
+	public int approveDoc(String check,String empCode,String documentCode, String type,String writer) {
 		HashMap<String, String>map=new HashMap<String, String>();
 		map.put("empCode", empCode);
 		map.put("check",check );
 		map.put("documentCode", documentCode);
 		int result=service.approveDoc(map);
 		if(result>0 &&Integer.parseInt(check)==-1) {
-			System.out.println("기각되었습니다");
-		}
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment("요청하신 서류가 반려되었습니다");
+			alarm.setEmpCode(writer);
+			
+			switch(type) {
+			case("va"):{
+				alarm.setRefUrl("/doc/selectOneVa.do");
+				break;
+			}
+			
+			case("co"):{
+				alarm.setRefUrl("/doc/selectOneCo.do");			
+				break;
+			}
+			
+			case("es"):{
+				alarm.setRefUrl("/doc/selectOneEs.do");
+				break;
+			}
+			
+			case("bt"):{
+				alarm.setRefUrl("/doc/selectOneBt.do");
+				break;
+			}
+			
+			case("sp"):{
+				alarm.setRefUrl("/doc/selectOneSp.do");
+				break;
+			}
+			
+			}
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			int res=service.insertAlarm(alarm);
+			if(result>0) {
+				emitter.sendEvent(writer, alarm.getAlarmComment());
+			}
+			
+		}else {
 		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
-		System.out.println(documentCode);
+		
 		int find=1;
 		for(int i=0;i<signList.size();i++) {
 			find=Integer.parseInt(signList.get(i).getSignYn());
 			if(find==-1) {
 				break;
 			}else if(find==0) {
-				System.out.println(signList.get(i).getEmpName()+"님이 결재할 차례입니다");
+				
+				
+				Alarm alarm = new Alarm();
+				alarm.setAlarmComment(signList.get(i).getEmpName()+"님 결재할 차례입니다");
+				alarm.setEmpCode(signList.get(i).getEmpCode());
+				
+				switch(type) {
+				case("va"):{
+					alarm.setRefUrl("/doc/selectOneVa.do");
+					break;
+				}
+				
+				case("co"):{
+					alarm.setRefUrl("/doc/selectOneCo.do");			
+					break;
+				}
+				
+				case("es"):{
+					alarm.setRefUrl("/doc/selectOneEs.do");
+					break;
+				}
+				
+				case("bt"):{
+					alarm.setRefUrl("/doc/selectOneBt.do");
+					break;
+				}
+				
+				case("sp"):{
+					alarm.setRefUrl("/doc/selectOneSp.do");
+					break;
+				}
+				
+				}
+				JSONObject json=new JSONObject();
+				json.put("documentCode", documentCode);
+				alarm.setUrlParam(json.toJSONString());
+				
+				int res=service.insertAlarm(alarm);
+				if(result>0) {
+					emitter.sendEvent(signList.get(i).getEmpCode(), alarm.getAlarmComment());
+				}
+				
+				
 			}
 		}
 		if(find==1) {
-			System.out.println("최종승인입니다.");
+			
+
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment("최종 승인되었습니다.");
+			alarm.setEmpCode(writer);
+			
+			switch(type) {
+			case("va"):{
+				alarm.setRefUrl("/doc/selectOneVa.do");
+				break;
+			}
+			
+			case("co"):{
+				alarm.setRefUrl("/doc/selectOneCo.do");			
+				break;
+			}
+			
+			case("es"):{
+				alarm.setRefUrl("/doc/selectOneEs.do");
+				break;
+			}
+			
+			case("bt"):{
+				alarm.setRefUrl("/doc/selectOneBt.do");
+				break;
+			}
+			
+			case("sp"):{
+				alarm.setRefUrl("/doc/selectOneSp.do");
+				break;
+			}
+			
+			}
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			int res=service.insertAlarm(alarm);
+			if(result>0) {
+				emitter.sendEvent(writer, alarm.getAlarmComment());
+			}
+			
+			
+			//최종승인 시 각 문서에 따른 추가기능
+			switch(type) {
+			case "sp":{
+				//지출결의서는 딱히적용할 것이 없음
+				break;
+			}
+			case "va":{
+				//최종승인시 휴가 적용 및 출퇴근 비고 정리
+				DocumentSelectDay selDay=service.selectAnnual(documentCode);
+				if(selDay!=null) {
+					//연차일 시 
+					
+					try {
+						Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
+						Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay());
+						
+						long diffInMillies = endDay.getTime() - startDay.getTime();
+						int days = (int) (diffInMillies / (1000 * 60 * 60 * 24))+1;
+						
+						HashMap<String, String>vacMap=new HashMap<String, String>();
+						vacMap.put("writer", writer);
+						vacMap.put("days",String.valueOf(days));
+						
+						int chk1=service.updateVac(vacMap);
+						System.out.println("res : "+res);
+						if(chk1>0) {
+						int chk2=0;
+						DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd");
+						
+						LocalDate startDate = LocalDate.parse(selDay.getStartDay(),formatter);
+						LocalDate endDate = LocalDate.parse(selDay.getEndDay(),formatter);
+						 ArrayList<Commute> vacList=new ArrayList<Commute>();
+						    while (!startDate.isAfter(endDate)) {
+						    	Commute comm= new Commute();
+						    	comm.setAttDate(startDate.format(formatter));
+						        comm.setCheckNote("연차");
+						        comm.setEmpCode(writer);
+						        vacList.add(comm);
+						        startDate = startDate.plusDays(1); // 하루씩 추가
+						    }
+						    for(int i=0;i<vacList.size();i++) {
+						    	Commute commute=vacList.get(i);
+						    	//연차일시 잘 적용되는가?
+						    	chk2+=service.insertAttVacation(commute);
+						    }
+						}
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}else {
+					//반차일 시
+					VacationHalf half=service.selectHalf(documentCode);
+					Commute commute=new Commute();
+					commute.setEmpCode(writer);
+					commute.setAttDate(half.getVacDate());
+					if(half.getHalfTime().equals("a")) {
+							commute.setCheckNote("오전반차");
+					}else {
+						commute.setCheckNote("오후반차");
+					}
+					
+					int insHalf=service.useHalf(writer);
+					int insAttHalf=service.insertAttHalf(commute);
+				}
+				
+				break;
+			}
+			
+			case "bt":{
+				
+				break;
+			}
+			
+			case "es":{
+				
+				break;
+			}
+			
+			}
 		}
+	}
 		return result;
 	}
 	

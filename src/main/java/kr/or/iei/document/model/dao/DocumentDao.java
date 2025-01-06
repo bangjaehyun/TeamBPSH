@@ -14,6 +14,8 @@ import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
+import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Repository("documentDao")
@@ -153,6 +155,47 @@ public class DocumentDao {
 		// TODO Auto-generated method stub
 		return sqlSession.update("document.approveDoc", map);
 	}
+
+	
+	public int useAnnual(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		
+		return sqlSession.update("emp.useAnnual", map);
+	}
+
+	public int insertAttVacation(Commute commute) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.insertAttVacation", commute);
+	}
+
+	public int insertAlarm(Alarm alarm) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("vote.insertAlarm", alarm);
+		
+	}
+
+	public int useHalf(String writer) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("emp.useHalf", writer);
+	}
+
+	public int insertAttHalf(Commute commute) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.insertAttHalf", commute);
+	}
+
+	public double selectRemainRealVac(String empCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("emp.selectRemainRealVac", empCode);
+	}
+
+	
+
+	
+
+	
+
+	
 
 	
 	

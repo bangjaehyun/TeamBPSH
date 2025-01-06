@@ -79,9 +79,7 @@
         margin: 0;
     }
     
-    .form-container {
-        margin-bottom: 20px;
-    }
+    
     
     .form {
         
@@ -110,48 +108,21 @@
         padding: 10px 0px;
     }
     
-    .detail {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        
+    .let-date{
+    	display: flex;
+    	gap:20px;
+    	
     }
-    .detail-header {
-        display: flex;
-        background-color: gray;
-        font-weight: bold;
+    .let-date label{
+    	font-weight: bold;
+    	font-size: 20px;
     }
-
-    .detail-header, .detail-cell {
-        
-        flex: 1;
-        text-align: center;
-        justify-content: space-between;
-        padding:0;
-        border-bottom: 1px solid black;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-        border: 1px solid black;
-    }
-
-
-   .detail-body{
-        display: flex;
-        background-color: white;
-        
-   }
-
-
-    .detail-body .detail-cell {
-        flex: 1;
-        text-align: center;
-        text-align: center;
-        border-bottom: 1px solid black;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-    }
+    
+    
+    
    
    .file{
+   	margin-top:1%;
     display: flex;
    }
    .file>label{
@@ -260,23 +231,35 @@
           
         </div>
         
-        <section class="form-section">
-            <div class="detail">
-                <div class="detail-header">
-                    <div class="detail-cell">사용일</div>
-                    <div class="detail-cell">금 액</div>
-                    <div class="detail-cell">사용용도</div>
-                </div>
-                
-                <c:forEach var="spend" items="${spendingList }">
-	               	<div class="detail-body">
-	                    <div class="detail-cell">${spend.spendingDay }</div>
-	                    <div class="detail-cell">${spend.spendingCost }</div>
-	                    <div class="detail-cell">${spend.spendingContent }</div>
-	                </div>
-                </c:forEach>
-                
-            </div>
+        <section class="date-section">
+           <div class="let-date">
+         		<c:choose>
+           				<c:when test="${vacType eq 'annual' }">
+							<div class="date">
+								<label for="vac-start">휴가 시작일자</label> <div>${startDay }</div>
+									
+							</div>
+							<div class="date" >
+								<label for="vac-end">휴가 종료일자</label> <div>${endDay }</div>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="date">
+								<label for="vac-start">반차 날짜</label> <div>${vacDate }</div>
+									
+							</div>
+							<div class="date" >
+								<label for="vac-end">반차시간대</label>
+								<c:if test="${time eq 'a'}">
+								<div>오전</div>
+								</c:if>
+								<c:if test="${time eq 'p'}">
+								<div>오후</div>
+								</c:if>
+							</div>
+						</c:otherwise>
+				</c:choose>
+					</div>
         </section>
         <div>
             <div class="file">
@@ -348,7 +331,7 @@ function signDocument(e){
 		data:{"check":e,
 			  "empCode":${loginEmp.empCode},
 			  "documentCode":${documentCode},
-			  "type":"sp",
+			  "type":"va",
 			  "writer":${doc.empCode}
 		},
 		success:function(res){

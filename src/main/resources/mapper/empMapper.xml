@@ -585,4 +585,45 @@
        from tbl_alarm
       where emp_code = #{empCode} and alarm_read = 'n'
      </select>
+     <update id="useAnnual"
+     parameterType="map">
+     update tbl_vacation_count
+   	set
+     	total_vacation = total_vacation - #{days}, 
+    	use_vacation = use_vacation + #{days} 
+     	where emp_code = #{writer}	
+     </update>
+     
+     <insert id="insertAttVacation"
+     parameterType="commute">
+     insert into tbl_check
+     (att_date,emp_code,check_note)
+     values
+     (#{attDate},#{empCode},#{checkNote})
+     </insert>
+     
+     <insert id="insertAttHalf"
+     parameterType="commute">
+     insert into tbl_check
+     (att_date,emp_code,check_note)
+     values
+     (#{attDate},#{empCode},#{checkNote})
+     </insert>
+     
+     <update id="useHalf"
+     parameterType="string">
+     update tbl_vacation_count
+   	set
+     	total_vacation = total_vacation - 0.5, 
+    	use_vacation = use_vacation + 0.5 
+     	where emp_code = #{_string}	
+     </update>
+     
+    <select id="selectRemainRealVac"
+    parameterType="string"
+    resultType="_double">
+    	select
+		total_vacation 
+		from tbl_vacation_count where emp_code=#{_string}
+    </select>
 </mapper>

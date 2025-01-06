@@ -83,8 +83,8 @@
   		insert into tbl_annual
   		values(
 			#{documentCode},
-			#{start},
-			#{end}  		
+			#{startDay},
+			#{endDay}  		
   		)
   	</insert>
   	
@@ -289,8 +289,8 @@
 	parameterType="string"
 	resultType="selDay">
 	select 
-		annual_start as start,
-		annual_end as end,
+		annual_start as startDay,
+		annual_end as endDay,
 		document_code as documentCode
 	from tbl_annual
 	where document_code =#{_string}
@@ -301,15 +301,17 @@
 		select
 			document_code as documentCode,
 			half_day as vacDate,
-			Half_time as halfTime
+			Half_type as halfTime
 		from tbl_half
 		where document_code=#{_string} 
 	</select>
 	<update id="approveDoc"
 	parameterType="map">
 		update
-		tbl_document_sign
-		set sign_yn=#{check}
+			tbl_document_sign
+			set sign_yn=#{check}
 		where emp_code=#{empCode} and document_code=#{documentCode}
 	</update>
+	
+
 </mapper>

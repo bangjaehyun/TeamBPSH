@@ -324,13 +324,14 @@ var checkDocument={
 		"docTitle":	false,
 		"sign":		false,
 		"date":		false,
-		"sameSign":	true,
-		"sameRef":	true,
-		"ovarlap":	true,
 		"past":		false
 		
 		
 };
+
+var signList = [];
+var refList = [];
+
 
 function msg(title, text, icon, callback){
 	swal({
@@ -458,6 +459,46 @@ $('#title').on('input',function(){
 });
 
 
+//결재자
+var sign=$('#sign');
+function chkSignList(){
+signList.length=0;
+sign.children().each(function() {
+    const signValue = $(this).val();
+   
+        signList.push(signValue);
+    
+});
+}
+
+//참조자 확인
+var ref=$('#ref');
+function chkRefList(){
+refList.length=0;
+ref.children().each(function() {
+    const refValue = $(this).val();
+  
+        refList.push(refValue);
+    
+});
+}
+
+
+function msg(title, text, icon, callback){
+	swal({
+		title : title,
+		text : text,
+		icon : icon
+	}).then(function(){
+		if(callback != "0"){
+			location.href = "/";
+		}
+	});
+	
+}
+
+
+
 //날짜계산
 function totalDays() {
     const startDate =$('#vacStart').val();
@@ -546,7 +587,7 @@ function onDateChange() {
     if (halfChecked) {
         //날짜 세팅
         document.getElementById('vacEnd').value = start;
-        
+       totalDays();
 
        
 
@@ -605,59 +646,14 @@ function onDateChange() {
 	
 	
 	function writeDocument() {
-	    const sign = $('#sign');
-	    const ref=$('#ref');
-	    const list = sign.children().length;
-	    if (list > 0) {
-	        checkDocument.sign = true;
-	    } else {
-	        checkDocument.sign = false;
-	    }
-	    
-	    const signList = [];
-	    signList.length=0;
-	    sign.children().each(function() {
-	        const signValue = $(this).val();
-	        if (signList.includes(signValue)) {
-	            checkDocument.sameSign = false; 
-	           
-	        } else {
-	            signList.push(signValue);
-	        }
-	    });
-	   
-
-	    // 참조자 확인
-	    const refList = [];
-	    refList.length=0;
-	    ref.children().each(function() {
-	        const refValue = $(this).val();
-	        if (refList.includes(refValue)) {
-	            checkDocument.sameRef = false;
-	            
-	        } else {
-	            refList.push(refValue);
-	        }
-	    });
-		
-	    const overlapList=[];
-	    checkDocument.overlap=true;
-	    overlapList.length=0;
-	    sign.children().each(function() {
-	    	const signOverLap=$(this).val();
-	    	ref.children().each(function(){
-   				 refOverLap=$(this).val();
-   				
-   					overlapList.push(refOverLap);
-   				
-	    			
-	    	});
-	    	if(overlapList.includes(signOverLap)){
-					checkDocument.overlap=false;
-				}
-	    	
-	    });
-	    
+		 const sign = $('#sign');
+	     const ref=$('#ref');
+		 const list = sign.children().length;
+		    if (list > 0) {
+		        checkDocument.sign = true;
+		    } else {
+		        checkDocument.sign = false;
+		    }
 
 	    // 제목, 결재자, 날짜 검증
 	    for (let check in checkDocument) {
@@ -666,9 +662,7 @@ function onDateChange() {
 	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
 	                case "sign":msg("알림","결재자는 최소 1명 이상이어야 합니다.","error","0"); break;
 	                case "date":msg("알림","날짜형식이 잘못되었습니다.","error","0"); break;
-	                case "sameSign":msg("알림","중복된 결재자가 존재합니다.","error","0"); checkDocument.sameSign=true; break;  
-	                case "sameRef": msg("알림","중복된 참조자가 존재합니다.","error","0");  checkDocument.sameRef=true; break;
-	                case "overlap":msg("알림","한명의 사원은 결재자 혹은 참조자중 하나만 가능합니다.","error","0"); checkDocument.overlap=true; break;
+	                
 	                case "past":msg("알림","오늘보다 이전 날짜는 선택이 불가능 합니다.","error","0"); checkDocument.past=false; break;
 	                //중복체크는 확인시 다시 값 초기화
 	                
@@ -683,8 +677,8 @@ function onDateChange() {
 	    formData.append("documentTypeCode","va");
 	    formData.append("half", $('#half').is(':checked') ? "true" : "false");
 	    formData.append("halfTime", $('input[name="select"]:checked').val());
-	    formData.append("start", $('#vacStart').val());
-	    formData.append("end", $('#vacEnd').val());
+	    formData.append("startDay", $('#vacStart').val());
+	    formData.append("endDay", $('#vacEnd').val());
 	    formData.append("documentContent",$('#summernote').val());
 		formData.append("empCode",${loginEmp.empCode});
 	    
@@ -735,6 +729,9 @@ function onDateChange() {
 		            }
 		            else if(res==1){
 		            	msg("알림","첨부파일 적용중에 문제가 발생했습니다.","error","0")
+		            }
+		            else if(res==-1){
+		            	msg("알림","잔여휴가가 충분하지 않습니다.","error","0")
 		            }
 		            else{
 		            	msg("알림","문서내용 적용중 문제가 발생했습니다.","error","0")	

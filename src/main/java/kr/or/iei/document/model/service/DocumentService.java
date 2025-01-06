@@ -20,6 +20,7 @@ import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Service("documentService")
@@ -315,6 +316,54 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		return dao.approveDoc(map);
 	}
+
+	public double selectRemainVac(String empCode) {
+		// TODO Auto-generated method stub
+		double remainVac=dao.selectRemainRealVac(empCode);
+		return remainVac;
+	}
+
+	public int updateVac(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		
+		return dao.useAnnual(map);
+	}
+
+	public int insertAttVacation(Commute commute) {
+		// TODO Auto-generated method stub
+		return dao.insertAttVacation(commute);
+	}
+
+	public int insertAlarm(Alarm alarm) {
+		// TODO Auto-generated method stub
+		return dao.insertAlarm(alarm);
+	}
+
+	public int useHalf(String writer) {
+		// TODO Auto-generated method stub
+		return dao.useHalf(writer);
+	}
+
+	public int insertAttHalf(Commute commute) {
+		// TODO Auto-generated method stub
+		return dao.insertAttHalf(commute);
+	}
+
+	public double selectRemainRealVac(String empCode) {
+		// TODO Auto-generated method stub
+		return dao.selectRemainRealVac(empCode);
+	}
+
+	
+
+	
+
+
+
+
+	
+
+	
 
 	
 
