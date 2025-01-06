@@ -14,6 +14,8 @@ import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
+import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Repository("documentDao")
@@ -106,9 +108,9 @@ public class DocumentDao {
 	}
 
 
-	public List<Document> selectDocList(HashMap<String, String> paging) {
+	public List<Document> selectDocList(String type) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("document.selectDocList",paging);
+		return sqlSession.selectList("document.selectDocList",type);
 	}
 
 	
@@ -122,5 +124,82 @@ public class DocumentDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("document.selectSignList",documentCode);
 	}
+
+
+	public Document selectOneDoc(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectOneDoc", documentCode);
+	}
+
+	public List<Spending> selectOneDocSpending(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectOneDocSpending", documentCode);
+	}
+
+	public List<DocumentFile> selectOneDocFile(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectOneDocFile", documentCode);
+	}
+
+	public DocumentSelectDay selectAnnual(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectAnnual",documentCode);
+	}
+
+	public VacationHalf selectHalf(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectHalf", documentCode);
+	}
+
+	public int approveDoc(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("document.approveDoc", map);
+	}
+
+	
+	public int useAnnual(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		
+		return sqlSession.update("emp.useAnnual", map);
+	}
+
+	public int insertAttVacation(Commute commute) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.insertAttVacation", commute);
+	}
+
+	public int insertAlarm(Alarm alarm) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("vote.insertAlarm", alarm);
+		
+	}
+
+	public int useHalf(String writer) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("emp.useHalf", writer);
+	}
+
+	public int insertAttHalf(Commute commute) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.insertAttHalf", commute);
+	}
+
+	public double selectRemainRealVac(String empCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("emp.selectRemainRealVac", empCode);
+	}
+
+	
+
+	
+
+	
+
+	
+
+	
+	
+
+
 
 }

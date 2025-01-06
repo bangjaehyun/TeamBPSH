@@ -259,7 +259,7 @@ public class EmpController {
     
     
     //회원관리
-    @PostMapping("empManager.do")
+    @PostMapping(value="empManager.do", produces="text/html; charset=utf-8;")
     @AdminChk
     public String empManager(Model model) {
     	ArrayList<Emp> empList = service.empManagerList();
@@ -472,9 +472,16 @@ public class EmpController {
       
       @PostMapping(value="alarmRead.do", produces="application/json; charset=utf-8")
       @ResponseBody
-      public String alarmRead(String alarmNo) {
+      public String alarmRead(String alarmNo, HttpSession session) {
     	  int result = service.readAlarm(alarmNo);
-    	  System.out.println(result);
+    	  
+    	  if(result > 0) {
+    		Emp loginEmp = (Emp)session.getAttribute("loginEmp");
+    		if(loginEmp.getAlarmCount() > 0) {
+    			loginEmp.setAlarmCount(loginEmp.getAlarmCount() - 1);
+    		}
+    	  }
+    	  
     	  return String.valueOf(result);
       }
       
@@ -530,7 +537,7 @@ public class EmpController {
     	  return String.valueOf(result);
       }
       
-      @PostMapping(value="empDevelopPrice", produces="application/json; charset=utf-8")
+      @PostMapping(value="empDevelopPrice.do", produces="text/html; charset=utf-8;")
       @AdminChk
       public String empDevelopPrice(Model model) {
           ArrayList<DevelopPrice> developPrice = service.selectDevelopsPrice();
@@ -558,7 +565,7 @@ public class EmpController {
           return "emp/empDevelopPrice";
       }
       
-      @PostMapping("deptLeaderApPoint.do")
+      @PostMapping(value="deptLeaderApPoint.do", produces="text/html; charset=utf-8;")
       @AdminChk
       public String deptLeaderApPoint(Model model) {
     	  DeptLeader deptLeader = service.selectDeptLeaderList();

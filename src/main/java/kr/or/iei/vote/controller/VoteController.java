@@ -46,10 +46,10 @@ public class VoteController {
 		return "vote/createVote";
 	}
 	
-	@PostMapping(value="insertVote.do")
+	@PostMapping(value="insertVote.do", produces="application/json; charset=utf-8")
+	@ResponseBody
 	public String insertVote(Vote vote, @RequestParam(name= "voteVal")List<String> voteList) {
 		int result = service.insertVote(vote, voteList);
-		
 		return String.valueOf(result);
 	}
 	

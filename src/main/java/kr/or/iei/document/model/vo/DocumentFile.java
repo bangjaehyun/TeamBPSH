@@ -3,7 +3,7 @@ package kr.or.iei.document.model.vo;
 public class DocumentFile {
 	private String fileNo;
 	private String documentCode;
-	private String FileName;
+	private String fileName;
 	private String filePath;
 	public DocumentFile() {
 		super();
@@ -13,7 +13,7 @@ public class DocumentFile {
 		super();
 		this.fileNo = fileNo;
 		this.documentCode = documentCode;
-		FileName = fileName;
+		this.fileName = fileName;
 		this.filePath = filePath;
 	}
 	public String getFileNo() {
@@ -29,10 +29,10 @@ public class DocumentFile {
 		this.documentCode = documentCode;
 	}
 	public String getFileName() {
-		return FileName;
+		return fileName;
 	}
 	public void setFileName(String fileName) {
-		FileName = fileName;
+		this.fileName = fileName;
 	}
 	public String getFilePath() {
 		return filePath;
@@ -42,9 +42,10 @@ public class DocumentFile {
 	}
 	@Override
 	public String toString() {
-		return "DocumentFile [fileNo=" + fileNo + ", documentCode=" + documentCode + ", FileName=" + FileName
+		return "DocumentFile [fileNo=" + fileNo + ", documentCode=" + documentCode + ", fileName=" + fileName
 				+ ", filePath=" + filePath + "]";
 	}
+	
 	
 	
 	

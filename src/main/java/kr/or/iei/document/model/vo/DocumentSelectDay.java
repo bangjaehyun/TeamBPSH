@@ -1,30 +1,30 @@
 package kr.or.iei.document.model.vo;
 
 public class DocumentSelectDay {
-	public String start;
-	public String end;
+	public String startDay;
+	public String endDay;
 	private String documentCode;
 	public DocumentSelectDay() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public DocumentSelectDay(String start, String end, String documentCode) {
+	public DocumentSelectDay(String startDay, String endDay, String documentCode) {
 		super();
-		this.start = start;
-		this.end = end;
+		this.startDay = startDay;
+		this.endDay = endDay;
 		this.documentCode = documentCode;
 	}
-	public String getStart() {
-		return start;
+	public String getStartDay() {
+		return startDay;
 	}
-	public void setStart(String start) {
-		this.start = start;
+	public void setStartDay(String startDay) {
+		this.startDay = startDay;
 	}
-	public String getEnd() {
-		return end;
+	public String getEndDay() {
+		return endDay;
 	}
-	public void setEnd(String end) {
-		this.end = end;
+	public void setEndDay(String endDay) {
+		this.endDay = endDay;
 	}
 	public String getDocumentCode() {
 		return documentCode;
@@ -34,8 +34,10 @@ public class DocumentSelectDay {
 	}
 	@Override
 	public String toString() {
-		return "DocumentSelectDay [start=" + start + ", end=" + end + ", documentCode=" + documentCode + "]";
+		return "DocumentSelectDay [startDay=" + startDay + ", endDay=" + endDay + ", documentCode=" + documentCode
+				+ "]";
 	}
+	
 	
 	
 	

@@ -2,6 +2,7 @@ package kr.or.iei.emp.model.vo;
 
 public class Alarm {
 	private String alarmNo;
+	private String empCode;
 	private String alarmComment;
 	private String refUrl;
 	private String urlParam;
@@ -12,12 +13,32 @@ public class Alarm {
 		super();
 	}
 
-	public Alarm(String alarmComment, String refUrl, String urlParam, String alarmDate) {
+	public Alarm(String alarmNo, String empCode, String alarmComment, String refUrl, String urlParam, String alarmRead,
+			String alarmDate) {
 		super();
+		this.alarmNo = alarmNo;
+		this.empCode = empCode;
 		this.alarmComment = alarmComment;
 		this.refUrl = refUrl;
 		this.urlParam = urlParam;
+		this.alarmRead = alarmRead;
 		this.alarmDate = alarmDate;
+	}
+
+	public String getAlarmNo() {
+		return alarmNo;
+	}
+
+	public void setAlarmNo(String alarmNo) {
+		this.alarmNo = alarmNo;
+	}
+
+	public String getEmpCode() {
+		return empCode;
+	}
+
+	public void setEmpCode(String empCode) {
+		this.empCode = empCode;
 	}
 
 	public String getAlarmComment() {
@@ -44,6 +65,14 @@ public class Alarm {
 		this.urlParam = urlParam;
 	}
 
+	public String getAlarmRead() {
+		return alarmRead;
+	}
+
+	public void setAlarmRead(String alarmRead) {
+		this.alarmRead = alarmRead;
+	}
+
 	public String getAlarmDate() {
 		return alarmDate;
 	}
@@ -54,8 +83,8 @@ public class Alarm {
 
 	@Override
 	public String toString() {
-		return "Alarm [alarmComment=" + alarmComment + ", refUrl=" + refUrl + ", urlParam=" + urlParam + ", alarmDate="
-				+ alarmDate + "]";
+		return "Alarm [alarmNo=" + alarmNo + ", empCode=" + empCode + ", alarmComment=" + alarmComment + ", refUrl="
+				+ refUrl + ", urlParam=" + urlParam + ", alarmRead=" + alarmRead + ", alarmDate=" + alarmDate + "]";
 	}
 
 }

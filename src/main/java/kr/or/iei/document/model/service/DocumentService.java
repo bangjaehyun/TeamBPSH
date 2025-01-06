@@ -19,6 +19,8 @@ import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
+import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Service("documentService")
@@ -45,14 +47,13 @@ public class DocumentService {
 	}
 	
 	//리스트조회
-		public ArrayList<Document> selectList(String type, int page) {
+		public ArrayList<Document> selectList(String type) {
 			// TODO Auto-generated method stub
 			
-			HashMap<String,String>paging=new HashMap<String, String>();
-			paging.put("type", type);
 			
 			
-			ArrayList<Document>list=(ArrayList<Document>)dao.selectDocList(paging);
+			
+			ArrayList<Document>list=(ArrayList<Document>)dao.selectDocList(type);
 			System.out.println(list);
 			for(int i=0;i<list.size();i++) {
 				int check=1;
@@ -92,7 +93,7 @@ public class DocumentService {
 		}
 	
 	
-
+	//휴가신청서 작성
 	@Transactional
 	public int insertVacation(Document document, DocumentSelectDay selDay, VacationHalf vacHalf) {
 		// TODO Auto-generated method stub
@@ -161,7 +162,9 @@ public class DocumentService {
 			
 		}
 		
-		
+		  Alarm alarm = new Alarm();
+		  alarm.setAlarmComment("새로운 결재사항이 있습니다"+"");
+		  alarm.setRefUrl(null);
 		
 		return result;
 	}
@@ -278,6 +281,91 @@ public class DocumentService {
 		return (ArrayList<DocumentType>)dao.selectDocType();
 		
 	}
+
+	public Document selectOneDoc(String documentCode) {
+		
+		return dao.selectOneDoc(documentCode);
+	}
+
+	public ArrayList<Spending> selectOneDocSpending(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<Spending>)dao.selectOneDocSpending(documentCode);
+	}
+
+	public ArrayList<DocumentFile> selectOneDocFile(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<DocumentFile>)dao.selectOneDocFile(documentCode);
+	}
+
+	public ArrayList<DocumentSign> selectSignList(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<DocumentSign>)dao.selectDocSign(documentCode);
+	}
+
+	public DocumentSelectDay selectAnnual(String documentCode) {
+		// TODO Auto-generated method stub
+		return dao.selectAnnual(documentCode);
+	}
+
+	public VacationHalf selectHalf(String documentCode) {
+		// TODO Auto-generated method stub
+		return dao.selectHalf(documentCode);
+	}
+
+	public int approveDoc(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return dao.approveDoc(map);
+	}
+
+	public double selectRemainVac(String empCode) {
+		// TODO Auto-generated method stub
+		double remainVac=dao.selectRemainRealVac(empCode);
+		return remainVac;
+	}
+
+	public int updateVac(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		
+		return dao.useAnnual(map);
+	}
+
+	public int insertAttVacation(Commute commute) {
+		// TODO Auto-generated method stub
+		return dao.insertAttVacation(commute);
+	}
+
+	public int insertAlarm(Alarm alarm) {
+		// TODO Auto-generated method stub
+		return dao.insertAlarm(alarm);
+	}
+
+	public int useHalf(String writer) {
+		// TODO Auto-generated method stub
+		return dao.useHalf(writer);
+	}
+
+	public int insertAttHalf(Commute commute) {
+		// TODO Auto-generated method stub
+		return dao.insertAttHalf(commute);
+	}
+
+	public double selectRemainRealVac(String empCode) {
+		// TODO Auto-generated method stub
+		return dao.selectRemainRealVac(empCode);
+	}
+
+	
+
+	
+
+
+
+
+	
+
+	
+
+	
 
 
 	
