@@ -47,6 +47,9 @@ public class EmpService {
 							}
 						}
 					}
+					int alaramCount = dao.selectAlarmCount(loginEmp.getEmpCode());
+					loginEmp.setAlarmCount(alaramCount);
+					
 				 }else {
 					return null; 
 				 }

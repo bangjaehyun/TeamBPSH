@@ -69,6 +69,7 @@
 		</div>
 		<table class="voteTbl">
 			<tr>
+				<th>작성자</th>
 				<th>제목</th>
 				<th>내용</th>
 				<th>시작일</th>
@@ -76,6 +77,7 @@
 			</tr>
 			<c:forEach var="vote" items="${voteList}">
 				<tr>
+					<td>${vote.empName}</td>
 					<td><a href="javascript:void(0)" onclick="voteDetail('${vote.voteNo}')">${vote.voteTitle}</a></td>
 					<td>${vote.voteContent}</td>
 					<td>${vote.voteStart}</td>

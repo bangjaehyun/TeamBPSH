@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.vote.model.vo.Vote;
 import kr.or.iei.vote.model.vo.VoteEmpList;
 import kr.or.iei.vote.model.vo.VoteList;
@@ -58,6 +60,14 @@ public class VoteDao {
 
 	public List<VoteEmpList> selectVoteEmpList(String voteNo) {
 		return sqlSession.selectList("vote.selectVoteEmpList", voteNo);
+	}
+
+	public List<String> selectAllEmp(String empCode) {
+		return sqlSession.selectList("vote.selectEmpNoList", empCode);
+	}
+
+	public int insertAlarm(Alarm alarm) {
+		return sqlSession.insert("vote.insertAlarm", alarm);
 	}
 
 }

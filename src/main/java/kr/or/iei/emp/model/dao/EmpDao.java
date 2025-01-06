@@ -238,6 +238,10 @@ public class EmpDao {
 		return sqlSession.insert("emp.insertLeader",emp);
 	}
 
+	public int selectAlarmCount(String empCode) {
+		return sqlSession.selectOne("emp.selectAlarmCount", empCode);
+	}
+
 
 
 
