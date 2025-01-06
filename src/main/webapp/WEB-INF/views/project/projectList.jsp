@@ -106,24 +106,9 @@
 		</table>
 	</div>
 	<script>
-	/*
-		function projectView(projectNo){
-			const form = document.createElement('form');
-			form.method = 'post';
-			form.action = '/project/view.do';
-			
-			const inputEl = document.createElement('input');
-			inputEl.type = 'hidden';
-			inputEl.name = 'projectNo';
-			inputEl.value = projectNo;
-			form.appendChild(inputEl);
-			
-			document.body.appendChild(form);
-			form.submit();
-		}
 	
-	*/
 	  function projectView(projectNo) {
+		console.log(projectNo);
 		pageMoveParam('/project/view.do',{ projectNo: projectNo });
     }
 	  

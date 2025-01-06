@@ -59,11 +59,91 @@ th {
 }
 
 .footer {
-	border: 1px solid #ddd;
-	padding: 20px;
-	text-align: center;
-	background-color: #0087FF;
-	
+    border: 1px solid #ddd;
+    padding: 20px;
+    text-align: center;
+    background-color: #0087FF;
+    border-radius: 10px;
+    color: white;
+}
+/* 댓글 입력 폼 */
+#footerSec {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+}
+/* 댓글 입력란 스타일 */
+#comment {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+}
+/* 파일 업로드 스타일 */
+#fileUpload {
+    display: block;
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+/* 댓글 추가 버튼 스타일 */
+#submitComment {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#submitComment:hover {
+    background-color: #003d82;
+}
+
+#commentsContainer{
+	display:flex;
+	list-style-type: none;
+	flex-direction: column;
+    align-items: flex-start; /* 세로 정렬 */
+    margin-bottom:5px;
+}
+/* 각 댓글 스타일 */
+#commentsContainer li {
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: 14px;
+    color:#000;
+}
+
+/* 댓글 내 텍스트 */
+#commentsContainer li p {
+    margin: 0;
+    font-weight: bold;
+    color: #000;
+}
+
+/* 첨부파일 다운로드 링크 */
+#commentsContainer li a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+#commentsContainer li a:hover {
+    text-decoration: underline;
+}
+.editContent{
+	width: 100%;
+    height: 100px;
 }
 
 
@@ -82,8 +162,8 @@ th {
 				<td>${project.projectTitle}</td>
 			</tr>
 			<tr>
-				<th>프로젝트 책임자</th>
-				<td>${project.teamLeader}</td>
+				<th>프로젝트 작성자</th>
+				<td>${project.empCode}</td>
 				<th>프로젝트 마감일</th>
 				<td>${project.projectEnd}</td>
 			</tr>
@@ -130,38 +210,189 @@ th {
 		<!-- 특이사항 및 첨부파일 -->
 		<div class="footer">
 			<h2>특이사항 및 첨부파일</h2>
-			<div>
+			<div id="footerSec">
 				<%-- <c:if test="${user.hasCommentPermission}"> --%>
 				<form id="commentForm" enctype="multipart/form-data">
-					<div id="commentsList" style="margin-top: 20px;">
-						<h3>댓글 목록</h3>
-						<ul id="commentsContainer">
-							<!-- 댓글이 여기 추가됩니다. -->
-						</ul>
-					</div>
-					<textarea id="comment" name="comment" rows="4"
-						placeholder="특이사항을 작성하세요..." style="width: 100%; resize: none;" ></textarea>
-					<input type="file" id="fileUpload" name="fileUpload"
-						style="margin-top: 10px;">
-					<button type="button" id="submitComment" style="margin-top: 10px;">댓글
-						추가</button>
+				<input type="hidden" name="empCode" value="${loginEmp.empCode}">
+				<input type="hidden" name="projectNo" value="${project.projectNo}">
+    				<div id="commentsList" style="margin-top: 20px;">
+        				<h3>댓글 목록</h3>
+        				<ul id="commentsContainer">
+            			<!-- 댓글이 여기 추가됩니다. -->
+        				</ul>
+    				</div>
+    				<textarea id="comment" name="commContent" rows="4"
+        			placeholder="특이사항을 작성하세요..." style="width: 500px;; resize: none;"></textarea>
+    
+    				<!-- comm_gb를 숨겨진 입력 필드로 설정 -->
+    				<input type="hidden" id="comm_gb" name="commGb" value="0">
+    
+    				<input type="file" id="fileUpload" name="fileUpload" style="margin-top: 10px;">
+    
+    				<button type="button" id="submitComment" style="margin-top: 10px;">댓글 추가</button>
 				</form>
-
+				
+					
+				
 				<%--<c:if test="${!user.hasCommentPermission}">  --%>
 				<p>댓글을 작성할 권한이 없습니다.</p>
+				
 
 
 			</div>
 		</div>
 	</div>
 	<script>
-		$(document)
-				.ready(
-						function() {
+		function loadComment(){
+			let projectNo = $('input[name="projectNo"]').val();
+			
+			$.ajax({
+				url : '/project/commList.do',
+				type : 'post',
+				data : {projectNo : projectNo},
+				dataType: "json",
+				success : function(comments){
+		            let commentHtml = "";
+					
+		            if (comments.length > 0) {
+		                comments.forEach(function(comment,index) {
+		                    commentHtml += 
+		                    	'<li>'+ '<input type="hidden" class="comm-no" value="'+comment.commNo+'">'+
+		                    	'<p>' + comment.empCode + '</p>'
+		                     				 +  comment.commContent
+		                        
+		                   	console.log(comment.filePath);
+		                    if (comment.fileName) {
+		                    	commentHtml += '<a href="javascript:void(0);" onclick="downloadFile(\'' + comment.filePath + '\', \'' + comment.fileName + '\')">' + comment.fileName + '</a>';
+		                        
+		                    }
+		                    
+		                    commentHtml += '<div class="comment-buttons">'
+                                + '<button type="button" class="edit-btn" onclick="editComment(\'' + comment.commNo + '\', \'' + comment.commContent + '\', \'' + comment.fileName + '\', \'' + comment.filePath +'\', \'' + comment.commGb + '\' )">수정</button>'
+                                + '<button type="button" class="delete-btn" onclick="deleteComment(\'' + comment.commNo + '\')">삭제</button>'
+                                + '</div>';
+							
+		                    commentHtml += '</li>';
+		                });
+		            } else {
+		                commentHtml = "<li>등록된 댓글이 없습니다.</li>";
+		            }
 
+		            $("#commentsContainer").html(commentHtml);
+				},
+				error : function(){
+					console.log('ajax 오류');
+				}
+			});
+		}
+		function downloadFile(filePath,fileName) {
+		    location.href = "/project/downloadFile.do?filePath=" + encodeURIComponent(filePath) + "&fileName=" + encodeURIComponent(fileName);
+		}
+		
+		function editComment(commNo, commContent, commGb, fileName, filePath) {
+			var commentElement = $("li").has("input.comm-no[value='" + commNo + "']"); // 해당 commNo를 가진 <li> 찾기
+
+		    // 요소가 없을 경우 오류 방지
+		    if (commentElement.length === 0) {
+		        console.error("Error: #comment-" + commNo + " 요소를 찾을 수 없습니다.");
+		        alert("댓글 요소를 찾을 수 없습니다.");
+		        return;
+		    }
+
+		    console.log("수정할 댓글 정보:", {
+		        commNo: commNo,
+		        commContent: commContent,
+		        commGb: commGb,
+		        fileName: fileName,
+		        filePath: filePath
+		    });
+
+		    // 기존 댓글 내용을 수정할 수 있도록 input 폼으로 변환
+		    var editFormHtml = "";
+		    editFormHtml += '<input type="hidden" class="comm-no" value="' + commNo + '">';
+		    editFormHtml += '<input type="text" class="editContent" value="' + commContent + '" style="width: 70%; margin-bottom: 5px;">';
+		    editFormHtml += '<input type="file" class="editFile" style="display: block; margin-top: 5px;">';
+		    editFormHtml += '<input type="hidden" class="editCommGb" value="' + commGb + '">';
+
+		    if (fileName) {
+		        editFormHtml += '<p>첨부파일: ' + fileName + ' ';
+		        editFormHtml += '<a href="javascript:void(0);" onclick="downloadFile(\'' + filePath + '\', \'' + fileName + '\')">' + fileName + '</a>';
+		        editFormHtml += '</p>';
+		        editFormHtml += '<input type="checkbox" class="deleteFile" value="delete"> 기존 파일 삭제';
+		    }
+
+		    // 저장 및 취소 버튼 추가
+		    editFormHtml += '<button type="button" class="save-edit-btn">저장</button>';
+		    editFormHtml += '<button type="button" class="cancel-edit-btn">취소</button>';
+
+		    // 기존 댓글을 수정 입력 폼으로 변경
+		    commentElement.html(editFormHtml);
+		}
+		$(document).on('click', '.save-edit-btn', function() {
+		    var commentElement = $(this).closest('li'); // 클릭한 버튼이 속한 li 찾기
+		    var commNo = commentElement.find('.comm-no').val(); // hidden input에서 commNo 가져오기
+		    var newContent = commentElement.find('.editContent').val(); // 수정된 댓글 내용
+		    var newFile = commentElement.find('.editFile')[0].files[0]; // 새 파일 선택
+		    var commGb = commentElement.find('.editCommGb').val(); // commGb 값
+		    var deleteFile = commentElement.find('.deleteFile').is(':checked') ? "delete" : "";
+
+		    console.log("수정된 데이터:", {
+		        commNo: commNo,
+		        commContent: newContent,
+		        commGb: commGb,
+		        file: newFile ? newFile.name : "첨부파일 없음",
+		        deleteFile: deleteFile
+		    });
+
+		    var formData = new FormData();
+		    formData.append("commNo", commNo);
+		    formData.append("commContent", newContent);
+		    formData.append("commGb", commGb);
+		    formData.append("deleteFile", deleteFile); // 기존 파일 삭제 여부 전달
+
+		    if (newFile) {
+		        formData.append("file", newFile);
+		    }
+
+		    if (deleteFile) {
+		        formData.append("deleteFile", deleteFile);
+		    }
+
+		    $.ajax({
+		        url: "/project/updateComment.do",
+		        type: "POST",
+		        data: formData,
+		        processData: false,
+		        contentType: false,
+		        success: function(response) {
+		            if (response.success) {
+		                alert("댓글이 수정되었습니다.");
+		                loadComment(); // 수정 후 댓글 목록 다시 불러오기
+		            } else {
+		                alert("댓글 수정 실패");
+		            }
+		        },
+		        error: function() {
+		            alert("서버 오류 발생");
+		        }
+		    });
+		});
+		
+		$(document).on('click', '.cancel-edit-btn', function() {
+		    var commentElement = $(this).closest('li'); // 클릭한 버튼이 속한 li 찾기
+		    var commNo = commentElement.find('.comm-no').val(); // hidden input에서 commNo 가져오기
+
+		    loadComment(); // 댓글 목록 다시 불러와서 원래 내용으로 복구
+		});
+		
+		
+		
+		
+	
+		$(document).ready(function() {
+							loadComment();
 							const labels = [ 'Module 1', 'Module 2', 'Module 3' ]; // 데이터 확인
 							const progressData = [ 75, 50, 90 ]; // 진행률 데이터 확인
-
 							if (!labels.length || !progressData.length) {
 								console.error("차트 데이터가 비어 있습니다.");
 							}
@@ -199,43 +430,39 @@ th {
 								}
 							}
 
-							$('#submitComment').on('click',function() {
-												// 서버 권한 확인을 위한 비동기 요청
-								$.get('/checkPermission',function(response) {
-									if (response.hasPermission) {
-									const commentText = $('#comment').val();
-									const fileInput = $('#fileUpload')[0].files[0];
-										if (!commentText&& !fileInput) {
-											alert("댓글 내용 또는 첨부파일 중 하나를 입력하세요.");
-											return;
-										}
-										const formData = new FormData();
-										formData.append('comment',commentText);
-										if (fileInput) {
-											formData.append('fileUpload',fileInput);
-										}
-										// AJAX 요청으로 댓글 추가
-										$.ajax({
-											url : '/project/submitComment',
-											type : 'POST',
-											data : formData,
-											contentType : false,
-											processData : false,
-											success : function() {
-												alert("댓글이 추가되었습니다.");
-												$('#commentsContainer').append(`<li>${commentText}</li>`);
-												$('#comment').val('');
-												$('#fileUpload').val('');
-											},
-											error : function() {
-												alert("댓글 추가 중 문제가 발생했습니다.");
-											}
-										});
-										} else {
-											alert("댓글 작성 권한이 없습니다.");
-									}
-							});
-					});
+							// 파일 업로드 시 comm_gb 값 변경
+						    $("#fileUpload").on("change", function() {
+						        let commGbInput = $("#comm_gb");
+						        if (this.files.length > 0) {
+						            commGbInput.val("1"); // 파일이 있으면 comm_gb = 1
+						        } else {
+						            commGbInput.val("0"); // 파일이 없으면 comm_gb = 0
+						        }
+						    });
+
+						    // 댓글 추가 버튼 클릭 이벤트
+						    $("#submitComment").on("click", function() {
+						        let formData = new FormData($("#commentForm")[0]); // 폼 데이터 가져오기
+						        $.ajax({
+						            url: "/project/submitComment.do", // 서버 서블릿 주소
+						            type: "POST",
+						            data: formData,
+						            processData: false, // FormData 사용할 때 필요
+						            contentType: false, // FormData 사용할 때 필요
+						            dataType: "json", // JSON 응답 받기
+						            success: function(res) {
+						                if (res) {
+						                	console.log(res);
+						                    alert("댓글이 추가되었습니다.");
+						                } else {
+						                    alert("댓글 추가 실패");
+						                }
+						            },
+						            error: function() {
+						                console.log("ajax오류");
+						            }
+						        });
+						    });
 				});
 	</script>
 </body>

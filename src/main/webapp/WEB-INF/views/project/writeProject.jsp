@@ -8,80 +8,96 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 <style>
-/* 전체 폼 스타일 */
-.projectForm {
-    width: 50%;
-    margin: 50px auto;
-    padding: 20px;
-    background: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-}
+        #con {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            font-family: 'Arial', sans-serif;
+        }
 
-/* 입력 필드와 텍스트 영역 스타일 */
-.projectForm input[type="text"],
-.projectForm textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
+        /* 폼 컨테이너 */
+        .projectForm {
+            
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
 
-/* 체크박스 목록 스타일 */
-.team {
-    margin-bottom: 15px;
-    padding: 10px;
-    background: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
+        /* 제목 입력란 */
+        .projectForm input[type="text"],
+        .projectForm textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
 
-.team p {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+        /* 마감일 + 팀 목록 컨테이너 */
+        .deadline-team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
 
-.team label {
-    display: inline-block;
-    margin-right: 15px;
-    font-size: 14px;
-}
+        /* 마감일 스타일 */
+        .deadline {
+            width: 30%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
 
-/* 라벨 스타일 */
-.projectForm label {
-    font-weight: bold;
-    display: block;
-    margin-top: 10px;
-}
+        /* 팀 목록 스타일 */
+        .team-list {
+            width: 65%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            background: #f9f9f9;
+        }
 
+        /* 내용 입력란 */
+        textarea {
+            width: calc(100% - 20px);
+            height: 150px;
+            padding: 10px;
+            resize: none;
+        }
 
-/* 버튼 스타일 */
-#btn {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
+        /* 작성 버튼 */
+        .submit-btn {
+            display: block;
+            width: 50%;
+            padding: 12px;
+            margin: 20px auto 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
 
-#btn:hover {
-    background-color: #0056b3;
-}
-	
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
 </style>
 </head>
 <body>
-	<div>
+	<div id="con">
 		<div>
-			<div>
 				<form class="projectForm" action="/project/write.do" method="post">
 					<input type="hidden" name="empCode" value="${loginEmp.empCode}">
 					<label>제목</label> 
@@ -103,7 +119,7 @@
 					</div>
 					<button id="btn" type="submit">작성</button>
 				</form>
-			</div>
+			
 		</div>
 	</div>
 <script src="/resources/summernote/summernote-lite.js"></script>
@@ -129,7 +145,6 @@
 			                  text : "투표가 완료되었습니다.",
 			                  icon : "success"
 			               }).then(function(){
-
 			            	   pageMove('/project/list.do');
 			               });
 			            }else{

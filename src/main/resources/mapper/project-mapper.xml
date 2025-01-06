@@ -44,23 +44,18 @@
 	<select id="projectView"
 	parameterType="string"
 	resultType="project">
-		SELECT 
+        SELECT 
         tbl_project.project_no AS projectNo,
         tbl_project.project_title AS projectTitle,
         tbl_project.project_content AS projectContent,
         tbl_project.project_end AS projectEnd,
-        tbl_emp.emp_name AS teamLeader
+        tbl_emp.emp_name as empName
+        
     FROM 
         tbl_project 
     JOIN 
-        tbl_project_team 
-        ON tbl_project.project_no = tbl_project_team.project_no
-    JOIN 
-        tbl_team_leader 
-        ON tbl_project_team.team_code = tbl_team_leader.team_code
-    JOIN 
         tbl_emp 
-        ON tbl_team_leader.emp_code = tbl_emp.emp_code
+        ON tbl_project.emp_code = tbl_emp.emp_code 
     WHERE 
         tbl_project.project_no = #{projectNo}
 		
@@ -114,4 +109,55 @@
     </foreach>
     SELECT 1 FROM DUAL
 </insert>
+	
+	<select id="commentNo" resultType="string">
+		select to_char(sysdate,'yyyymmddHHMM')||lpad(seq_project_comm.nextVal,4,'0') as comm_no from dual
+	</select>
+	
+	<insert id="insertComment" parameterType="string">
+		insert into tbl_project_comm (
+            comm_no, project_no, emp_code, comm_gb, comm_content, file_name, file_path, comm_date
+        ) 
+        values 
+        (
+            #{commNo}, #{projectNo}, #{empCode}, #{commGb}, #{commContent}, #{fileName}, #{filePath}, sysdate
+        )
+	</insert>
+	
+	<select id="selectProjectComm" parameterType="string" resultType="comment">
+		select 
+			comm_no as commNo,
+			emp_code as empCode,
+			comm_gb as commGb,
+			comm_content as commContent,
+			file_name as fileName,
+			file_path as filePath,
+			comm_date as commDate
+		from tbl_project_comm
+		where project_no = #{projectNo}
+	</select>
+	
+	<select id="selectCommNo" parameterType="string" resultType="comment">
+		select
+			comm_no as commNo,
+			emp_code as empCode,
+			comm_gb as commGb,
+			comm_content as commContent,
+			file_name as fileName,
+			file_path as filePath,
+			comm_date as commDate
+		from tbl_project_comm
+		where comm_no = #{commNo}
+	</select>
+	
+	<update id="updateComment" parameterType="comment">
+		update tbl_project_comm 
+		set 
+			comm_content = #{commContent},
+			comm_gb = #{commGb},
+			file_path = #{filePath},
+			file_name = #{fileName}
+		where comm_no = #{commNo} 
+			
+	</update>
 </mapper>

@@ -12,6 +12,7 @@ public class Project {
 	
 	//종속 변수
 	private String documentDate;
+	private String empName;
 	private String teamLeader;
 	private ArrayList<ProjectPartemp> projectPartemp;
 	
@@ -23,7 +24,7 @@ public class Project {
 
 
 	public Project(String projectNo, String documentTypeCode, String projectTitle, String projectContent,
-			String projectEnd, String empCode, String documentDate, String teamLeader,
+			String projectEnd, String empCode, String documentDate, String empName, String teamLeader,
 			ArrayList<ProjectPartemp> projectPartemp) {
 		super();
 		this.projectNo = projectNo;
@@ -33,6 +34,7 @@ public class Project {
 		this.projectEnd = projectEnd;
 		this.empCode = empCode;
 		this.documentDate = documentDate;
+		this.empName = empName;
 		this.teamLeader = teamLeader;
 		this.projectPartemp = projectPartemp;
 	}
@@ -108,6 +110,16 @@ public class Project {
 	}
 
 
+	public String getEmpName() {
+		return empName;
+	}
+
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
+
 	public String getTeamLeader() {
 		return teamLeader;
 	}
@@ -132,11 +144,12 @@ public class Project {
 	public String toString() {
 		return "Project [projectNo=" + projectNo + ", documentTypeCode=" + documentTypeCode + ", projectTitle="
 				+ projectTitle + ", projectContent=" + projectContent + ", projectEnd=" + projectEnd + ", empCode="
-				+ empCode + ", documentDate=" + documentDate + ", teamLeader=" + teamLeader + ", projectPartemp="
-				+ projectPartemp + "]";
+				+ empCode + ", documentDate=" + documentDate + ", empName=" + empName + ", teamLeader=" + teamLeader
+				+ ", projectPartemp=" + projectPartemp + "]";
 	}
-	
-	
+
+
+
 	
 	
 

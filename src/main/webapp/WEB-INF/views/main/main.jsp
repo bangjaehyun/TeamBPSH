@@ -216,7 +216,6 @@ table tr:hover {
 					empCode : empCode
 				},
 				success : function(res) {
-					console.log(JSON.stringify(res)); // JSON 데이터를 문자열로 변환하여 출력
 					docList(res); // 데이터를 HTML로 출력하는 함수 호출
 				},
 				error : function() {
