@@ -149,6 +149,11 @@ public class DocumentDao {
 		return sqlSession.selectOne("document.selectHalf", documentCode);
 	}
 
+	public int approveDoc(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("document.approveDoc", map);
+	}
+
 	
 	
 

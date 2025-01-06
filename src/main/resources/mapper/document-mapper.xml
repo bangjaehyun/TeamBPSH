@@ -47,7 +47,7 @@
 
 	<select id="selectDocumentCode"
   	resultType="string">
-  		select to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,6,'0') as document_code from dual
+  		select to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,8,'0') as document_code from dual
   	</select>
 	
 	<select id="selectSpendingCode"
@@ -270,7 +270,7 @@
 			spending_content as spendingContent,
 			document_code as documentCode
 		from tbl_spending
-		where document_code =#{_stirng}	
+		where document_code =#{_string}	
 	</select>
 	
 	<select id="selectOneDocFile"
@@ -305,4 +305,11 @@
 		from tbl_half
 		where document_code=#{_string} 
 	</select>
+	<update id="approveDoc"
+	parameterType="map">
+		update
+		tbl_document_sign
+		set sign_yn=#{check}
+		where emp_code=#{empCode} and document_code=#{documentCode}
+	</update>
 </mapper>

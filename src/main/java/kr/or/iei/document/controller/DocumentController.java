@@ -145,7 +145,7 @@ public class DocumentController {
 				 filterTeam.add(teamList.get(i));
 			 }
 		 }
-		 System.out.println(filterTeam);
+		
 		return filterTeam;
 	}
 	
@@ -200,7 +200,7 @@ public class DocumentController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		System.out.println(savePath);
+		
 	        	
 	        return new Gson().toJson(savePath);
 	
@@ -458,8 +458,19 @@ public class DocumentController {
 		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
 		
 		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
-	
+		String signableEmp="";
+		for(int i=0;i<signList.size();i++) {
+			if(Integer.parseInt(signList.get(i).getSignYn())==0) {
+				signableEmp=signList.get(i).getEmpCode();
+				break;
+			}else if(Integer.parseInt(signList.get(i).getSignYn())==-1) {
+				break;
+			}
+		}
+		
 		doc.setFileList(fileList);
+		model.addAttribute("documentCode",documentCode);
+		model.addAttribute("signableEmp",signableEmp);
 		model.addAttribute("doc",doc);
 		model.addAttribute("signList", signList);
 		model.addAttribute("spendingList",spendingList);
@@ -507,7 +518,34 @@ public class DocumentController {
 	
 	
 	
-	
+	//결재하기
+	@PostMapping("approveDoc.do")
+	@ResponseBody
+	public int approveDoc(String check,String empCode,String documentCode) {
+		HashMap<String, String>map=new HashMap<String, String>();
+		map.put("empCode", empCode);
+		map.put("check",check );
+		map.put("documentCode", documentCode);
+		int result=service.approveDoc(map);
+		if(result>0 &&Integer.parseInt(check)==-1) {
+			System.out.println("기각되었습니다");
+		}
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
+		System.out.println(documentCode);
+		int find=1;
+		for(int i=0;i<signList.size();i++) {
+			find=Integer.parseInt(signList.get(i).getSignYn());
+			if(find==-1) {
+				break;
+			}else if(find==0) {
+				System.out.println(signList.get(i).getEmpName()+"님이 결재할 차례입니다");
+			}
+		}
+		if(find==1) {
+			System.out.println("최종승인입니다.");
+		}
+		return result;
+	}
 	
 
 

@@ -19,6 +19,7 @@ import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
+import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Service("documentService")
@@ -91,7 +92,7 @@ public class DocumentService {
 		}
 	
 	
-
+	//휴가신청서 작성
 	@Transactional
 	public int insertVacation(Document document, DocumentSelectDay selDay, VacationHalf vacHalf) {
 		// TODO Auto-generated method stub
@@ -160,7 +161,9 @@ public class DocumentService {
 			
 		}
 		
-		
+		  Alarm alarm = new Alarm();
+		  alarm.setAlarmComment("새로운 결재사항이 있습니다"+"");
+		  alarm.setRefUrl(null);
 		
 		return result;
 	}
@@ -307,6 +310,13 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		return dao.selectHalf(documentCode);
 	}
+
+	public int approveDoc(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return dao.approveDoc(map);
+	}
+
+	
 
 
 	

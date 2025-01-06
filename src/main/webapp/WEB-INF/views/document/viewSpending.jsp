@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
  <style>
     body {
         font-family: Arial, sans-serif;
@@ -178,7 +179,37 @@
         margin-bottom: 10px;
         padding:0;
     }
-   
+  
+
+    .sign-text{
+    	display:flex;
+    	margin-top: 1%;
+    	width:100%;
+    	font-size: 20px;
+    	justify-content: center;
+    }	
+    .sign-buttons {
+		display:flex;
+    	justify-content: center;
+		gap: 20px;
+		margin-top: 5px;
+	}
+	
+	.sign-buttons button {
+		padding: 10px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 14px;
+	}
+	.confirm{
+		background-color:yellowgreen;
+		color: white;
+	}
+   .reject{
+   		color: white;
+   		background-color:red;
+   }
  
    
 </style>
@@ -210,7 +241,7 @@
             <div>
                 <div class="signs">
                 <c:forEach var="signEmp" items="${signList}">
-            <input type="hidden" name="sigmEmpCode" value="${signList.empCode }">
+           
                     <div class="sign-box">
                     	
                         <div class="name">${signEmp.empRank} ${signEmp.empName}</div>
@@ -259,11 +290,17 @@
         <div class="detail-content">
             <label for="content">내용</label>
         </div>
-            <div class="content"  >
+            <div class="content" >
                 <textarea id=summernote name="docContent" escapeXml="false"  readonly>${doc.documentContent }</textarea>
             </div>
-       <c:if test="${loginEmp.empCode in signEmpCode &&check=1  }">
+       <c:if test="${loginEmp.empCode eq signableEmp  }">
        	
+       	<div class="sign-text">결재하기</div>
+       		<div class="sign-buttons">
+				<button class="confirm" type="button" onclick="signDocument('1')">승인</button>
+				<button class="reject" type="button" onclick="signDocument('-1')">기각</button>
+			</div>
+			
        </c:if>
 
     </div>
@@ -290,6 +327,39 @@ $('#summernote').summernote( {
 function fileDown(fileName, filePath) {
 	location.href = '/notice/fileDown?fileName=' + fileName + '&filePath=' + filePath;
 }
+
+function msg(title, text, icon, callback){
+	swal({
+		title : title,
+		text : text,
+		icon : icon
+	}).then(function(){
+		if(callback != "0"){
+			location.href = "/";
+		}
+	});
+	
+}
+
+function signDocument(e){
+	$.ajax({
+		url:"/doc/approveDoc.do",
+		type:"post",
+		data:{"check":e,
+			  "empCode":${loginEmp.empCode},
+			  "documentCode":${documentCode}
+		},
+		success:function(e){
+			msg("알림","결재가 완료되었습니다.","success","1")
+		},
+		error:function(){
+			msg("알림","결재중 오류가 발생하였습니다.","error","0");
+			console.log("오류");
+		}
+	});
+	
+}
+
 </script>
 </body>
 </html>
