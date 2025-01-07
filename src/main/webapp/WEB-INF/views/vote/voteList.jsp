@@ -21,7 +21,7 @@
 }
 
 .voteTbl {
-  min-width : 100%;
+  min-width : 1000px;
   width: 100%;
   border-spacing: 0;
 }

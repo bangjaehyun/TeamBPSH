@@ -77,7 +77,7 @@
 	<div class="empCheck-wrap">
 		<div>
 			<button onclick="moveMonth('left')" class="material-icons">chevron_left</button>
-			<span class="empCheck-title">${date.getMonthValue()}월 출 퇴근 관리</span>
+			<span class="empCheck-title">${date.getYear()}년 ${date.getMonthValue()}월 출 퇴근 관리</span>
 			<button onclick="moveMonth('right')" class="material-icons">chevron_right</button>
 		</div>
 		<div>

@@ -345,14 +345,21 @@ public class EmpService {
 
 	public ArrayList<Emp> empCheckMonth(String yearMonth) {
 		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
-		
-		for(Emp e : empList) {
-			HashMap<String,String> map = new HashMap<String, String>();
-			map.put("empCode", e.getEmpCode());
-			map.put("yearMonth", yearMonth);
+		for(int i = empList.size()-1; i >= 0; i--) {
+				//입사년월
+				int empYearMonth = Integer.parseInt(empList.get(i).getEmpDate().substring(0, 7).replace("-", ""));
+				//찾으려는 출퇴근 기록부 년월 보다 입사일이 늦으면 찾지 않음
+		        if (Integer.parseInt(yearMonth) < empYearMonth) {
+		        	empList.remove(i);
+		        	continue;
+		        } 
 			
+			HashMap<String,String> map = new HashMap<String, String>();
+			map.put("empCode", empList.get(i).getEmpCode());
+			map.put("yearMonth", yearMonth);
+			//해당 사원의 해당월의 기록 가져오기
 			ArrayList<Check> checkList = (ArrayList<Check>)dao.empCheckMonth(map);
-			e.setCheckList(checkList);
+			empList.get(i).setCheckList(checkList);
 		}
 		
 		return empList;

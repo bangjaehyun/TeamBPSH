@@ -7,8 +7,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+	.total-wrap{
+		min-width: 1400px;
+	}
 	.wrap{
 		display: flex;
+		width: 100%;
 	}
 	.side{
 		width: 55px;	
@@ -88,6 +92,7 @@
 </style>
 </head>
 <body>
+	<div class="total-wrap">
 	<jsp:include page="/WEB-INF/views/main/header.jsp"></jsp:include>
 	<div class="wrap">
 		<div class="side">
@@ -119,6 +124,7 @@
             	 	</ul>
             	 </div>
 		</div>
+	</div>
 	</div>
 	<script>
 	function chatOpen(){

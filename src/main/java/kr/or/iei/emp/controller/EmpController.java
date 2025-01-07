@@ -617,7 +617,6 @@ public class EmpController {
     	  model.addAttribute("date", newDate);
     	  model.addAttribute("empList", empList);
     	  model.addAttribute("empListJson", new Gson().toJson(empList));
-    	  System.out.println(empList);
     	  
     	  return "emp/empCheck";
       }
