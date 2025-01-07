@@ -627,6 +627,7 @@
 		from tbl_vacation_count where emp_code=#{_string}
     </select>
     
+
      <select id="empCheckMonth"
      parameterType="map"
      resultType="empCheck">
@@ -637,4 +638,13 @@
        from tbl_check
       where emp_code = #{empCode} and att_date like #{yearMonth} || '%'
      </select>
+
+     <insert id="insertAttBt"
+     parameterType="commute">
+     insert into tbl_check
+     (att_date,emp_code,check_note)
+     values
+     (#{attDate},#{empCode},#{checkNote})
+     </insert>
+
 </mapper>

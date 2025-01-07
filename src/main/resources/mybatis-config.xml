@@ -29,6 +29,10 @@
 		<typeAlias type="kr.or.iei.vote.model.vo.Vote" alias="vote"/>
 		<typeAlias type="kr.or.iei.vote.model.vo.VoteList" alias="voteList"/>
 		<typeAlias type="kr.or.iei.vote.model.vo.VoteEmpList" alias="VoteEmpList"/>
+
 		<typeAlias type="kr.or.iei.emp.model.vo.Check" alias="empCheck"/>
+
+		<typeAlias type="kr.or.iei.document.model.vo.Business" alias="business"/>
+
 	</typeAliases>
 </configuration>

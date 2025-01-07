@@ -6,6 +6,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+
+import kr.or.iei.document.model.vo.Business;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
@@ -188,6 +190,28 @@ public class DocumentDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectOne("emp.selectRemainRealVac", empCode);
 	}
+
+	public List<DocumentReference> selectRefList(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectRefList", documentCode);
+	}
+
+	public int insertBusiness(Business business) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("document.insertBusiness", business);
+	}
+
+	public Business selectOneBt(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectOneBt",documentCode);
+	}
+
+	public int insertAttBt(Commute commute) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("emp.insertAttBt", commute);
+	}
+
+	
 
 	
 
