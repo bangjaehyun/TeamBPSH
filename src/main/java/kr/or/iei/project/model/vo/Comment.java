@@ -10,13 +10,17 @@ public class Comment {
 	private String filePath;
 	private String commDate;
 	
+	private String empName;
+	private String rankName;
+	private String teamName;
+	
 	public Comment() {
 		super();
 	
 	}
 
 	public Comment(String commNo, String projectNo, String empCode, String commGb, String commContent, String fileName,
-			String filePath, String commDate) {
+			String filePath, String commDate, String empName, String rankName, String teamName) {
 		super();
 		this.commNo = commNo;
 		this.projectNo = projectNo;
@@ -26,6 +30,9 @@ public class Comment {
 		this.fileName = fileName;
 		this.filePath = filePath;
 		this.commDate = commDate;
+		this.empName = empName;
+		this.rankName = rankName;
+		this.teamName = teamName;
 	}
 
 	public String getCommNo() {
@@ -92,12 +99,39 @@ public class Comment {
 		this.commDate = commDate;
 	}
 
+	public String getEmpName() {
+		return empName;
+	}
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
+	public String getRankName() {
+		return rankName;
+	}
+
+	public void setRankName(String rankName) {
+		this.rankName = rankName;
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
 	@Override
 	public String toString() {
-		return "Commnet [commNo=" + commNo + ", projectNo=" + projectNo + ", empCode=" + empCode + ", commGb=" + commGb
+		return "Comment [commNo=" + commNo + ", projectNo=" + projectNo + ", empCode=" + empCode + ", commGb=" + commGb
 				+ ", commContent=" + commContent + ", fileName=" + fileName + ", filePath=" + filePath + ", commDate="
-				+ commDate + "]";
+				+ commDate + ", empName=" + empName + ", rankName=" + rankName + ", teamName=" + teamName + "]";
 	}
+
+	
+
 	
 	
 	

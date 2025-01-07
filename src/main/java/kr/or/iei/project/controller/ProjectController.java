@@ -222,49 +222,60 @@ public class ProjectController {
 
         Map<String, Boolean> response = new HashMap<>();
 
-        // 1️⃣ 댓글 조회 (예외 처리)
+        // 댓글 조회 (예외 처리)
         Comment comment = service.getCommentNo(commNo);
         if (comment == null) {
-            
             response.put("success", false);
             return response;
         }
         
         
-
+        System.out.println(deleteFile);
+        System.out.println("111");
         comment.setCommContent(commContent);
 
-        // 2️⃣ 기존 파일 삭제 처리
+     // 기존 파일 삭제 처리 (deleteFile 값이 "1"일 경우)
         if ("1".equals(deleteFile) && comment.getFilePath() != null) {
-            File oldFile = new File(request.getSession().getServletContext().getRealPath(comment.getFilePath()));
+        	String realPath = request.getSession().getServletContext().getRealPath(comment.getFilePath());
+        	File oldFile = new File(request.getSession().getServletContext().getRealPath(comment.getFilePath()));
             if (oldFile.exists()) {
                 boolean deleted = oldFile.delete();
-                
+                if (!deleted) {
+                    System.out.println("파일 삭제 실패: " + realPath);
+                }
+            } else {
+                System.out.println("파일이 존재하지 않음: " + realPath);
             }
+                
             comment.setFileName(null);
             comment.setFilePath(null);
             comment.setCommGb("0"); // 파일 삭제 시 comm_gb 값을 0으로 변경
-        }
+            }
+        
 
-        // 3️⃣ 새로운 파일 업로드 처리
+        //새로운 파일 업로드 처리
         if (newFile != null && !newFile.isEmpty()) {
             String savePath = request.getSession().getServletContext().getRealPath("/resources/projectUpload");
             File uploadDir = new File(savePath);
             if (!uploadDir.exists()) {
                 uploadDir.mkdirs();
             }
-
+            
             String originalFileName = newFile.getOriginalFilename();
-            String newFileName = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + "_" + originalFileName;
+            String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+            String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+            String toDay = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            int ranNum = new Random().nextInt(10000) + 1;
+            String newFileName = fileName + "_" + toDay + "_" + ranNum + extension;
+            
             String fullSavePath = savePath + File.separator + newFileName;
-            String relativePath = "/resources/projectUpload/" + newFileName;
-
+            
+			
             try {
                 newFile.transferTo(new File(fullSavePath));
                 comment.setFileName(originalFileName);
-                comment.setFilePath(relativePath);
-                comment.setCommGb("1"); // 새 파일 추가 시 comm_gb = 1
-                
+                comment.setFilePath(newFileName);
+                comment.setCommGb("1"); // 새로운 파일 추가 시 comm_gb = 1
             } catch (IOException e) {
                 e.printStackTrace();
                 response.put("success", false);
@@ -272,7 +283,7 @@ public class ProjectController {
             }
         }
 
-        // 기존 파일도 없고 새 파일도 없을 경우 comm_gb = 0
+        //기존 파일이 삭제되었고, 새 파일도 없는 경우 comm_gb = 0
         if (comment.getFilePath() == null) {
             comment.setCommGb("0");
         }
@@ -281,6 +292,39 @@ public class ProjectController {
         response.put("success", result);
         
 
+        return response;
+    }
+    
+    @PostMapping("deleteComment.do")
+    @ResponseBody
+    public Map<String, Boolean> deleteComment(@RequestParam String commNo, HttpServletRequest request) {
+        Map<String, Boolean> response = new HashMap<>();
+        
+        Comment comment = service.getCommentNo(commNo);
+        if (comment == null) {
+            response.put("success", false);
+            return response;
+        }
+
+        //기존 파일 삭제 처리 (첨부파일이 있을 경우)
+        if (comment.getFilePath() != null) {
+            String realPath = request.getSession().getServletContext().getRealPath(comment.getFilePath());
+            File file = new File(realPath);
+
+            if (file.exists()) {
+                boolean deleted = file.delete();
+                
+            } else {
+                System.out.println("삭제가 안됨");
+            }
+        }
+
+        // 
+        boolean result = service.deleteComment(commNo);
+
+        
+
+        response.put("success", result);
         return response;
     }
 }

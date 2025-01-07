@@ -90,4 +90,9 @@ public class ProjectService {
         return updatedRows > 0;
     }
 
+	public boolean deleteComment(String commNo) {
+		
+		return dao.deleteComment(commNo) > 0;
+	}
+
 }

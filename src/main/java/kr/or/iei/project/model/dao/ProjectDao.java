@@ -85,9 +85,12 @@ public class ProjectDao {
 
 	public int updateComment(Comment comment) {
         int result = sqlSession.update("project.updateComment", comment);
-        System.out.println("✅ updateComment 실행: " + result + " 개 행 수정됨.");
         return result;
     }
+
+	public int deleteComment(String commNo) {
+		return sqlSession.delete("project.deleteComment",commNo);
+	}
 
 
 	

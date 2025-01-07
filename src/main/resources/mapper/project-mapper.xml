@@ -1,163 +1,183 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="project">
-	<select id="apiProjectList" 
-	parameterType="string" 
-	resultType="project">
-	SELECT
+	<select id="apiProjectList" parameterType="string"
+		resultType="project">
+		SELECT
 		tbl_project.project_no as projectNo,
-		tbl_project.project_title as projectTitle,
+		tbl_project.project_title as
+		projectTitle,
 		tbl_project.project_content as projectContent,
 		tbl_project.project_end as projectEnd,
-		tbl_project_partemp.emp_code as empCode,
+		tbl_project_partemp.emp_code as
+		empCode,
 		tbl_document_type.document_type_code as documentTypeCode,
 		tbl_document.document_date as documentDate
 		FROM
 		tbl_project
 		JOIN
 		tbl_project_partemp
-		ON tbl_project_partemp.project_no = tbl_project.project_no
+		ON tbl_project_partemp.project_no =
+		tbl_project.project_no
 		JOIN
 		tbl_document_type
-		ON tbl_document_type.document_type_code = tbl_project.document_type_code
+		ON
+		tbl_document_type.document_type_code = tbl_project.document_type_code
 		JOIN
 		tbl_document
 		ON tbl_document.document_type_code =
 		tbl_document_type.document_type_code
-        join
-        tbl_project_team
-        on tbl_project.project_no = tbl_project_team.project_no
-        where tbl_project_team.team_code = #{loginEmp.teamCode}
+		join
+		tbl_project_team
+		on tbl_project.project_no = tbl_project_team.project_no
+		where tbl_project_team.team_code = #{loginEmp.teamCode}
 	</select>
-	
-	<select id="projectList" 
-	parameterType="string" 
-	resultType="project">
-		select 
-			tbl_project.project_no as projectNo,
-			tbl_project.project_title as projectTitle,
-			tbl_project.project_content as projectContent,
-			tbl_project.project_end as projectEnd
-		from tbl_project 
-	</select>
-	
-	<select id="projectView"
-	parameterType="string"
-	resultType="project">
-        SELECT 
-        tbl_project.project_no AS projectNo,
-        tbl_project.project_title AS projectTitle,
-        tbl_project.project_content AS projectContent,
-        tbl_project.project_end AS projectEnd,
-        tbl_emp.emp_name as empName
-        
-    FROM 
-        tbl_project 
-    JOIN 
-        tbl_emp 
-        ON tbl_project.emp_code = tbl_emp.emp_code 
-    WHERE 
-        tbl_project.project_no = #{projectNo}
-		
-	</select>
-	
-	<select id="projectPartempList"
-	parameterType="string"
-	resultType="projectPartemp">
+
+	<select id="projectList" parameterType="string"
+		resultType="project">
 		select
-			tbl_emp.emp_code as empCode,
-        	tbl_emp.emp_name as empName,
-        	tbl_project_partemp.partemp_content as partempContent,
-        	tbl_emp.team_code as teamCode,
-        	tbl_emp.rank_code as rankCode
-        from tbl_project_partemp
-        join tbl_emp 
-        on tbl_project_partemp.emp_code = tbl_emp.emp_code
-        where tbl_project_partemp.project_no = #{projectNo}
+		tbl_project.project_no as projectNo,
+		tbl_project.project_title as projectTitle,
+		tbl_project.project_content as projectContent,
+		tbl_project.project_end as projectEnd
+		from tbl_project
 	</select>
-	
+
+	<select id="projectView" parameterType="string"
+		resultType="project">
+		SELECT
+		tbl_project.project_no AS projectNo,
+		tbl_project.project_title AS projectTitle,
+		tbl_project.project_content AS projectContent,
+		tbl_project.project_end AS projectEnd,
+		tbl_emp.emp_name as empName
+
+		FROM
+		tbl_project
+		JOIN
+		tbl_emp
+		ON tbl_project.emp_code = tbl_emp.emp_code
+		WHERE
+		tbl_project.project_no = #{projectNo}
+
+	</select>
+
+	<select id="projectPartempList" parameterType="string"
+		resultType="projectPartemp">
+		select
+		tbl_emp.emp_code as empCode,
+		tbl_emp.emp_name as empName,
+		tbl_project_partemp.partemp_content as partempContent,
+		tbl_emp.team_code as teamCode,
+		tbl_emp.rank_code as rankCode
+		from tbl_project_partemp
+		join tbl_emp
+		on tbl_project_partemp.emp_code = tbl_emp.emp_code
+		where tbl_project_partemp.project_no = #{projectNo}
+	</select>
+
 	<select id="projectNo" resultType="string">
-		select to_char(sysdate,'yyyymmdd')||lpad(seq_project.nextVal,4,'0') as project_no from dual
+		select
+		to_char(sysdate,'yyyymmdd')||lpad(seq_project.nextVal,4,'0') as
+		project_no from dual
 	</select>
-	
+
 	<insert id="projectWrite" parameterType="project">
 		insert into tbl_project
 		(
-			project_no,
-			document_type_code,
-			emp_code,
-			project_title,
-			project_content,
-			project_end
+		project_no,
+		document_type_code,
+		emp_code,
+		project_title,
+		project_content,
+		project_end
 		)
 		values
 		(
-			#{projectNo},
-			'pj',
-			#{empCode},
-			#{projectTitle},
-			#{projectContent},
-			#{projectEnd}
+		#{projectNo},
+		'pj',
+		#{empCode},
+		#{projectTitle},
+		#{projectContent},
+		#{projectEnd}
 		)
 	</insert>
-	
+
 	<insert id="insertTeam" parameterType="map">
-    INSERT ALL
-    <foreach collection="teamCode" item="code">
-        INTO tbl_project_team (project_no, team_code)
-        VALUES (#{projectNo}, #{code})
-    </foreach>
-    SELECT 1 FROM DUAL
-</insert>
-	
-	<select id="commentNo" resultType="string">
-		select to_char(sysdate,'yyyymmddHHMM')||lpad(seq_project_comm.nextVal,4,'0') as comm_no from dual
-	</select>
-	
-	<insert id="insertComment" parameterType="string">
-		insert into tbl_project_comm (
-            comm_no, project_no, emp_code, comm_gb, comm_content, file_name, file_path, comm_date
-        ) 
-        values 
-        (
-            #{commNo}, #{projectNo}, #{empCode}, #{commGb}, #{commContent}, #{fileName}, #{filePath}, sysdate
-        )
+		INSERT ALL
+		<foreach collection="teamCode" item="code">
+			INTO tbl_project_team (project_no, team_code)
+			VALUES (#{projectNo}, #{code})
+		</foreach>
+		SELECT 1 FROM DUAL
 	</insert>
-	
-	<select id="selectProjectComm" parameterType="string" resultType="comment">
-		select 
-			comm_no as commNo,
-			emp_code as empCode,
-			comm_gb as commGb,
-			comm_content as commContent,
-			file_name as fileName,
-			file_path as filePath,
-			comm_date as commDate
-		from tbl_project_comm
-		where project_no = #{projectNo}
-	</select>
-	
-	<select id="selectCommNo" parameterType="string" resultType="comment">
+
+	<select id="commentNo" resultType="string">
 		select
-			comm_no as commNo,
-			emp_code as empCode,
-			comm_gb as commGb,
-			comm_content as commContent,
-			file_name as fileName,
-			file_path as filePath,
-			comm_date as commDate
+		to_char(sysdate,'yyyymmddHHMM')||lpad(seq_project_comm.nextVal,6,'0')
+		as comm_no from dual
+	</select>
+
+	<insert id="insertComment" parameterType="string">
+		insert into
+		tbl_project_comm (
+		comm_no, project_no, emp_code, comm_gb, comm_content, file_name, file_path,
+		comm_date
+		)
+		values
+		(
+		#{commNo}, #{projectNo}, #{empCode}, #{commGb}, #{commContent}, #{fileName},
+		#{filePath}, sysdate
+		)
+	</insert>
+
+	<select id="selectProjectComm" parameterType="string"
+		resultType="comment">
+		select
+		pc.comm_no AS commNo,
+		pc.project_no AS projectNo,
+		pc.emp_code AS empCode,
+		e.emp_name AS empName,
+		r.rank_name AS rankName,
+		t.team_name AS teamName,
+		pc.comm_content AS commContent,
+		pc.file_name AS fileName,
+		pc.file_path AS folePath,
+		pc.comm_date AS commDate
+		from tbl_project_comm pc
+		join tbl_emp e on pc.emp_code = e.emp_code
+		join tbl_rank r on e.rank_code = r.rank_code
+		join tbl_team t on e.team_code = t.team_code
+		order by pc.comm_date desc
+	</select>
+
+	<select id="selectCommNo" parameterType="string"
+		resultType="comment">
+		select
+		comm_no as commNo,
+		emp_code as empCode,
+		comm_gb as commGb,
+		comm_content as commContent,
+		file_name as fileName,
+		file_path as filePath,
+		comm_date as commDate
 		from tbl_project_comm
 		where comm_no = #{commNo}
 	</select>
-	
+
 	<update id="updateComment" parameterType="comment">
-		update tbl_project_comm 
-		set 
-			comm_content = #{commContent},
-			comm_gb = #{commGb},
-			file_path = #{filePath},
-			file_name = #{fileName}
-		where comm_no = #{commNo} 
-			
+		update tbl_project_comm
+		set
+		comm_content = #{commContent},
+		comm_gb = #{commGb},
+		file_path = #{filePath},
+		file_name = #{fileName}
+		where comm_no = #{commNo}
 	</update>
+
+	<delete id="deleteComment" parameterType="string">
+		delete from
+		tbl_project_comm
+		where comm_no = #{commNo}
+	</delete>
 </mapper>

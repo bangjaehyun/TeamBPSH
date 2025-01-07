@@ -33,7 +33,7 @@ th, td {
 }
 
 th {
-	background-color: #0087FF; /* 헤더 배경: 진한 파랑 */
+	background-color: #8FCEFF; /* 헤더 배경: 진한 파랑 */
 	color: #fff; /* 헤더 텍스트: 흰색 */
 	font-weight: bold;
 }
@@ -62,7 +62,7 @@ th {
     border: 1px solid #ddd;
     padding: 20px;
     text-align: center;
-    background-color: #0087FF;
+    background-color: #8FCEFF;
     border-radius: 10px;
     color: white;
 }
@@ -92,7 +92,7 @@ th {
 }
 /* 댓글 추가 버튼 스타일 */
 #submitComment {
-    background-color: #0056b3;
+    background-color: #DDDDFF;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -144,6 +144,37 @@ th {
 .editContent{
 	width: 100%;
     height: 100px;
+}
+
+/* 공통 버튼 스타일 */
+.comment-buttons button {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 5px 5px 0 0;
+}
+
+/* 수정 버튼 스타일 */
+.comment-buttons .edit-btn {
+    background-color: #fc8383; 
+    color: white;
+}
+
+.comment-buttons .edit-btn:hover {
+    background-color: #f9cfcf; 
+}
+
+/* 삭제 버튼 스타일 */
+.comment-buttons .delete-btn {
+    background-color: #a5a5ff; 
+    color: white;
+}
+
+.comment-buttons .delete-btn:hover {
+    background-color: #DDDDFF; 
 }
 
 
@@ -272,19 +303,25 @@ th {
 		                comments.forEach(function(comment,index) {
 		                    commentHtml += 
 		                    	'<li>'+ '<input type="hidden" class="comm-no" value="'+comment.commNo+'">'+
-		                    	'<p>' + comment.empCode + '</p>'
-		                     				 +  comment.commContent
+		                    	'<p>'+ comment.teamName+'&nbsp;' +comment.rankName + '&nbsp;' + comment.empName + '</p>'
+		                     				 +  comment.commContent  +'<br> 작성일 : '+ comment.commDate;
 		                        
-		                   	console.log(comment.filePath);
+		                   	
 		                    if (comment.fileName) {
-		                    	commentHtml += '<a href="javascript:void(0);" onclick="downloadFile(\'' + comment.filePath + '\', \'' + comment.fileName + '\')">' + comment.fileName + '</a>';
+		                    	commentHtml += '<br> 첨부파일 : <a href="javascript:void(0);" onclick="downloadFile(\'' + comment.filePath + '\', \'' + comment.fileName + '\')">' + comment.fileName + '</a>';
 		                        
 		                    }
 		                    
-		                    commentHtml += '<div class="comment-buttons">'
-                                + '<button type="button" class="edit-btn" onclick="editComment(\'' + comment.commNo + '\', \'' + comment.commContent + '\', \'' + comment.fileName + '\', \'' + comment.filePath +'\', \'' + comment.commGb + '\' )">수정</button>'
-                                + '<button type="button" class="delete-btn" onclick="deleteComment(\'' + comment.commNo + '\')">삭제</button>'
-                                + '</div>';
+		                    	 commentHtml += '<div class="comment-buttons">';
+		                         commentHtml += '<button type="button" class="edit-btn" onclick="editComment(\'' 
+		                             + comment.commNo + '\', \'' 
+		                             + comment.commContent + '\', \'' 
+		                             + comment.commGb + '\', \''  
+		                             + comment.fileName + '\', \'' 
+		                             + comment.filePath + '\')">수정</button>'; 
+
+		                             commentHtml += '<button type="button" class="delete-btn" onclick="deleteComment(\'' + comment.commNo + '\')">삭제</button>'
+		                             commentHtml += '</div>';
 							
 		                    commentHtml += '</li>';
 		                });
@@ -304,72 +341,89 @@ th {
 		}
 		
 		function editComment(commNo, commContent, commGb, fileName, filePath) {
-			var commentElement = $("li").has("input.comm-no[value='" + commNo + "']"); // 해당 commNo를 가진 <li> 찾기
+		    var commentElement = $("li").has("input.comm-no[value='" + commNo + "']");
 
-		    // 요소가 없을 경우 오류 방지
 		    if (commentElement.length === 0) {
-		        console.error("Error: #comment-" + commNo + " 요소를 찾을 수 없습니다.");
+		        console.error("Error: 해당 댓글 요소를 찾을 수 없습니다.");
 		        alert("댓글 요소를 찾을 수 없습니다.");
 		        return;
 		    }
 
+		    
 		    console.log("수정할 댓글 정보:", {
-		        commNo: commNo,
+		        commNo: commNo.trim(),  // 공백 제거
 		        commContent: commContent,
 		        commGb: commGb,
 		        fileName: fileName,
 		        filePath: filePath
 		    });
 
-		    // 기존 댓글 내용을 수정할 수 있도록 input 폼으로 변환
 		    var editFormHtml = "";
-		    editFormHtml += '<input type="hidden" class="comm-no" value="' + commNo + '">';
-		    editFormHtml += '<input type="text" class="editContent" value="' + commContent + '" style="width: 70%; margin-bottom: 5px;">';
-		    editFormHtml += '<input type="file" class="editFile" style="display: block; margin-top: 5px;">';
+		    editFormHtml += '<input type="hidden" class="comm-no" value="' + commNo.trim() + '">';
+		    editFormHtml += '<textarea class="editContent" style="width: 70%; height: 60px;">' + commContent + '</textarea>';
+		    editFormHtml += '<br>';
+		    editFormHtml += '<input type="file" class="editFile">';
 		    editFormHtml += '<input type="hidden" class="editCommGb" value="' + commGb + '">';
 
-		    if (fileName) {
-		        editFormHtml += '<p>첨부파일: ' + fileName + ' ';
-		        editFormHtml += '<a href="javascript:void(0);" onclick="downloadFile(\'' + filePath + '\', \'' + fileName + '\')">' + fileName + '</a>';
-		        editFormHtml += '</p>';
-		        editFormHtml += '<input type="checkbox" class="deleteFile" value="delete"> 기존 파일 삭제';
+		    // 📌 기존 파일이 있는 경우 파일 다운로드 링크 및 삭제 체크박스 추가
+		    if (fileName !== "없음") {
+		        editFormHtml += '<p>첨부파일: <a href="javascript:void(0);" onclick="downloadFile(\'' + filePath + '\', \'' + fileName + '\')">' + fileName + '</a></p>';
+		        editFormHtml += '<label><input type="checkbox" class="deleteFile"> 기존 파일 삭제</label>';
+		    } else {
+		        commGb = "0"; // 기존 파일이 없으면 commGb를 0으로 설정
 		    }
 
-		    // 저장 및 취소 버튼 추가
 		    editFormHtml += '<button type="button" class="save-edit-btn">저장</button>';
 		    editFormHtml += '<button type="button" class="cancel-edit-btn">취소</button>';
 
-		    // 기존 댓글을 수정 입력 폼으로 변경
 		    commentElement.html(editFormHtml);
+
+		    // 📌 파일이 선택되면 commGb 값을 1로 변경
+		    commentElement.find(".editFile").on("change", function() {
+		        commentElement.find(".editCommGb").val("1");
+		    });
+
+		    // 📌 기존 파일 삭제 체크박스 선택 시 commGb 값을 0으로 변경
+		    commentElement.find(".deleteFile").on("change", function() {
+		        if ($(this).is(":checked")) {
+		            commentElement.find(".editCommGb").val("0");
+		        }
+		    });
 		}
+			
 		$(document).on('click', '.save-edit-btn', function() {
-		    var commentElement = $(this).closest('li'); // 클릭한 버튼이 속한 li 찾기
-		    var commNo = commentElement.find('.comm-no').val(); // hidden input에서 commNo 가져오기
-		    var newContent = commentElement.find('.editContent').val(); // 수정된 댓글 내용
-		    var newFile = commentElement.find('.editFile')[0].files[0]; // 새 파일 선택
-		    var commGb = commentElement.find('.editCommGb').val(); // commGb 값
-		    var deleteFile = commentElement.find('.deleteFile').is(':checked') ? "delete" : "";
+		    var commentElement = $(this).closest('li');
+		    var commNo = commentElement.find('.comm-no').val().trim(); // 공백 제거
+		    var newContent = commentElement.find('.editContent').val();
+		    var newFile = commentElement.find('.editFile')[0].files[0];
+		    var commGb = commentElement.find('.editCommGb').val();
+		    var deleteFileChecked = commentElement.find('.deleteFile').is(':checked');
+
+		    // 기본값 설정
+		    commGb = commGb !== undefined && commGb !== "undefined" ? commGb : "0";
 
 		    console.log("수정된 데이터:", {
 		        commNo: commNo,
 		        commContent: newContent,
 		        commGb: commGb,
 		        file: newFile ? newFile.name : "첨부파일 없음",
-		        deleteFile: deleteFile
+		        deleteFile: deleteFileChecked ? "1" : "0"
 		    });
 
 		    var formData = new FormData();
 		    formData.append("commNo", commNo);
 		    formData.append("commContent", newContent);
-		    formData.append("commGb", commGb);
-		    formData.append("deleteFile", deleteFile); // 기존 파일 삭제 여부 전달
 
-		    if (newFile) {
-		        formData.append("file", newFile);
+		    if (deleteFileChecked) {
+		        formData.append("deleteFile", "1"); 
+		        formData.append("commGb", "0"); // 기존 파일 삭제 시 commGb = 0
+		    } else {
+		        formData.append("deleteFile", "0");
 		    }
 
-		    if (deleteFile) {
-		        formData.append("deleteFile", deleteFile);
+		    if (newFile) {
+		        formData.append("newFile", newFile);
+		        formData.append("commGb", "1"); // 새 파일 업로드 시 commGb = 1
 		    }
 
 		    $.ajax({
@@ -381,7 +435,7 @@ th {
 		        success: function(response) {
 		            if (response.success) {
 		                alert("댓글이 수정되었습니다.");
-		                loadComment(); // 수정 후 댓글 목록 다시 불러오기
+		                loadComment(); 
 		            } else {
 		                alert("댓글 수정 실패");
 		            }
@@ -399,7 +453,34 @@ th {
 		    loadComment(); // 댓글 목록 다시 불러와서 원래 내용으로 복구
 		});
 		
-		
+		function deleteComment(commNo) {
+		    if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
+		        return;
+		    }
+
+		    console.log("🔴 삭제할 댓글 번호:", commNo);
+
+		    $.ajax({
+		        url: "/project/deleteComment.do",
+		        type: "POST",
+		        data: { commNo: commNo },
+		        dataType: "json",
+		        success: function(response) {
+		            if (response.success) {
+		                console.log("✅ 댓글 삭제 성공: ", commNo);
+		                alert("댓글이 삭제되었습니다.");
+		                loadComment(); // 삭제 후 댓글 목록 다시 로드
+		            } else {
+		                console.log("❌ 댓글 삭제 실패");
+		                alert("댓글 삭제에 실패했습니다.");
+		            }
+		        },
+		        error: function() {
+		            console.log("❌ 서버 오류 발생");
+		            alert("서버 오류가 발생했습니다.");
+		        }
+		    });
+		}
 		
 		
 	
