@@ -1,5 +1,7 @@
 package kr.or.iei.emp.model.vo;
 
+import java.util.ArrayList;
+
 public class Emp {
 	private String empCode;
 	private String teamCode;
@@ -21,6 +23,8 @@ public class Emp {
 	private int readCount; // 읽지않은 채팅 갯수
 	private int alarmCount;// 읽지 않은 알람 갯수
 
+	private ArrayList<Check> checkList;
+
 	public Emp() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -29,7 +33,7 @@ public class Emp {
 	public Emp(String empCode, String teamCode, String rankCode, String deptCode, String empId, String empPw,
 			String empName, String empPhone, String empRetire, String empDate, String rankName, String deptName,
 			String salary, String vacationTotal, String vacationUse, boolean admin, boolean login, int readCount,
-			int alarmCount) {
+			int alarmCount, ArrayList<Check> checkList) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
@@ -50,6 +54,7 @@ public class Emp {
 		this.login = login;
 		this.readCount = readCount;
 		this.alarmCount = alarmCount;
+		this.checkList = checkList;
 	}
 
 	public String getEmpCode() {
@@ -204,6 +209,14 @@ public class Emp {
 		this.alarmCount = alarmCount;
 	}
 
+	public ArrayList<Check> getCheckList() {
+		return checkList;
+	}
+
+	public void setCheckList(ArrayList<Check> checkList) {
+		this.checkList = checkList;
+	}
+
 	@Override
 	public String toString() {
 		return "Emp [empCode=" + empCode + ", teamCode=" + teamCode + ", rankCode=" + rankCode + ", deptCode="
@@ -211,7 +224,7 @@ public class Emp {
 				+ ", empRetire=" + empRetire + ", empDate=" + empDate + ", rankName=" + rankName + ", deptName="
 				+ deptName + ", salary=" + salary + ", vacationTotal=" + vacationTotal + ", vacationUse=" + vacationUse
 				+ ", admin=" + admin + ", login=" + login + ", readCount=" + readCount + ", alarmCount=" + alarmCount
-				+ "]";
+				+ ", checkList=" + checkList + "]";
 	}
 
 }

@@ -16,6 +16,7 @@ import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
+import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
@@ -337,6 +338,21 @@ public class EmpService {
 		}
 		
 		return result;
+	}
+
+	public ArrayList<Emp> empCheckMonth(String yearMonth) {
+		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
+		
+		for(Emp e : empList) {
+			HashMap<String,String> map = new HashMap<String, String>();
+			map.put("empCode", e.getEmpCode());
+			map.put("yearMonth", yearMonth);
+			
+			ArrayList<Check> checkList = (ArrayList<Check>)dao.empCheckMonth(map);
+			e.setCheckList(checkList);
+		}
+		
+		return empList;
 	}
 
 }

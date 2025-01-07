@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
+import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
@@ -242,9 +243,8 @@ public class EmpDao {
 		return sqlSession.selectOne("emp.selectAlarmCount", empCode);
 	}
 
-
-
-
-
+	public List<Check> empCheckMonth(HashMap<String, String> map) {
+		return sqlSession.selectList("emp.empCheckMonth", map);
+	}
 
 }
