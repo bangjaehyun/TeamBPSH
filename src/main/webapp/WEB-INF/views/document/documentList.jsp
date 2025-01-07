@@ -206,7 +206,7 @@ function viewOneDoc(e){
 	
 	}
 	
-	
+	console.log(type);
 	$.ajax({
 		url:urls,
 		type:"post",

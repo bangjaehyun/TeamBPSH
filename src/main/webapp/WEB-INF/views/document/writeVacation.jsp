@@ -559,7 +559,7 @@ if (halfChecked) {
 	    halfTime.css('display','flex');
 	    result.css('display','none');
 } else {
-		endDate.css('display','block');
+		endDate.css('display','flex');
 		halfTime.css('display','none');
 		result.css('display','block');
 //     endDate.style.display = 'block';

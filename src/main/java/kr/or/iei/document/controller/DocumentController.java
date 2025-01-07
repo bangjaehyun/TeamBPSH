@@ -1,7 +1,9 @@
 package kr.or.iei.document.controller;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.util.Locale;
 import java.util.Random;
 import javax.annotation.Resource;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,16 +31,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.messaging.SubProtocolWebSocketHandler;
+
 import com.google.gson.Gson;
 
 import kr.or.iei.common.emitter.Emitter;
 import kr.or.iei.document.model.service.DocumentService;
+import kr.or.iei.document.model.vo.Business;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
@@ -89,7 +96,7 @@ public class DocumentController {
 			}
 			
 			case("bt"):{
-				file="writeBuisiness";	
+				file="writeBusiness";	
 				break;
 			}
 			
@@ -208,7 +215,7 @@ public class DocumentController {
 		 File savedFile = new File(root);
 	        try {
 				uploadFile.transferTo(savedFile);
-				System.out.println(savedFile);
+				
 			} catch (IllegalStateException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -232,8 +239,7 @@ public class DocumentController {
 				}
 			}else {
 				try {
-					System.out.println(selDay.getStartDay());
-					System.out.println(selDay.getEndDay());
+					
 					Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay().replace("-", ""));
 					Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay().replace("-", ""));
 					long diffInMillies = endDay.getTime() - startDay.getTime();
@@ -322,6 +328,7 @@ public class DocumentController {
 			    }
 			    document.setSignList(signList);
 			
+			    //참조자
 			    ArrayList<DocumentReference> refList = new ArrayList<>();
 			    for (String refCode : refEmpList) {
 			        DocumentReference ref = new DocumentReference();
@@ -350,7 +357,10 @@ public class DocumentController {
 				
 				
 			int result=service.insertVacation(document,selDay, vacHalf);
+			
+			
 			ArrayList<DocumentSign> signs=service.selectSignList(documentCode);
+			
 			Alarm alarm = new Alarm();
 			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
 			alarm.setEmpCode(signs.get(0).getEmpCode());
@@ -361,9 +371,28 @@ public class DocumentController {
 			alarm.setUrlParam(json.toJSONString());
 			
 			int res=service.insertAlarm(alarm);
-			if(result>0) {
-				emitter.sendEvent(signList.get(0).getEmpCode(), alarm.getAlarmComment());
+			if(res>0&&result>0) {
+				emitter.sendEvent(signs.get(0).getEmpCode(), alarm.getAlarmComment());
 			}
+			
+			ArrayList<DocumentReference>refs=service.selectRefList(documentCode);
+			
+			for(int i=0;i<refs.size();i++) {
+				Alarm refAlarm=new Alarm();
+				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
+				refAlarm.setEmpCode(refs.get(i).getEmpCode());
+				refAlarm.setRefUrl("/doc/selectOneVa.do");
+				JSONObject json2=new JSONObject();
+				json2.put("documentCode", documentCode);
+				refAlarm.setUrlParam(json2.toJSONString());
+				 int res2=service.insertAlarm(refAlarm);
+				if(res2>0&&result>0) {
+					emitter.sendEvent(refs.get(i).getEmpCode(), refAlarm.getAlarmComment());
+				}
+				
+				}
+			
+			
 			return result;
 		}
 		
@@ -454,24 +483,182 @@ public class DocumentController {
 
 			int result=service.insertSpending(document,spendingList);
 			
+			
+			
+			ArrayList<DocumentSign> signs=service.selectSignList(documentCode);
 			Alarm alarm = new Alarm();
-			alarm.setAlarmComment(signList.get(0).getEmpName()+"님 결재할 차례입니다");
-			alarm.setEmpCode(signList.get(0).getEmpCode());
-			alarm.setRefUrl("/doc/selectOneVa.do");
+			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
+			alarm.setEmpCode(signs.get(0).getEmpCode());
+			alarm.setRefUrl("/doc/selectOneSp.do");
 			
 			JSONObject json=new JSONObject();
 			json.put("documentCode", documentCode);
 			alarm.setUrlParam(json.toJSONString());
 			
 			int res=service.insertAlarm(alarm);
-			if(result>0) {
-				emitter.sendEvent(signList.get(0).getEmpCode(), alarm.getAlarmComment());
+			if(result>0&&res>0) {
+				emitter.sendEvent(signs.get(0).getEmpCode(), alarm.getAlarmComment());
 			}
 			
+			ArrayList<DocumentReference>refs=service.selectRefList(documentCode);
+			
+			for(int i=0;i<refs.size();i++) {
+				Alarm refAlarm=new Alarm();
+				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
+				refAlarm.setEmpCode(refs.get(i).getEmpCode());
+				refAlarm.setRefUrl("/doc/selectOneSp.do");
+				JSONObject json2=new JSONObject();
+				json2.put("documentCode", documentCode);
+				refAlarm.setUrlParam(json2.toJSONString());
+				 int res2=service.insertAlarm(refAlarm);
+				if(res2>0&&result>0) {
+					emitter.sendEvent(refs.get(i).getEmpCode(), refAlarm.getAlarmComment());
+				}
+				
+				}
+			
+			return result;
+		}
+		
+		//출장보고서 작성
+		@PostMapping(value="writeBusiness.do",produces="application/json; charset=utf-8")
+		@ResponseBody
+		public int writeBusiness(HttpSession session,HttpServletRequest request,Document document,@RequestParam MultipartFile[] files,@RequestParam List<String> signEmpList, @RequestParam List<String> refEmpList,Business business,Model m ) {
+			
+			String root=request.getSession().getServletContext().getRealPath("/resources/");
+			
+			//파일관련 기능
+			ArrayList<DocumentFile>fileList=new ArrayList<DocumentFile>();
+			
+			String documentCode=service.selectDocumentCode();
+			document.setDocumentCode(documentCode);
+			Date date=new Date();
+			String today=new SimpleDateFormat("yyyyMMdd").format(date);
+			
+			String savePath = root + "documentFiles" + File.separator + today + File.separator;
+
+			
+			File directory=new File(savePath);
+			if(!directory.exists()) {
+				directory.mkdir();
+			}
+			today=new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+			for (int i=0;i<files.length;i++) {
+				MultipartFile file=files[i];
+				
+				if(!file.isEmpty()) {
+					
+					String originalFileName =file.getOriginalFilename();
+					String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+					
+					
+					
+					String filePath=fileName+"_"+today+extension;
+					savePath+=filePath;
+					
+					BufferedOutputStream bos=null;
+					
+					try {
+							byte []bytes=file.getBytes();
+							FileOutputStream fos=new FileOutputStream(new File(savePath));
+							bos = new BufferedOutputStream(fos);
+							bos.write(bytes);
+							
+							DocumentFile docFile=new DocumentFile();
+							docFile.setFileName(originalFileName);
+							docFile.setFilePath(filePath);
+							docFile.setDocumentCode(documentCode);
+							fileList.add(docFile);
+					}catch(IOException e) {
+						e.printStackTrace();
+					}finally {
+						try {
+							bos.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			document.setFileList(fileList);
+			
+			
+			//결재자
+			 ArrayList<DocumentSign> signList = new ArrayList<>();
+			    for (int i = 0; i < signEmpList.size(); i++) {
+			        DocumentSign sign = new DocumentSign();
+			        sign.setEmpCode(signEmpList.get(i));
+			        sign.setDocumentSeq(String.valueOf(i + 1));
+			        sign.setDocumentCode(documentCode);
+			        signList.add(sign);
+			    }
+			    document.setSignList(signList);
+			
+			    //참조자
+			    ArrayList<DocumentReference> refList = new ArrayList<>();
+			    for (String refCode : refEmpList) {
+			        DocumentReference ref = new DocumentReference();
+			        ref.setEmpCode(refCode);
+			        ref.setDocumentCode(documentCode);
+			        refList.add(ref);
+			    }
+			    document.setRefList(refList);
+			
+			    business.setDocumentCode(documentCode);
+			    String startdate=business.getBusinessStart().replace("-", "");
+				String endDate=business.getBusinessEnd().replace("-", "");
+	    		business.setBusinessStart(startdate);
+			    business.setBusinessEnd(endDate);		
+				
+				
+			int result=service.insertBusiness(document,business);
+			
+			//처음 지정된 결재자
+			ArrayList<DocumentSign> signs=service.selectSignList(documentCode);
+			
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
+			alarm.setEmpCode(signs.get(0).getEmpCode());
+			alarm.setRefUrl("/doc/selectOneBt.do");
+			
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			
+			int res=service.insertAlarm(alarm);
+			if(res>0&&result>0) {
+				emitter.sendEvent(signs.get(0).getEmpCode(), alarm.getAlarmComment());
+			}
+			
+			//모든 참조자
+			ArrayList<DocumentReference>refs=service.selectRefList(documentCode);
+			
+			for(int i=0;i<refs.size();i++) {
+				Alarm refAlarm=new Alarm();
+				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
+				refAlarm.setEmpCode(refs.get(i).getEmpCode());
+				refAlarm.setRefUrl("/doc/selectOneBt.do");
+				JSONObject json2=new JSONObject();
+				json2.put("documentCode", documentCode);
+				
+				refAlarm.setUrlParam(json2.toJSONString());
+				 int res2=service.insertAlarm(refAlarm);
+				if(res2>0&&result>0) {
+					emitter.sendEvent(refs.get(i).getEmpCode(), refAlarm.getAlarmComment());
+				}
+				
+				}
 			
 			
 			return result;
 		}
+		
+		
+		
+		
 		
 
 
@@ -502,11 +689,11 @@ public class DocumentController {
 		Document doc=service.selectOneDoc(documentCode);
 		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
 		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
-		model.addAttribute("fileList",fileList);
+		doc.setFileList(fileList);
 		model.addAttribute("signList",signList);
 		model.addAttribute("doc",doc);
 		model.addAttribute("documentCode", documentCode);
-		System.out.println(signList);
+		
 		DocumentSelectDay selDay=service.selectAnnual(documentCode);
 		
 		String signableEmp="";
@@ -522,7 +709,7 @@ public class DocumentController {
 		
 		String vacType;
 		if(selDay!=null) {
-			System.out.println(selDay);
+			
 			vacType="annual";
 			model.addAttribute("vacType",vacType);
 			try {
@@ -534,7 +721,7 @@ public class DocumentController {
 				model.addAttribute("endDay", EndDay);
 				model.addAttribute("startDay",StartDay);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		
@@ -544,7 +731,7 @@ public class DocumentController {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 			vacType="half";
 			VacationHalf half=service.selectHalf(documentCode);
-			System.out.println(half);
+			
 			model.addAttribute("vacType",vacType);
 			
 			try {
@@ -576,9 +763,9 @@ public class DocumentController {
 		for(int i=0;i<signList.size();i++) {
 			if(Integer.parseInt(signList.get(i).getSignYn())==0) {
 				signableEmp=signList.get(i).getEmpCode();
-				break;
+				break;//결재할 순서인 사람
 			}else if(Integer.parseInt(signList.get(i).getSignYn())==-1) {
-				break;
+				break; //반려된 상황
 			}
 		}
 		
@@ -595,13 +782,30 @@ public class DocumentController {
 	
 	//출장보고서 불러오기
 	@PostMapping("selectOneBt.do")
-	public String SelectOneBuisinessTrip(String documentCode) {
+	public String SelectOneBusinessTrip(String documentCode,Model model) {
 		Document doc=service.selectOneDoc(documentCode);
 		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
-		
-		
 		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
-		return "";
+		Business business=service.selectOneBt(documentCode);
+		String signableEmp="";
+		for(int i=0;i<signList.size();i++) {
+			if(Integer.parseInt(signList.get(i).getSignYn())==0) {
+				signableEmp=signList.get(i).getEmpCode();
+				break;//결재할 순서인 사람
+			}else if(Integer.parseInt(signList.get(i).getSignYn())==-1) {
+				break; //반려된 상황
+			}
+		}
+		
+		doc.setFileList(fileList);
+		model.addAttribute("signList",signList);
+		model.addAttribute("documentCode",documentCode);
+		model.addAttribute("signableEmp",signableEmp);
+		model.addAttribute("doc",doc);
+		model.addAttribute("business",business);
+		
+		
+		return "document/viewBusiness";
 	}
 	
 	//협조전 불러오기
@@ -783,14 +987,14 @@ public class DocumentController {
 			//최종승인 시 각 문서에 따른 추가기능
 			switch(type) {
 			case "sp":{
-				//지출결의서는 딱히적용할 것이 없음
+				//지출결의서는 딱히적용할 것이 없음(추후 추가작업 있을시 추가구현)
 				break;
 			}
 			case "va":{
 				//최종승인시 휴가 적용 및 출퇴근 비고 정리
 				DocumentSelectDay selDay=service.selectAnnual(documentCode);
 				if(selDay!=null) {
-					//연차일 시 
+					//연차일 시 적용.
 					
 					try {
 						Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
@@ -804,7 +1008,7 @@ public class DocumentController {
 						vacMap.put("days",String.valueOf(days));
 						
 						int chk1=service.updateVac(vacMap);
-						System.out.println("res : "+res);
+						
 						if(chk1>0) {
 						int chk2=0;
 						DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -851,7 +1055,35 @@ public class DocumentController {
 			}
 			
 			case "bt":{
+				//여기서 적용 안됨
+				Business business=service.selectOneBt(documentCode);
 				
+				int chk=0;
+				try {
+					DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd");
+					
+					LocalDate startDate = LocalDate.parse(business.getBusinessStart(),formatter);
+					LocalDate endDate = LocalDate.parse(business.getBusinessEnd(),formatter);
+					ArrayList<Commute>btList=new ArrayList<Commute>();
+					while(!startDate.isAfter(endDate)) {
+						Commute comm=new Commute();
+						comm.setAttDate(startDate.format(formatter));
+						comm.setCheckNote("출장");
+						comm.setEmpCode(writer);
+						System.out.println(comm);
+						btList.add(comm);
+						startDate = startDate.plusDays(1); 
+					}
+					
+					for(int i=0;i<btList.size();i++) {
+						Commute commute=btList.get(i);
+						chk+=service.insertAttBt(commute);
+					}
+					
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			}
 			
@@ -866,6 +1098,47 @@ public class DocumentController {
 		return result;
 	}
 	
+	@GetMapping("fileDown.do")
+	@ResponseBody
+	public int downloadFile(HttpServletRequest request, HttpServletResponse response, String fileName, String filePath) {
+	    String root = request.getSession().getServletContext().getRealPath("/resources/");
+	    String target = "_";
+	    int startIdx = filePath.indexOf(target) + 1;
+	    String writedate = filePath.substring(startIdx, startIdx + 8);
+	    String savePath = root + "/documentFiles/" + writedate + "/";
 
+	    File file = new File(savePath + filePath);
+	    if (!file.exists()) {
+	        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+	        return -1; // 파일이 없는 경우
+	    }
+
+	    try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+	         BufferedOutputStream bos = new BufferedOutputStream(response.getOutputStream())) {
+
+	        
+
+	        // 파일명 설정
+	        String resFileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+	        response.setHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", resFileName));
+
+	        // 파일 데이터 전송
+	        byte[] buffer = new byte[4096];
+	        int bytesRead;
+	        while ((bytesRead = bis.read(buffer)) != -1) {
+	            bos.write(buffer, 0, bytesRead);
+	        }
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	        return -1;
+	    }
+
+	    return 1; // 성공
+	}
+
+	
+	
 
 }

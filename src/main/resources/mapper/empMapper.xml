@@ -626,4 +626,12 @@
 		total_vacation 
 		from tbl_vacation_count where emp_code=#{_string}
     </select>
+    
+     <insert id="insertAttBt"
+     parameterType="commute">
+     insert into tbl_check
+     (att_date,emp_code,check_note)
+     values
+     (#{attDate},#{empCode},#{checkNote})
+     </insert>
 </mapper>
