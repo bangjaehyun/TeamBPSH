@@ -168,7 +168,18 @@ th {
 				<td>${project.projectEnd}</td>
 			</tr>
 		</table>
-
+		
+		<div id="addEmp">
+				<label for="empSelect">사원 선택 : </label>
+				<select id="empSelect">
+					<c:forEach var="emp" items="${empList}">
+						<option value="${emp.empCode}">${emp.empName}(${emp.rankCode})</option>
+					</c:forEach>
+				</select>
+				<input type="text" name="partempContent" placeholder="역할 입력">
+				<button type="button" id="addEmp">참여추가</button>
+			</div>
+		
 		<!-- 참여 사원 리스트 -->
 		<div class="participants">
 			<h2>참여 사원 리스트</h2>
@@ -188,6 +199,9 @@ th {
 							<td>${projectPartempList.empName}</td>
 							<td>${projectPartempList.rankCode}</td>
 							<td>${projectPartempList.partempContent}</td>
+							<td>
+                    			<button class="removeEmp" data-empcode="${projectEmp.empCode}">삭제</button>
+               				</td>
 						</tr>
 					</c:forEach>
 
@@ -390,80 +404,166 @@ th {
 		
 	
 		$(document).ready(function() {
-							loadComment();
-							const labels = [ 'Module 1', 'Module 2', 'Module 3' ]; // 데이터 확인
-							const progressData = [ 75, 50, 90 ]; // 진행률 데이터 확인
-							if (!labels.length || !progressData.length) {
-								console.error("차트 데이터가 비어 있습니다.");
-							}
-							var projectNo = $('input[name="projectNo"]').val();
-							function loadChart() {
-								const ctx = document
-										.getElementById('progressChart');
+		    loadComment();
+		    loadEmployeeList(); // 참여 사원 리스트 불러오기
 
-								if (ctx) {
-									new Chart(
-											ctx,
-											{
-												type : 'bar',
-												data : {
-													labels : labels,
-													datasets : [ {
-														label : '진행률 (%)',
-														data : progressData,
-														backgroundColor : 'rgba(75, 192, 192, 0.2)',
-														borderColor : 'rgba(75, 192, 192, 1)',
-														borderWidth : 1
-													} ]
-												},
-												options : {
-													scales : {
-														y : {
-															beginAtZero : true,
-															max : 100
-														}
-													}
-												}
-											});
-								} else {
-									console.error("Canvas 요소를 찾을 수 없습니다.");
-								}
-							}
+		    // 📌 프로젝트 진행률 차트
+		    const labels = ['Module 1', 'Module 2', 'Module 3'];
+		    const progressData = [75, 50, 90];
 
-							// 파일 업로드 시 comm_gb 값 변경
-						    $("#fileUpload").on("change", function() {
-						        let commGbInput = $("#comm_gb");
-						        if (this.files.length > 0) {
-						            commGbInput.val("1"); // 파일이 있으면 comm_gb = 1
-						        } else {
-						            commGbInput.val("0"); // 파일이 없으면 comm_gb = 0
-						        }
-						    });
+		    if (!labels.length || !progressData.length) {
+		        console.error("차트 데이터가 비어 있습니다.");
+		    }
 
-						    // 댓글 추가 버튼 클릭 이벤트
-						    $("#submitComment").on("click", function() {
-						        let formData = new FormData($("#commentForm")[0]); // 폼 데이터 가져오기
-						        $.ajax({
-						            url: "/project/submitComment.do", // 서버 서블릿 주소
-						            type: "POST",
-						            data: formData,
-						            processData: false, // FormData 사용할 때 필요
-						            contentType: false, // FormData 사용할 때 필요
-						            dataType: "json", // JSON 응답 받기
-						            success: function(res) {
-						                if (res) {
-						                	console.log(res);
-						                    alert("댓글이 추가되었습니다.");
-						                } else {
-						                    alert("댓글 추가 실패");
-						                }
-						            },
-						            error: function() {
-						                console.log("ajax오류");
-						            }
-						        });
-						    });
-				});
+		    function loadChart() {
+		        const ctx = document.getElementById('progressChart');
+
+		        if (ctx) {
+		            new Chart(ctx, {
+		                type: 'bar',
+		                data: {
+		                    labels: labels,
+		                    datasets: [{
+		                        label: '진행률 (%)',
+		                        data: progressData,
+		                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+		                        borderColor: 'rgba(75, 192, 192, 1)',
+		                        borderWidth: 1
+		                    }]
+		                },
+		                options: {
+		                    scales: {
+		                        y: {
+		                            beginAtZero: true,
+		                            max: 100
+		                        }
+		                    }
+		                }
+		            });
+		        } else {
+		            console.error("Canvas 요소를 찾을 수 없습니다.");
+		        }
+		    }
+
+		    // 📌 파일 업로드 시 comm_gb 값 변경
+		    $("#fileUpload").on("change", function() {
+		        let commGbInput = $("#comm_gb");
+		        commGbInput.val(this.files.length > 0 ? "1" : "0");
+		    });
+
+		    // 📌 댓글 추가 버튼 클릭 이벤트
+		    $("#submitComment").on("click", function() {
+		        let formData = new FormData($("#commentForm")[0]);
+		        $.ajax({
+		            url: "/project/submitComment.do",
+		            type: "POST",
+		            data: formData,
+		            processData: false,
+		            contentType: false,
+		            dataType: "json",
+		            success: function(res) {
+		                if (res) {
+		                    console.log(res);
+		                    alert("댓글이 추가되었습니다.");
+		                    loadComment(); // 댓글 목록 갱신
+		                } else {
+		                    alert("댓글 추가 실패");
+		                }
+		            },
+		            error: function() {
+		                console.log("ajax 오류");
+		            }
+		        });
+		    });
+
+		    // 📌 참여 사원 추가 버튼 클릭 이벤트
+		    $("#addEmpBtn").on("click", function() {
+		        var empCode = $("#empSelect").val();
+		        var partempContent = $('input[name="partempContent"]').val();
+		        var projectNo = $('input[name="projectNo"]').val();
+
+		        if (!partempContent) {
+		            alert("역할을 입력하세요.");
+		            return;
+		        }
+
+		        $.ajax({
+		            url: "/project/addPartEmp.do",
+		            type: "POST",
+		            data: {
+		                empCode: empCode,
+		                partempContent: partempContent,
+		                projectNo: projectNo
+		            },
+		            success: function(response) {
+		                if (response.success) {
+		                    alert("참여 사원이 추가되었습니다.");
+		                    loadEmployeeList(); // 참여 사원 리스트 새로고침
+		                } else {
+		                    alert("참여 사원 추가 실패");
+		                }
+		            },
+		            error: function() {
+		                alert("서버 오류 발생");
+		            }
+		        });
+		    });
+
+		    // 📌 참여 사원 삭제 버튼 클릭 이벤트
+		    $(document).on("click", ".removeEmp", function() {
+		        var empCode = $(this).data("empcode");
+		        var projectNo = $('input[name="projectNo"]').val();
+
+		        $.ajax({
+		            url: "/project/removeEmployee.do",
+		            type: "POST",
+		            data: {
+		                empCode: empCode,
+		                projectNo: projectNo
+		            },
+		            success: function(response) {
+		                if (response.success) {
+		                    alert("참여 사원이 삭제되었습니다.");
+		                    loadEmployeeList(); // 참여 사원 리스트 새로고침
+		                } else {
+		                    alert("삭제 실패");
+		                }
+		            },
+		            error: function() {
+		                alert("서버 오류 발생");
+		            }
+		        });
+		    });
+
+		    // 📌 참여 사원 리스트 로딩 함수
+		    function loadEmployeeList() {
+		        var projectNo = $('input[name="projectNo"]').val();
+
+		        $.ajax({
+		            url: "/project/partEmpList.do",
+		            type: "POST",
+		            data: { projectNo: projectNo },
+		            dataType: "json",
+		            success: function(data) {
+		                var html = "";
+		                data.forEach(function(emp) {
+		                    html += "<tr>";
+		                    html += "<td>" + emp.empCode + "</td>";
+		                    html += "<td>" + emp.empName + "</td>";
+		                    html += "<td>" + emp.rankCode + "</td>";
+		                    html += "<td>" + emp.partempContent + "</td>";
+		                    html += "<td><button class='removeEmp' data-empcode='" + emp.empCode + "'>삭제</button></td>";
+		                    html += "</tr>";
+		                });
+
+		                $("#employeeTableBody").html(html);
+		            },
+		            error: function() {
+		                console.log("사원 리스트 로딩 실패");
+		            }
+		        });
+		    }
+		});
 	</script>
 </body>
 </html>
