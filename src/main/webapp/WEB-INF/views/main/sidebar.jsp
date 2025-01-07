@@ -210,7 +210,9 @@
      
      <%--5번째 li 태그로 이동--%>
      $('.side-li:nth-child(5)').on('click',function(){
-    	 pageMove('/vote/list.do');
+    	 const data = {"startCount" : 1,
+    			 	   "endCount" : 15}
+    	 pageMoveParam('/vote/list.do', data);
     });
     
     <%--main 페이지로 이동--%>

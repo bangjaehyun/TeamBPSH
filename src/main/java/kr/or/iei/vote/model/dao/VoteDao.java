@@ -14,6 +14,7 @@ import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.vote.model.vo.Vote;
 import kr.or.iei.vote.model.vo.VoteEmpList;
 import kr.or.iei.vote.model.vo.VoteList;
+import kr.or.iei.vote.model.vo.VotePaging;
 
 @Repository("voteDao")
 public class VoteDao {
@@ -22,8 +23,8 @@ public class VoteDao {
 	@Qualifier("sqlSessionTemplate")
 	private SqlSessionTemplate sqlSession;
 	
-	public List<Vote> selectVoteList() {
-		return sqlSession.selectList("vote.selectList");
+	public List<Vote> selectVoteList(VotePaging votePaging) {
+		return sqlSession.selectList("vote.selectList", votePaging);
 	}
 
 	public String getVoteNo() {
@@ -68,6 +69,10 @@ public class VoteDao {
 
 	public int insertAlarm(Alarm alarm) {
 		return sqlSession.insert("vote.insertAlarm", alarm);
+	}
+
+	public int selectVoteListCount() {
+		return sqlSession.selectOne("vote.selectVoteListCount");
 	}
 
 }

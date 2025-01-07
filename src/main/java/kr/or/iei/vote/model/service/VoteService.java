@@ -24,6 +24,7 @@ import kr.or.iei.vote.model.dao.VoteDao;
 import kr.or.iei.vote.model.vo.Vote;
 import kr.or.iei.vote.model.vo.VoteEmpList;
 import kr.or.iei.vote.model.vo.VoteList;
+import kr.or.iei.vote.model.vo.VotePaging;
 
 @Service("voteService")
 public class VoteService {
@@ -36,8 +37,18 @@ public class VoteService {
 	@Qualifier("emitter")
 	private Emitter emitter;
 
-	public ArrayList<Vote> selectVoteList() {
-		return (ArrayList<Vote>)dao.selectVoteList();
+	public VotePaging selectVoteList(VotePaging votePaging) {
+		
+		VotePaging voteNavi = new VotePaging();
+		int totalCount = dao.selectVoteListCount();
+		
+		if(totalCount > 0) {
+			ArrayList<Vote> voteList = (ArrayList<Vote>)dao.selectVoteList(votePaging);
+			voteNavi.setVoteList(voteList);
+			voteNavi.setTotalCount(String.valueOf(totalCount));
+		}
+		
+		return voteNavi;
 	}
 
 	@Transactional
@@ -122,6 +133,15 @@ public class VoteService {
 		}
 		
 		return result;
+	}
+
+	public VotePaging addVoteList(VotePaging votePaging) {
+		VotePaging voteNavi = new VotePaging();
+		
+		ArrayList<Vote> voteList = (ArrayList<Vote>)dao.selectVoteList(votePaging);
+		voteNavi.setVoteList(voteList);
+		
+		return voteNavi;
 	}
 	
 }

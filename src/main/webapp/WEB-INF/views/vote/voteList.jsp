@@ -60,6 +60,29 @@
 	transform: scale(1.1);
 	text-transform: scale(1.1);
 }
+
+.vote-tr>td>a{
+	text-decoration: none;
+	color : black;
+}
+
+.vote-tr>td:nth-child(3){
+	max-width : 200px;
+ 	overflow: hidden;
+    text-overflow: ellipsis;
+}
+.seeMore{
+	width: 100%;
+	
+}
+
+.seeMore>button{
+	width: 100%;
+	font-size : 15px;
+	color: white;
+	background: #9fd1fe;
+	border: none;
+}
 </style>
 </head>
 <body>
@@ -76,7 +99,7 @@
 				<th>마감일</th>
 			</tr>
 			<c:forEach var="vote" items="${voteList}">
-				<tr>
+				<tr class="vote-tr">
 					<td>${vote.empName}</td>
 					<td><a href="javascript:void(0)" onclick="voteDetail('${vote.voteNo}')">${vote.voteTitle}</a></td>
 					<td>${vote.voteContent}</td>
@@ -85,9 +108,22 @@
 				</tr>
 			</c:forEach>
 		</table>
+		<div class="seeMore">
+			<button onclick="seeMore()">더보기</button>
+		</div>
 	</div>
 	
 	<script>
+	var startCount = 16;
+	$(document).ready(function(){
+		
+		if(${voteTotalCount} < startCount){
+			$('.seeMore').css('display','none');
+		}
+		
+	});
+	
+	
 	function voteCreate(){
 		pageMove('/vote/createVote.do');
 	}
@@ -96,6 +132,59 @@
 					  "empCode" : '${loginEmp.empCode}'};
 		
 		pageMoveParam('/vote/voteDetail.do', data);
+	}
+	
+	function seeMore(){
+		$.ajax({
+			url : "/vote/addVoteList.do",
+			type : "post",
+			data : {"startCount" : startCount,
+				    "endCount" : startCount + 14},
+			success : function(res){
+				addVoteList(res);
+				startCount += 15;
+				
+				if(${voteTotalCount} < startCount){
+					$('.seeMore').css('display','none');
+				}
+			},
+			error : function(){
+				console.log("ajax 오류");
+			}
+		});
+	}
+	
+	function addVoteList(voteList){
+		for(let i in voteList){
+			let vote = voteList[i];
+			
+			let trEl = $('<tr>');
+			let nameEl = $('<td>');
+			let titleEl = $('<td>');
+			let contentEl = $('<td>');
+			let startEl = $('<td>');
+			let endEl = $('<td>');
+			let aEl = $('<a>');
+			
+			
+			aEl.attr('href', 'javascript:void(0)');
+			aEl.attr('onclick', 'voteDetail("' + vote.voteNo + '")');
+			aEl.html(vote.voteTitle);
+			nameEl.html(vote.empName);
+			contentEl.html(vote.voteContent);
+			startEl.html(vote.voteStart);
+			endEl.html(vote.voteEnd);
+			titleEl.append(aEl);
+			
+			trEl.attr('class','vote-tr');
+			trEl.append(nameEl);
+			trEl.append(titleEl);
+			trEl.append(contentEl);
+			trEl.append(startEl);
+			trEl.append(endEl);
+			
+			$('.voteTbl').append(trEl);
+		}
 	}
 	</script>
 </body>

@@ -69,7 +69,9 @@
 }
 
 .manager-content table th {
+	background : #b2b2b2;
 	font-size: 13px;
+	color: white;
 }
 
 .manager-content table td {
@@ -96,9 +98,6 @@
  	display: none; 
 }
 
-.check{
-	background: #b2b2b2;
-}
 
 .noMessage-div{
 	width: 100%;
@@ -142,11 +141,11 @@
 			<button class="excelOutput-btn" onclick="exportExcel()">엑셀 출력</button>
 		</div>
 		<div class="manager-menu">
-			<div>
-				<a id="salesMenu" href="javascript:void(0)" onclick="menuChange('sales')">매출</a>
+			<div  id="salesMenu">
+				<a href="javascript:void(0)" onclick="menuChange('sales')">매출</a>
 			</div>
-			<div>
-				<a id="spendingMenu" href="javascript:void(0)" onclick="menuChange('spending')">지출</a>
+			<div id="spendingMenu">
+				<a href="javascript:void(0)" onclick="menuChange('spending')">지출</a>
 			</div>
 		</div>
 		<div class="manager-content">
@@ -207,7 +206,7 @@
 	
 	<script>
 	$(document).ready(function(){
-		$('#salesMenu').addClass('check');	
+		$('#salesMenu').css('background','#b2b2b2');	
 	});
 	
 	function exportExcel(){ 
@@ -247,14 +246,16 @@
 			$('.spending').css('display','none');
 			$('.sales').css('display','block');
 			
-			$('#salesMenu').addClass('check');
-			$('#spendingMenu').removeClass('check');
+			$('#salesMenu').css('background','#b2b2b2');
+			$('#spendingMenu').css('background','#e5e5e5');
+			
+			
 		}else{
 			$('.sales').css('display','none');
 			$('.spending').css('display','block');
 			
-			$('#salesMenu').removeClass('check');
-			$('#spendingMenu').addClass('check');
+			$('#spendingMenu').css('background','#b2b2b2');
+			$('#salesMenu').css('background','#e5e5e5');
 		}
 		
 	}
