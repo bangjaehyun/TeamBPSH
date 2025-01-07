@@ -13,7 +13,7 @@
 		box-sizing: border-box;
  }
 .vote-wrap{
-	width: calc(100vw - 55px);
+	width: 100%;
 	height: calc(100vh - 50px);
 	overflow: auto;
 	overflow-x: hidden;

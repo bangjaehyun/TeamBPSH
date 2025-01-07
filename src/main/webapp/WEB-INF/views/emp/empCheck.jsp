@@ -15,9 +15,14 @@
 
 .empCheck-wrap {
 	width: calc(100vw - 55px);
+	min-width : 100%;
 	height: calc(100vh - 50px);
 	padding : 50px;
 	overflow: auto;
+}
+
+.empCheck-wrap>div{
+	min-width: 1000px;
 }
 
 .weekend {
@@ -175,43 +180,6 @@
 		form.append(empListEl);
 		$('body').append(form);
 		form.submit();
-		
-// 		let f = document.createElement('form');
-// 		        f.setAttribute('method', 'get');
-// 		        f.setAttribute('action', '/emp/empCheckExport.do');
-// 				f.append("year",year);
-// 				f.append("month",month);
-// 				f.append("empList",empListString);
-// 		document.body.appendChild(f);
-// 		f.submit();
-		
-		
-		
-// 		$.ajax({
-// 			url : "/emp/empCheckExport.do",
-// 			type : "get",
-// 			data : {"year" : year,
-// 					"month" : month,
-// 					"empList" : empListString},
-// 			success : function(res){
-				
-// 			},
-// 			error : function(){
-// 				console.log("ajax 오류");
-// 			}
-// 		});
-		
-// 		let f = document.createElement('form');
-// 		        f.setAttribute('method', 'get');
-// 		        f.setAttribute('action', '/emp/empCheckExport.do');
-// 				f.append($('<input/>', {type: 'hidden', name: 'year', value:year }));
-// 				f.append($('<input/>', {type: 'hidden', name: 'month', value:month}));
-
-// // 				f.append("empList", empList);
-// 				document.body.appendChild(f);
-// 				console.log(f);
-// 		f.submit();
-		
 	}
 	
 	function moveMonth(icon){
@@ -225,6 +193,15 @@
 			year = year + 1;
 		}
 		let yearMonth = year + pad(month);
+		
+		 let date = new Date();
+         let newYearMonth = date.getFullYear() + pad(date.getMonth()+1);
+         
+         if(yearMonth > newYearMonth){
+        	 msg("확인", "확인 가능한 날짜가 아닙니다.","warning");
+        	 return;
+         }
+		
 		data = {'yearMonth' : yearMonth};
      	pageMoveParam("/emp/empCheck.do", data);
 	}

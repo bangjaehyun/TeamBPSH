@@ -13,7 +13,7 @@
 		box-sizing: border-box;
  }
 .develop-wrap{
-	width: calc(100vw - 55px);
+	width: 100%;
 	height: calc(100vh - 50px);
 	overflow: scroll;
 	overflow-x: hidden;

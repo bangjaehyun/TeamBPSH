@@ -26,6 +26,10 @@
 		display: none;
 	}
 	
+	.page-div{
+		width: 100%;
+	}
+	
  		.myPage{
  			position : absolute;
          	visibility: hidden;
@@ -130,9 +134,12 @@
 		        f.setAttribute('action', '/emp/chatFrm.do');
 		popupWindow.document.body.appendChild(f);
 		f.submit();
+		$('.myPage').removeClass('act');
 	}
 	
 	function myPage(){
+		$('.myPage').removeClass('act');
+		
 		pageMoveParam("/emp/myPage.do", {"empCode" : "${loginEmp.empCode}"});
 	}
 	

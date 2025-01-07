@@ -153,6 +153,11 @@
 			$('.myPage').removeClass('act');
 		}else{
 			$('.myPage').addClass('act');
+			
+			if($('.alarm').hasClass('alarmAct')){
+				$('.alarm').removeClass('alarmAct');
+				$('.alarm').children().remove();
+			}
 		}
 	});
 	
@@ -161,6 +166,9 @@
 			$('.alarm').removeClass('alarmAct');
 			$('.alarm').children().remove();
 		}else{
+			if($('.myPage').hasClass('act')){
+				$('.myPage').removeClass('act');
+			}
 			$('.alarm').addClass('alarmAct');
 			$.ajax({
 				url : "/emp/loadAlarmList.do",
@@ -194,6 +202,9 @@
 	});
 	
 	function alarmMove(alarmNo ,url, param, alarmRead){
+		$('.alarm').removeClass('alarmAct');
+		$('.alarm').children().remove();
+		
 		if(alarmRead == 'n'){
 			alarmChangeRead(alarmNo);
 		}

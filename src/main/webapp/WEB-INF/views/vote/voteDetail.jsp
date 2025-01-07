@@ -14,7 +14,7 @@
 }
 
 .vote-wrap {
-	width: calc(100vw - 55px);
+	width: 100%;
 	height: calc(100vh - 50px);
 	padding: 40px;
 }

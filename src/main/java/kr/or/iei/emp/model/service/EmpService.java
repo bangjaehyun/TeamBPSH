@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.document.model.vo.Sales;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
@@ -24,6 +26,7 @@ import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
+import kr.or.iei.emp.model.vo.SalesSpending;
 import kr.or.iei.emp.model.vo.Team;
 
 @Service("empService")
@@ -353,6 +356,16 @@ public class EmpService {
 		}
 		
 		return empList;
+	}
+
+	public SalesSpending selectSalesManager(String yearMonth) {
+		SalesSpending salesSpending = new SalesSpending();
+		ArrayList<Sales> salesList = (ArrayList<Sales>)dao.selectSalesMonth(yearMonth);
+		ArrayList<Spending> spendingList = (ArrayList<Spending>)dao.selectSpendingMonth(yearMonth);
+		salesSpending.setSalesList(salesList);
+		salesSpending.setSpendingList(spendingList);
+		
+		return salesSpending;
 	}
 
 }

@@ -150,7 +150,11 @@
     }
     <%--매출 관리 페이지 이동--%>
     function salesManager(){
-    	pageMove("/document/salesManager.do");	
+    	  let date = new Date();
+          let yearMonth = date.getFullYear() + pad(date.getMonth()+1);
+          data = {'yearMonth' : yearMonth};
+    	
+    	pageMoveParam("/emp/salesManager.do", data);	
     }
     <%--회원 관리 --%>
     function empManager(){

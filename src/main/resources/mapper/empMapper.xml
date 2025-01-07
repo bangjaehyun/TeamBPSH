@@ -647,4 +647,24 @@
      (#{attDate},#{empCode},#{checkNote})
      </insert>
 
+	<select id="selectSalesMonth"
+     parameterType="string"
+     resultType="sales">
+     select document_code as documentCode,
+             TO_CHAR(TO_DATE(sales_day, 'YYYYMMDD'), 'YYYY-MM-DD') as salesDay,
+             sales_cost as salesCost,
+             sales_content as salesContent
+       from tbl_sales where sales_day like #{yearMonth} || '%' order by sales_day
+     </select>
+     
+      <select id="selectSpendingMonth"
+     parameterType="string"
+     resultType="spending">
+     select spending_code as spendingCode,
+             document_code as documentCode,
+             TO_CHAR(TO_DATE(spending_day, 'YYYYMMDD'), 'YYYY-MM-DD')  as spendingDay,
+             spending_cost as spendingCost,
+             spending_content as spendingContent
+       from tbl_spending where spending_day like #{yearMonth} || '%' order by spending_day
+     </select>
 </mapper>
