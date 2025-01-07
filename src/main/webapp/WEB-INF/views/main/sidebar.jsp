@@ -137,6 +137,7 @@
 					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="empCheck()">출퇴근 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="salesManager()">매출관리</a></li>
 				</ul>
 			</li>
@@ -163,6 +164,18 @@
     function empDevelopPrice(){
         pageMove("/emp/empDevelopPrice.do");
     }
+    
+    <%-- 출퇴근 관리 --%>
+    function empCheck(){
+        let date = new Date();
+        let yearMonth = date.getFullYear() + pad(date.getMonth()+1);
+        data = {'yearMonth' : yearMonth};
+         pageMoveParam("/emp/empCheck.do", data)
+    }
+    
+    function pad(d) {
+        return (Number(d) < 10) ? '0' + d.toString() : d.toString();
+  }
     
   	<%--sub메뉴클릭시 숨기기 위한 이벤트--%>
     $('.side-div').next().find('li').click(function(){

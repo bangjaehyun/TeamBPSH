@@ -7,6 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Collection;
@@ -21,6 +24,21 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,17 +51,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+
+
 import kr.or.iei.common.EmpSessionListener;
 import kr.or.iei.common.annotation.AdminChk;
 import kr.or.iei.common.annotation.NoLoginChk;
 import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.document.model.vo.Document;
-import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
+import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.DeptLeader;
@@ -581,5 +603,263 @@ public class EmpController {
     	  int result = service.chageLeader(emp);
     	  
     	  return String.valueOf(result);
+      }
+      
+      @PostMapping(value="empCheck.do", produces="text/html; charset=utf-8;")
+      public String empCheck(Model model,String yearMonth) {
+    	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+    	  YearMonth yearMonthDate = YearMonth.parse(yearMonth, formatter);
+    	  
+    	  LocalDate newDate = yearMonthDate.atDay(1);
+    	  ArrayList<Emp> empList = service.empCheckMonth(yearMonth);
+    	  model.addAttribute("date", newDate);
+    	  model.addAttribute("empList", empList);
+    	  model.addAttribute("empListJson", new Gson().toJson(empList));
+    	  System.out.println(empList);
+    	  
+    	  return "emp/empCheck";
+      }
+      
+      @GetMapping(value="empCheckExport.do")
+      public void empCheckExport(String year, String month,String empList,  HttpServletResponse response){
+    	  System.out.println(year);
+    	  System.out.println(month);
+    	  System.out.println(empList);
+			try {
+				ObjectMapper objectMapper = new ObjectMapper();
+				ArrayList<Emp> emps = objectMapper.readValue(empList, new TypeReference<ArrayList<Emp>>() {
+				});
+
+				  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+		    	  YearMonth yearMonthDate = YearMonth.parse(String.format("%d%02d", Integer.parseInt(year),Integer.parseInt(month)), formatter);
+		    	  
+		    	  LocalDate newDate = yearMonthDate.atDay(1);
+		    	  
+		    	
+				
+				// ExcelDown시작
+				Workbook workbook = new HSSFWorkbook();
+
+				// 시트생성
+
+				Sheet sheet = workbook.createSheet(String.format("%s년 %s월 %s", year, month,"출,퇴근 관리"));
+
+				sheet.setDefaultColumnWidth((short)15);
+				sheet.setDefaultRowHeightInPoints(20);
+				// 행,열,열번호
+
+				Row row = null;
+
+				Cell cell = null;
+
+				int rowNo = 0;
+
+				// 테이블헤더용스타일
+
+				CellStyle valueStyle = workbook.createCellStyle();
+				
+				valueStyle.setBorderTop(BorderStyle.THIN);
+
+				valueStyle.setBorderBottom(BorderStyle.THIN);
+
+				valueStyle.setBorderLeft(BorderStyle.THIN);
+
+				valueStyle.setBorderRight(BorderStyle.THIN);
+
+				valueStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				
+				valueStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+				
+				valueStyle.setAlignment(HorizontalAlignment.CENTER);
+				
+				Font valuefont = workbook.createFont();
+				valuefont.setFontHeightInPoints((short) 12);
+				valueStyle.setFont(valuefont);
+				
+				valueStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex()); //흰색 배경
+				
+				
+				CellStyle headStyle = workbook.createCellStyle();
+
+				// 가는경계선을가집니다.
+
+				headStyle.setBorderTop(BorderStyle.THIN);
+
+				headStyle.setBorderBottom(BorderStyle.THIN);
+
+				headStyle.setBorderLeft(BorderStyle.THIN);
+
+				headStyle.setBorderRight(BorderStyle.THIN);
+
+
+				headStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				
+				headStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+				
+				headStyle.setAlignment(HorizontalAlignment.CENTER);
+				Font headfont = workbook.createFont();
+				headfont.setFontHeightInPoints((short) 15);
+				headStyle.setFont(headfont);			
+				headStyle.setFillForegroundColor(HSSFColorPredefined.GREY_40_PERCENT.getIndex()); //회색
+				
+				CellStyle weekendStyle = workbook.createCellStyle();
+				
+				weekendStyle.setBorderTop(BorderStyle.THIN);
+
+				weekendStyle.setBorderBottom(BorderStyle.THIN);
+
+				weekendStyle.setBorderLeft(BorderStyle.THIN);
+
+				weekendStyle.setBorderRight(BorderStyle.THIN);
+
+				weekendStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+				
+				weekendStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+				
+				weekendStyle.setAlignment(HorizontalAlignment.CENTER);
+				
+				 Font weekendfont = workbook.createFont();
+				 weekendfont.setColor(HSSFColor.HSSFColorPredefined.WHITE.getIndex());
+				 weekendfont.setFontHeightInPoints((short) 15);
+			    weekendStyle.setFont(weekendfont);				
+				weekendStyle.setFillForegroundColor(HSSFColorPredefined.RED.getIndex()); //빨간 배경
+				
+
+				CellStyle bodyStyle = workbook.createCellStyle();
+
+				bodyStyle.setBorderTop(BorderStyle.THIN);
+
+				bodyStyle.setBorderBottom(BorderStyle.THIN);
+
+				bodyStyle.setBorderLeft(BorderStyle.THIN);
+
+				bodyStyle.setBorderRight(BorderStyle.THIN);
+
+				row = sheet.createRow(rowNo++);
+				cell = row.createCell(0);
+				cell.setCellStyle(valueStyle);
+				cell.setCellValue(String.format("%s년 %s월 %s", year, month,"출,퇴근 관리"));
+				sheet.addMergedRegion(new CellRangeAddress( 0, 1, 0, 8));
+				// 헤더명설정
+				
+				rowNo +=3;
+				row = sheet.createRow(rowNo++);
+				
+				sheet.addMergedRegion(new CellRangeAddress( 4, 5, 0, 0));
+				
+				cell = row.createCell(0);
+				cell.setCellStyle(valueStyle);
+				cell.setCellValue("이름");
+				int firstCol = 1;
+				int lastCol = 3;
+				for(int i =1; i <= newDate.lengthOfMonth(); i++) {
+					
+					cell = row.createCell(firstCol);
+					sheet.addMergedRegion(new CellRangeAddress( 4, 4, firstCol ,lastCol));
+					firstCol = lastCol + 1; 
+					lastCol = lastCol + 3;
+					
+					if(newDate.withDayOfMonth(i).getDayOfWeek().getValue() == 6 || newDate.withDayOfMonth(i).getDayOfWeek().getValue() == 7) {
+						cell.setCellStyle(weekendStyle);
+					}else {
+						cell.setCellStyle(headStyle);
+					}
+					cell.setCellValue(i);
+		    	 }
+				
+				row = sheet.createRow(rowNo++);
+				
+				int subHeaderCol = 1;
+				for(int i =1; i <= newDate.lengthOfMonth(); i++) {
+					
+					cell = row.createCell(subHeaderCol++);		
+					cell.setCellStyle(headStyle);
+					cell.setCellValue("출근");
+					
+					cell = row.createCell(subHeaderCol++);
+					cell.setCellStyle(headStyle);
+					cell.setCellValue("퇴근");
+					
+					cell = row.createCell(subHeaderCol++);
+					cell.setCellStyle(headStyle);
+					cell.setCellValue("비고");
+				}
+					
+				
+				
+				for(Emp emp : emps) {
+					row = sheet.createRow(rowNo++);
+					cell = row.createCell(0);
+					cell.setCellStyle(valueStyle);
+					cell.setCellValue(emp.getEmpName());
+					
+					int empValueCol = 1;
+					for(int i =1; i <= newDate.lengthOfMonth(); i++) {
+						boolean valueChk = false;
+						for(Check check : emp.getCheckList()) {
+							int day = Integer.parseInt(String.format("%02d", i));
+							int checkDay = Integer.parseInt(check.getDay().substring(6,8));
+							if(day == checkDay) {
+								valueChk = true;
+								
+								cell = row.createCell(empValueCol++);
+								cell.setCellStyle(valueStyle);
+								cell.setCellValue(getTimeFormat(check.getCheckIn()));
+								
+								cell = row.createCell(empValueCol++);
+								cell.setCellStyle(valueStyle);
+								cell.setCellValue(getTimeFormat(check.getCheckOut()));
+								
+								cell = row.createCell(empValueCol++);
+								cell.setCellStyle(valueStyle);
+								cell.setCellValue(check.getCheckNote());
+							}
+						}
+						if(!valueChk) {
+							cell = row.createCell(empValueCol++);
+							cell.setCellStyle(valueStyle);
+							
+							cell = row.createCell(empValueCol++);
+							cell.setCellStyle(valueStyle);
+							
+							cell = row.createCell(empValueCol++);
+							cell.setCellStyle(valueStyle);
+						}
+					
+					}
+				}
+
+				
+				// 컨텐츠타입과파일명지정
+				response.setContentType("ms-vnd/excel");
+				String fileName = java.net.URLEncoder.encode(String.format("%s년 %s월 %s", year, month,"출,퇴근 관리.xls"), "UTF8");
+				fileName = fileName.replaceAll("\\+", "%20");
+				response.setHeader("Content-Disposition",
+						"attachment;filename=" + fileName);
+
+				// 엑셀출력
+
+				workbook.write(response.getOutputStream());
+
+				workbook.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+		}
+      
+      private String getTimeFormat(String value) {
+    	  if(value != null) {
+	    	  String hour = value.substring(0,2);
+	    	  String min = value.substring(2,4);
+	    	  String sec = value.substring(4,6);
+	    	  
+	    	  
+	    	  return String.format("%s:%s:%s", hour,min,sec);
+    	  }else {
+    		  return null;
+    	  }
       }
 }

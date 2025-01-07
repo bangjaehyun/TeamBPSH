@@ -626,4 +626,15 @@
 		total_vacation 
 		from tbl_vacation_count where emp_code=#{_string}
     </select>
+    
+     <select id="empCheckMonth"
+     parameterType="map"
+     resultType="empCheck">
+     select att_date as day,
+             check_in as checkIn,
+             check_out as checkOut,
+             check_note as checkNote
+       from tbl_check
+      where emp_code = #{empCode} and att_date like #{yearMonth} || '%'
+     </select>
 </mapper>
