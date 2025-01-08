@@ -725,5 +725,5 @@
              spending_content as spendingContent
        from tbl_spending where spending_day like #{yearMonth} || '%' order by spending_day
      </select>
->>>>>>> main
+
 </mapper>
