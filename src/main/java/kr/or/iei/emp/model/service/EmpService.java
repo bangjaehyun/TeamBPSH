@@ -110,6 +110,7 @@ public class EmpService {
 		return result;
 	}
 
+	@Transactional
 	public void chkAdmin() {
 		int result = dao.idCheck("admin");
 		if(result == 0) {
@@ -118,11 +119,28 @@ public class EmpService {
 			emp.setEmpId("admin");
 			emp.setEmpPw(pw);
 			emp.setTeamCode("G1");
+			emp.setDeptCode("GD");
 			emp.setRankCode("J6");
 			emp.setEmpName("배재현");
+			emp.setSalary("50000000");
 			emp.setEmpPhone("01012341234");
 			emp.setEmpRetire("n");
 			result = dao.insertAdmin(emp);
+			
+			if(result > 0) {
+				result = dao.insertLeader(emp);
+				if(result > 0) {
+					String empCode = dao.selectAdminEmpCode();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("empCode", empCode);
+					map.put("salary", emp.getSalary());
+					result = dao.insertSalary(map);
+					if(result > 0) {
+						result = dao.insertVacation(empCode);
+					}
+				}
+			}
+			
 		}
 	}
 

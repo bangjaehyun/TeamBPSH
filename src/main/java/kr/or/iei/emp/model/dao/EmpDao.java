@@ -273,4 +273,8 @@ public class EmpDao {
 		return sqlSession.selectList("emp.selectSpendingMonth", yearMonth);
 	}
 
+	public String selectAdminEmpCode() {
+		return sqlSession.selectOne("emp.selectAdminEmpCode");
+	}
+
 }
