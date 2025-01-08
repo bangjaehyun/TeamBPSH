@@ -41,9 +41,9 @@ public class ProjectService {
 	public Project projectView(String projectNo) {
 		 Project project =  dao.projectView(projectNo);
 		 ArrayList<Team> projectTeam = (ArrayList<Team>) dao.projectTeamLit(projectNo);
-		 ArrayList<ProjectPartemp> projectPartempList = (ArrayList<ProjectPartemp>) dao.projectEmpList(projectNo);
 		 project.setTeamList(projectTeam);
-		 project.setProjectPartemp(projectPartempList);
+		 
+		 
 		return project;
 	}
 
@@ -97,6 +97,18 @@ public class ProjectService {
 	public boolean deleteComment(String commNo) {
 		
 		return dao.deleteComment(commNo) > 0;
+	}
+
+	public List<Emp> addProjectEmp(String teamCode, String projectNo) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("projectNo", projectNo);
+		params.put("teamCode", teamCode);
+		return  dao.addProjectEmp(params);
+	}
+
+	public ArrayList<ProjectPartemp> projectEmpList(String projectNo) {
+		
+		return (ArrayList<ProjectPartemp>) dao.projectEmpList(projectNo);
 	}
 
 

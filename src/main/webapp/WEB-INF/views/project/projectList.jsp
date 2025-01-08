@@ -13,11 +13,8 @@
 /* 테이블 */
 
 .page-wrap {
-	
     justify-content: center;
-    margin-left: 50px;
     width:100%;
-    
     gap: 10px;
 	
 	
@@ -109,7 +106,8 @@
 	
 	  function projectView(projectNo) {
 		console.log(projectNo);
-		pageMoveParam('/project/view.do',{ projectNo: projectNo });
+		pageMoveParam('/project/view.do',{ projectNo: projectNo,
+										   teamCode : '${loginEmp.teamCode}'});
     }
 	  
 	 $('#pjBtn').on('click',function(){

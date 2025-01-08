@@ -38,6 +38,7 @@ import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.service.ProjectService;
 import kr.or.iei.project.model.vo.Comment;
 import kr.or.iei.project.model.vo.Project;
+import kr.or.iei.project.model.vo.ProjectPartemp;
 
 
 @Controller("projectController")
@@ -66,15 +67,19 @@ public class ProjectController {
 	}
 	
 	@PostMapping("view.do")
-	public String projectView(Model model, String projectNo) {
+	public String projectView(HttpSession session, Model model, String projectNo, String teamCode) {
+		
+		
 		Project project = service.projectView(projectNo);
-		
-		
-		 model.addAttribute("project", project);
-
+		List<Emp> addProjectEmp = service.addProjectEmp(teamCode, projectNo);
+		ArrayList<ProjectPartemp> projectPartempList = service.projectEmpList(projectNo);
+	    model.addAttribute("addProjectEmp", addProjectEmp);
+		model.addAttribute("project", project);
+		model.addAttribute("projectPartempList",projectPartempList);
 	     
 	    return "project/projectView";
 	}
+
 	
 	@PostMapping("writeFrm.do")
 	public String projectWriteFrm(Model model) {

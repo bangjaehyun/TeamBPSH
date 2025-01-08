@@ -18,6 +18,7 @@ public class Project {
 	private String empName;
 	private String teamLeader;
 	private ArrayList<ProjectPartemp> projectPartemp;
+	private ArrayList<ProjectTeam> projectTeam;
 	
 	
 	public Project() {

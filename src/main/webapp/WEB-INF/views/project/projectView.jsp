@@ -9,6 +9,10 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+
+textarea {
+	resize: none;
+}
 #mainContainer {
 	justify-content: center;
 	width: calc(100vw - 55px);
@@ -177,12 +181,25 @@ th {
     background-color: #DDDDFF; 
 }
 
+#teamEmpTable thead th, tbody td {
+	width:200px;
+}
+#teamEmpTable thead th:nth-child(4), tbody td:nth-child(4) {
+	width: 700px;
+}
+#teamEmpTable tbody td:nth-child(4) textarea {
+	width: 100%;
+	height:100%;
+}
+#teamEmpTable thead th:nth-child(5), tbody td:nth-child(5) {
+	width: 37px;
+}
 
 </style>
 </head>
 <body>
 	<div id="mainContainer">
-
+	
 		<h1>프로젝트 상세 정보</h1>
 		<!-- 프로젝트 기본 정보 -->
 		<table id="pjHeader">
@@ -203,7 +220,34 @@ th {
 				<td>${project.projectEnd}</td>
 			</tr>
 		</table>
-
+		<%-- 세션에서 teamCode 가져오기 --%>
+		 
+		 
+		<div class="teamEmps">
+			<h2>추가 가능한 팀원 목록</h2>
+			<table id="teamEmpTable">
+				<thead>
+					<tr>
+						<th>사원 번호</th>
+						<th>이름</th>
+						<th>직급</th>
+						<th>역할</th>
+						<th>추가</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="addProjectEmp" items="${addProjectEmp}">
+						<tr>
+							<td>${addProjectEmp.empCode}</td>
+							<td>${addProjectEmp.empName}</td>
+							<td>${addProjectEmp.rankCode}</td>
+							<td><textarea></textarea>
+							<td><button id="addPartEmp" data-empcode="${addProjectEmp.empCode}">추가</button></td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
 		<!-- 참여 사원 리스트 -->
 		<div class="participants">
 			<h2>참여 사원 리스트</h2>
@@ -214,6 +258,7 @@ th {
 						<th>이름</th>
 						<th>직급</th>
 						<th>역할</th>
+						<th>삭제</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -479,7 +524,7 @@ th {
 	
 		$(document).ready(function() {
 		    loadComment();
-		    loadEmployeeList(); // 참여 사원 리스트 불러오기
+// 		    loadEmployeeList(); // 참여 사원 리스트 불러오기
 
 		    // 📌 프로젝트 진행률 차트
 		    const labels = ['Module 1', 'Module 2', 'Module 3'];
@@ -549,36 +594,10 @@ th {
 		            }
 		        });
 		    });
-
-		    
-		    // 📌 참여 사원 리스트 로딩 함수
-		    function loadEmployeeList() {
-		        var projectNo = $('input[name="projectNo"]').val();
-
-		        $.ajax({
-		            url: "/project/partEmpList.do",
-		            type: "POST",
-		            data: { projectNo: projectNo },
-		            dataType: "json",
-		            success: function(data) {
-		                var html = "";
-		                data.forEach(function(emp) {
-		                    html += "<tr>";
-		                    html += "<td>" + emp.empCode + "</td>";
-		                    html += "<td>" + emp.empName + "</td>";
-		                    html += "<td>" + emp.rankCode + "</td>";
-		                    html += "<td>" + emp.partempContent + "</td>";
-		                    html += "<td><button class='removeEmp' data-empcode='" + emp.empCode + "'>삭제</button></td>";
-		                    html += "</tr>";
-		                });
-
-		                $("#employeeTableBody").html(html);
-		            },
-		            error: function() {
-		                console.log("사원 리스트 로딩 실패");
-		            }
-		        });
-		    }
+			
+		   $('#addPartEmp').on('click',function(){
+			   
+		   });
 		});
 	</script>
 </body>

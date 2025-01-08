@@ -117,7 +117,7 @@
 					<textarea id="summernote" name="projectContent"></textarea>
 					</div>
 					</div>
-					<button id="btn" type="submit">작성</button>
+					<button id="btn" type="button">작성</button>
 				</form>
 			
 		</div>
@@ -125,42 +125,43 @@
 <script src="/resources/summernote/summernote-lite.js"></script>
 <script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
 	<script>
-		var teamCode = [];
-			$('input[name="teamCode"]:checked').each(function(i){
-				teamCode.push($(this).val());
-		});
-		
-		$('#btn').on('click',function(){
-			let formData = $('.projectForm').serialize();
-			formData.append("teamCode",teamCode);
-			$.ajax({
-				url : '/project/write.do',
-				type : 'post',
-				data : 'formData',
-				success : function(res){
-					console.log(res);
-					if(res > "1"){
-			               swal({
-			                  title : "완료",
-			                  text : "투표가 완료되었습니다.",
-			                  icon : "success"
-			               }).then(function(){
-			            	   pageMove('/project/list.do');
-			               });
-			            }else{
-			               swal({
-			                  title : "오류",
-			                  text : "투표중 오류가 발생하였습니다.",
-			                  icon : "error"
-			               }).then(function(){
-			            	   pageMove('/project/list.do');
-			               });
-			            }
-				},error: function(){
-					console.log('ajax오류');
-				}
-			});
-		});
+	$('#btn').on('click',function(){
+        
+        
+        var form = $('.projectForm')[0];
+        var formData = new FormData(form);
+        
+        $.ajax({
+           url : '/project/write.do',
+           type : 'post',
+           data : formData,
+           contentType: false,
+             processData: false,
+           success : function(res){
+              console.log(res);
+              if(res > "1"){
+                       swal({
+                          title : "완료",
+                          text : "프로젝트 생성이 완료되었습니다.",
+                          icon : "success"
+                       }).then(function(){
+
+                          pageMove('/project/list.do');
+                       });
+                    }else{
+                       swal({
+                          title : "오류",
+                          text : "프로젝트중 생성 중 오류가 발생하였습니다.",
+                          icon : "error"
+                       }).then(function(){
+                          pageMove('/project/list.do');
+                       });
+                    }
+           },error: function(){
+              console.log('ajax오류');
+           }
+        });
+     });
 			
 			
 		

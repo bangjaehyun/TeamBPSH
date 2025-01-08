@@ -95,6 +95,11 @@ public class ProjectDao {
 		
 		return sqlSession.selectList("project.projectTeamList",projectNo);
 	}
+
+	public List<Emp> addProjectEmp(HashMap<String, Object> params) {
+		
+		return sqlSession.selectList("project.addProjectList",params);
+	}
 	
 
 

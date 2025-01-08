@@ -214,15 +214,18 @@
 		where tbl_project_team.project_no = #{projectNo}
 	</select>
 
-	<select id="teamEmpList" parameterType="map" resultType="emp">
-		select e.emp_code, e.emp_name, e.rank_code, e.team_code
-		from tbl_emp e
-		where e.team_code = (select team_code from tbl_emp where emp_code =
-		#{empCode})
-		and e.emp_code != #{empCode} 
-		and e.emp_code not in (
-		select emp_code from tbl_project_partemp where project_no = #{projectNo}
-		) 
+	<select id="addProjectList" parameterType="map" resultType="emp">
+	SELECT
+		e.emp_code AS empCode,
+	e.emp_name AS empName,
+	e.rank_code AS rankCode,
+	e.team_code AS teamCode
+	FROM tbl_emp e
+	WHERE e.team_code = #{teamCode} 
+	AND e.emp_code NOT IN (
+	SELECT p.emp_code FROM tbl_project_partemp p
+	WHERE p.project_no = #{projectNo}
+	)
 	</select>
 
 	<insert id="addProjectPartemp" parameterType="map">
