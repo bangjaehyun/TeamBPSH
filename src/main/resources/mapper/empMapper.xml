@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="emp">
+	<select id="selectAdminEmpCode"
+	resultType="string">
+	select emp_code
+	  from tbl_emp
+	 where emp_id = 'admin'
+	</select>
  	<select id="loginEmp"
  	parameterType="emp"
  	resultType="emp">
@@ -531,10 +537,20 @@
        join tbl_emp using(emp_code)
      </select>
      
+      <select id="selectTeamLeaderList"
+     resultType="emp">
+       select f.team_code as teamCode, 
+     		  f.emp_code as empCode,
+     		  e.emp_name as empName 
+         from tbl_team_leader f
+         join tbl_emp e on f.emp_code = e.emp_code
+     </select>
+     
      <select id="selectEmpList"
      resultType="emp">
      select emp_code as empCode,
      		emp_name as empName,
+     		team_code as teamCode,
      		(
      		select rank_name 
      		  from tbl_rank 
@@ -544,7 +560,8 @@
         	select dept_code 
         	  from tbl_dept 
         	 where dept_code = t.dept_code
-        	)as deptCode
+        	)as deptCode,
+        	emp_date as empDate
        from tbl_emp e
        join tbl_team t using(team_code)
      </select>
@@ -574,6 +591,35 @@
      values
      (
      	#{deptCode},
+     	#{empCode}
+     )
+     </insert>
+     
+      <select id="selectTeamLeader"
+     parameterType="emp"
+     resultType="int">
+     select count(*)
+       from tbl_team_leader
+      where team_code = #{teamCode}
+     </select>
+     
+      <update id="updateTeamLeader"
+     parameterType="emp">
+     update tbl_team_leader
+        set emp_code = #{empCode}
+      where team_code = #{teamCode}
+     </update>
+     
+     <insert id="insertTeamLeader"
+     parameterType="emp">
+     insert into tbl_team_leader
+     (
+     	team_code,
+     	emp_code
+     )
+     values
+     (
+     	#{teamCode},
      	#{empCode}
      )
      </insert>
@@ -646,6 +692,7 @@
      values
      (#{attDate},#{empCode},#{checkNote})
      </insert>
+
 	<select id="selectDevPrice"
 	resultType="developPrice">
 		select
@@ -656,4 +703,27 @@
 			rank_name as rankName
 		from tbl_day_price join tbl_rank using(rank_code) join tbl_team using(team_code)
 	</select>
+
+
+	<select id="selectSalesMonth"
+     parameterType="string"
+     resultType="sales">
+     select document_code as documentCode,
+             TO_CHAR(TO_DATE(sales_day, 'YYYYMMDD'), 'YYYY-MM-DD') as salesDay,
+             sales_cost as salesCost,
+             sales_content as salesContent
+       from tbl_sales where sales_day like #{yearMonth} || '%' order by sales_day
+     </select>
+     
+      <select id="selectSpendingMonth"
+     parameterType="string"
+     resultType="spending">
+     select spending_code as spendingCode,
+             document_code as documentCode,
+             TO_CHAR(TO_DATE(spending_day, 'YYYYMMDD'), 'YYYY-MM-DD')  as spendingDay,
+             spending_cost as spendingCost,
+             spending_content as spendingContent
+       from tbl_spending where spending_day like #{yearMonth} || '%' order by spending_day
+     </select>
+>>>>>>> main
 </mapper>

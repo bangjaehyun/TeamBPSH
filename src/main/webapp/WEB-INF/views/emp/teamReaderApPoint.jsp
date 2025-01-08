@@ -66,12 +66,12 @@
 				<th>사원</th>
 				<th>변경</th>
 			</tr>
-			<c:forEach var="dept" items="${deptList}">
+			<c:forEach var="team" items="${teamList}">
 				<tr>
-					<td>${dept.deptName}</td>
-					<td><select id="${dept.deptCode}">
+					<td>${team.teamName}</td>
+					<td><select id="${team.teamCode}">
 							<c:forEach var="emp" items="${empList}">
-								<c:if test="${dept.deptCode eq emp.deptCode}">
+								<c:if test="${team.teamCode eq emp.teamCode}">
 									<option id="${emp.empCode}" value="${emp.empCode}">${emp.empName} ${emp.rankName}</option>
 								</c:if>
 							</c:forEach>
@@ -92,29 +92,29 @@
 	
 	function changeLeader(obj){
 		let empCode = $(obj).parent().parent().find('select').val();
-		let deptCode = $(obj).parent().parent().find('select').attr('id');
+		let teamCode = $(obj).parent().parent().find('select').attr('id');
 		
 		$.ajax({
-			url : "/emp/changeLeader.do",
+			url : "/emp/changeTeamLeader.do",
 			type : "post",
-			data : {"deptCode" : deptCode,
+			data : {"teamCode" : teamCode,
 					"empCode" : empCode},
 			success : function(res){
 				if(res == "1"){
 					swal({
 						title : "완료",
-						text : "부서장 변경이 완료되었습니다.",
+						text : "팀장 변경이 완료되었습니다.",
 						icon : "success"
 					}).then(function(){
-						pageMove("/emp/deptLeaderApPoint.do");	
+						pageMove("/emp/teamLeaderApPoint.do");	
 					});
 				}else{
 					swal({
 						title : "오류",
-						text : "부서장 변경중 오류가 발생하였습니다.",
+						text : "팀장 변경중 오류가 발생하였습니다.",
 						icon : "success"
 					}).then(function(){
-						pageMove("/emp/deptLeaderApPoint.do");	
+						pageMove("/emp/teamLeaderApPoint.do");	
 					});
 				}
 			},

@@ -14,7 +14,7 @@
 }
 
 .vote-wrap {
-	width: calc(100vw - 55px);
+	width: 100%;
 	height: calc(100vh - 50px);
 	padding: 40px;
 }
@@ -155,7 +155,7 @@
 			<div class="vote-content">
 				<span>내용</span>
 				<div>
-					<textarea name="voteContent"></textarea>
+					<textarea id="voteContent" name="voteContent"></textarea>
 				</div>
 			</div>
 			<div class="voteList-box">
@@ -201,7 +201,25 @@
 	}
 	
 	function voteCreate(){
-		console.log($('.voteList').children().length);
+		if($('input[name="voteEnd"]').val() == ""){
+			msg("확인","마감일을 선택하여 주시기 바랍니다.", "warning");
+			return;
+		}
+		
+		if($('input[name="voteTitle"]').val() == ""){
+			msg("확인","제목을 입력해 주시기 바랍니다.", "warning");
+			return;	
+		}
+		
+		if($('#voteContent').val() == ""){
+			msg("확인","내용을 입력해 주시기 바랍니다.", "warning");
+			return;	
+		}
+		
+		if($('.voteList').children().length < 1){
+			msg("확인","항목을 최소 1개 입력 바랍니다.", "warning");
+			return;		
+		}
 		
 		let formData = $('.vote-val').serialize();
 		$.ajax({
@@ -209,7 +227,15 @@
 			type : "post",
 			data : formData,
 			success : function(res){
-				pageMove('/vote/list.do');
+				swal({
+					title : "완료",
+					text : "투표가 추가 되었습니다.",
+					icon : "success"
+				}).then(function(){
+					 const data = {"startCount" : 1,
+		    			 	   "endCount" : 15}
+		    	 pageMoveParam('/vote/list.do', data);
+				});
 			},
 			error : function(){
 				console.log("ajax 오류");

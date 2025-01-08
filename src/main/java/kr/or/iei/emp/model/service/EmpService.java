@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.document.model.vo.Sales;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
@@ -20,10 +22,11 @@ import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
-import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Leader;
 import kr.or.iei.emp.model.vo.Rank;
+import kr.or.iei.emp.model.vo.SalesSpending;
 import kr.or.iei.emp.model.vo.Team;
 
 @Service("empService")
@@ -107,6 +110,7 @@ public class EmpService {
 		return result;
 	}
 
+	@Transactional
 	public void chkAdmin() {
 		int result = dao.idCheck("admin");
 		if(result == 0) {
@@ -115,11 +119,28 @@ public class EmpService {
 			emp.setEmpId("admin");
 			emp.setEmpPw(pw);
 			emp.setTeamCode("G1");
+			emp.setDeptCode("GD");
 			emp.setRankCode("J6");
 			emp.setEmpName("배재현");
+			emp.setSalary("50000000");
 			emp.setEmpPhone("01012341234");
 			emp.setEmpRetire("n");
 			result = dao.insertAdmin(emp);
+			
+			if(result > 0) {
+				result = dao.insertLeader(emp);
+				if(result > 0) {
+					String empCode = dao.selectAdminEmpCode();
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("empCode", empCode);
+					map.put("salary", emp.getSalary());
+					result = dao.insertSalary(map);
+					if(result > 0) {
+						result = dao.insertVacation(empCode);
+					}
+				}
+			}
+			
 		}
 	}
 
@@ -321,11 +342,18 @@ public class EmpService {
 		return 1;
 	}
 
-	public DeptLeader selectDeptLeaderList() {
+	public Leader selectDeptLeaderList() {
 		ArrayList<Emp> leaderList = (ArrayList<Emp>)dao.selectDeptLeaderList();
 		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
 		
-		return new DeptLeader(leaderList, empList);
+		return new Leader(leaderList, empList);
+	}
+	
+	public Leader selectTeamLeaderList() {
+		ArrayList<Emp> leaderList = (ArrayList<Emp>)dao.selectTeamLeaderList();
+		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
+		
+		return new Leader(leaderList, empList);
 	}
 
 	public int chageLeader(Emp emp) {
@@ -339,20 +367,49 @@ public class EmpService {
 		
 		return result;
 	}
+	
+	public int chageTeamLeader(Emp emp) {
+		int result = dao.selectTeamLeader(emp);
+		
+		if(result > 0) {
+			result = dao.updateTeamLeader(emp);
+		}else {
+			result = dao.insertTeamLeader(emp);
+		}
+		
+		return result;
+	}
 
 	public ArrayList<Emp> empCheckMonth(String yearMonth) {
 		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
-		
-		for(Emp e : empList) {
-			HashMap<String,String> map = new HashMap<String, String>();
-			map.put("empCode", e.getEmpCode());
-			map.put("yearMonth", yearMonth);
+		for(int i = empList.size()-1; i >= 0; i--) {
+				//입사년월
+				int empYearMonth = Integer.parseInt(empList.get(i).getEmpDate().substring(0, 7).replace("-", ""));
+				//찾으려는 출퇴근 기록부 년월 보다 입사일이 늦으면 찾지 않음
+		        if (Integer.parseInt(yearMonth) < empYearMonth) {
+		        	empList.remove(i);
+		        	continue;
+		        } 
 			
+			HashMap<String,String> map = new HashMap<String, String>();
+			map.put("empCode", empList.get(i).getEmpCode());
+			map.put("yearMonth", yearMonth);
+			//해당 사원의 해당월의 기록 가져오기
 			ArrayList<Check> checkList = (ArrayList<Check>)dao.empCheckMonth(map);
-			e.setCheckList(checkList);
+			empList.get(i).setCheckList(checkList);
 		}
 		
 		return empList;
+	}
+
+	public SalesSpending selectSalesManager(String yearMonth) {
+		SalesSpending salesSpending = new SalesSpending();
+		ArrayList<Sales> salesList = (ArrayList<Sales>)dao.selectSalesMonth(yearMonth);
+		ArrayList<Spending> spendingList = (ArrayList<Spending>)dao.selectSpendingMonth(yearMonth);
+		salesSpending.setSalesList(salesList);
+		salesSpending.setSpendingList(spendingList);
+		
+		return salesSpending;
 	}
 
 }

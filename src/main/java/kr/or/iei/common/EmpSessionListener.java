@@ -40,11 +40,12 @@ public class EmpSessionListener implements HttpSessionBindingListener {
 	 * @see HttpSessionBindingListener#valueBound(HttpSessionBindingEvent)
 	 */
 	public void valueBound(HttpSessionBindingEvent event) {
+		loginEmpChatChange(event.getName());
+		
 		loginEmps.put(event.getSession(), event.getName());
 		System.out.println(event.getName() + " 로그인 완료");
 		System.out.println("현재 접속자 수 : " + getEmpCount());
 		
-		loginEmpChatChange(event.getName());
 	}
 
 	/**
@@ -111,7 +112,6 @@ public class EmpSessionListener implements HttpSessionBindingListener {
 	
 	private void loginEmpChatChange(String loginEmpCode) {
 		Collection<String> loginEmps = getEmps();
-		
 		for(String empCode : loginEmps) {
 			WebSocketSession ws = SocketHandler.map.get(empCode);
 			
@@ -134,6 +134,9 @@ public class EmpSessionListener implements HttpSessionBindingListener {
 		Collection<String> loginEmps = getEmps();
 		
 		for(String empCode : loginEmps) {
+			if(empCode == logoutEmpCode) {
+				continue;
+			}
 			WebSocketSession ws = SocketHandler.map.get(empCode);
 			
 			JsonObject json = new JsonObject();
