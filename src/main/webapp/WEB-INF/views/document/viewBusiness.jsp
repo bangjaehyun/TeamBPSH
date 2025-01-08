@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
  <style>
     body {
         font-family: Arial, sans-serif;
@@ -79,9 +80,7 @@
         margin: 0;
     }
     
-    .form-container {
-        margin-bottom: 20px;
-    }
+    
     
     .form {
         
@@ -110,48 +109,21 @@
         padding: 10px 0px;
     }
     
-    .detail {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        
+    .let-date{
+    	display: flex;
+    	gap:20px;
+    	
     }
-    .detail-header {
-        display: flex;
-        background-color: gray;
-        font-weight: bold;
+    .let-date label{
+    	font-weight: bold;
+    	font-size: 20px;
     }
-
-    .detail-header, .detail-cell {
-        
-        flex: 1;
-        text-align: center;
-        justify-content: space-between;
-        padding:0;
-        border-bottom: 1px solid black;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-        border: 1px solid black;
-    }
-
-
-   .detail-body{
-        display: flex;
-        background-color: white;
-        
-   }
-
-
-    .detail-body .detail-cell {
-        flex: 1;
-        text-align: center;
-        text-align: center;
-        border-bottom: 1px solid black;
-        border-left: 1px solid black;
-        border-right: 1px solid black;
-    }
+    
+    
+    
    
    .file{
+   	margin-top:1%;
     display: flex;
    }
    .file>label{
@@ -213,13 +185,13 @@
  
    
 </style>
-<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 
+<link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>지출결의서</h1>
+            <h1>출장보고서</h1>
         </header>
        
         <div class="header">
@@ -235,6 +207,14 @@
                 </div>
                 <div class="form">
                     <label for="title" name="title" readonly>제목</label>
+                    <span>${doc.documentTitle }</span>
+                </div>
+                <div class="form">
+                    <label for="place" name="place" readonly>출장지</label>
+                    <span>${business.businessTo }</span>
+                </div>
+                <div class="form">
+                    <label for="perpose" name="perpose" readonly>출장목적</label>
                     <span>${doc.documentTitle }</span>
                 </div>
             </div>
@@ -260,23 +240,20 @@
           
         </div>
         
-        <section class="form-section">
-            <div class="detail">
-                <div class="detail-header">
-                    <div class="detail-cell">사용일</div>
-                    <div class="detail-cell">금 액</div>
-                    <div class="detail-cell">사용용도</div>
-                </div>
-                
-                <c:forEach var="spend" items="${spendingList }">
-	               	<div class="detail-body">
-	                    <div class="detail-cell">${spend.spendingDay }</div>
-	                    <div class="detail-cell">${spend.spendingCost }</div>
-	                    <div class="detail-cell">${spend.spendingContent }</div>
-	                </div>
-                </c:forEach>
-                
-            </div>
+        <section class="date-section">
+           <div class="let-date">
+         		
+           				
+							<div class="date">
+								<label for="bt-start">출장 시작일</label> <div>${business.businessStart}</div>
+									
+							</div>
+							<div class="date" >
+								<label for="bt-end">출장 종료일</label> <div>${business.businessEnd }</div>
+							</div>
+						
+						
+					</div>
         </section>
         <div>
             <div class="file">
@@ -359,7 +336,7 @@ function signDocument(e){
 		data:{"check":e,
 			  "empCode":${loginEmp.empCode},
 			  "documentCode":${documentCode},
-			  "type":"sp",
+			  "type":"bt",
 			  "writer":${doc.empCode}
 		},
 		success:function(res){
@@ -374,7 +351,7 @@ function signDocument(e){
 }
 
 function fileDown(fileName, filePath) {
-	location.href="/doc/fileDown?fileName="+fileName+"&filePath="+filePath;
+	location.href="/doc/fileDown.do?fileName="+fileName+"&filePath="+filePath;
 }
 
 </script>

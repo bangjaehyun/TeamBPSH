@@ -3,6 +3,7 @@
 <mapper namespace="vote">
 
 <select id="selectList"
+parameterType="votePaging"
 resultType="vote">
 select vote_no as voteNo,
 	   emp_name as empName,
@@ -10,8 +11,24 @@ select vote_no as voteNo,
 	   vote_content as voteContent,
 	   vote_start as voteStart,
 	   vote_end as voteEnd
+  from 
+      (
+       select rownum rnum, a.* 
+         from 
+             (
+              select * 
+                from tbl_vote
+                join tbl_emp using(emp_code) 
+               order by vote_no desc
+              ) a 
+        )
+        where rnum between #{startCount} and #{endCount}
+</select>
+
+<select id="selectVoteListCount"
+resultType="int">
+select count(*)
   from tbl_vote
-  join tbl_emp using(emp_code)
 </select>
 
 <select id="getVoteNo"

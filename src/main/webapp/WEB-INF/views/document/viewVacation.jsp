@@ -264,8 +264,8 @@
         <div>
             <div class="file">
                 <label for="file">첨부파일</label>
-                <c:forEach var="file" items="${fileList}">
-                    <a href="javascript:void(0)" onclick="fileDown('${file.fileName}', '${file.filePath}',)">${file.fileName}</a>
+                <c:forEach var="file" items="${doc.fileList}">
+                    <a href="javascript:void(0)" onclick="fileDown('${file.fileName}', '${file.filePath}',)">${file.fileName} </a>
                 </c:forEach>
                 
             </div>
@@ -308,7 +308,7 @@ $('#summernote').summernote( {
 }).summernote('disable');
 
 function fileDown(fileName, filePath) {
-	location.href = '/notice/fileDown?fileName=' + fileName + '&filePath=' + filePath;
+	location.href="/doc/fileDown?fileName="+fileName+"&filePath="+filePath;
 }
 
 function msg(title, text, icon, callback){
@@ -344,6 +344,8 @@ function signDocument(e){
 	});
 	
 }
+
+
 
 </script>
 </body>

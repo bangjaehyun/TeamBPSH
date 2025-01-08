@@ -16,7 +16,7 @@
 	
 	/*테이블*/
 	.page-wrap{
-	width: calc(100vw - 55px);
+	width: width: 100%;
 	height: calc(100vh - 50px);
 	}
 .tbl {

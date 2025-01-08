@@ -312,6 +312,37 @@
 			set sign_yn=#{check}
 		where emp_code=#{empCode} and document_code=#{documentCode}
 	</update>
-	
+	<select id="selectRefList"
+	parameterType="string"
+	resultType="ref">
+		select
+			emp_code as empCode,
+			document_code as documentCode
+		from tbl_reference
+		where document_code=#{_string}
+	</select>
 
+	<insert id="insertBusiness"
+	parameterType="business">
+	insert into tbl_business_trip
+	values(
+		#{documentCode},
+		#{businessTo},
+		#{businessPerpose},
+		#{businessStart},
+		#{businessEnd}
+	)
+	</insert>
+	<select id="selectOneBt"
+	parameterType="string"
+	resultType="business">
+		select
+			document_code as documentCode,
+			business_to as businessTo,
+			business_perpose as businessPerpose,
+			business_start as businessStart,
+			business_end as businessEnd
+		from tbl_business_trip
+		where document_code=#{_string}
+	</select>
 </mapper>

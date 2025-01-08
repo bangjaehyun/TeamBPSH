@@ -61,6 +61,8 @@ import kr.or.iei.common.annotation.AdminChk;
 import kr.or.iei.common.annotation.NoLoginChk;
 import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.document.model.vo.Sales;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
@@ -71,6 +73,7 @@ import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.SalesSpending;
 
 
 @Controller("empController")
@@ -488,7 +491,6 @@ public class EmpController {
       @ResponseBody
       public String loadAlarmList(String empCode) {
     	  ArrayList<Alarm> alarmList = service.loadAlarmList(empCode);
-    	  System.out.println(alarmList);
     	  return new Gson().toJson(alarmList);
       }
       
@@ -615,16 +617,13 @@ public class EmpController {
     	  model.addAttribute("date", newDate);
     	  model.addAttribute("empList", empList);
     	  model.addAttribute("empListJson", new Gson().toJson(empList));
-    	  System.out.println(empList);
     	  
     	  return "emp/empCheck";
       }
       
+      //출퇴근 기록 엑셀 출력
       @GetMapping(value="empCheckExport.do")
       public void empCheckExport(String year, String month,String empList,  HttpServletResponse response){
-    	  System.out.println(year);
-    	  System.out.println(month);
-    	  System.out.println(empList);
 			try {
 				ObjectMapper objectMapper = new ObjectMapper();
 				ArrayList<Emp> emps = objectMapper.readValue(empList, new TypeReference<ArrayList<Emp>>() {
@@ -756,7 +755,7 @@ public class EmpController {
 					
 					cell = row.createCell(firstCol);
 					sheet.addMergedRegion(new CellRangeAddress( 4, 4, firstCol ,lastCol));
-					firstCol = lastCol + 1; 
+					firstCol = lastCol + 1;
 					lastCol = lastCol + 3;
 					
 					if(newDate.withDayOfMonth(i).getDayOfWeek().getValue() == 6 || newDate.withDayOfMonth(i).getDayOfWeek().getValue() == 7) {
@@ -764,8 +763,15 @@ public class EmpController {
 					}else {
 						cell.setCellStyle(headStyle);
 					}
+					
+					
 					cell.setCellValue(i);
 		    	 }
+				
+				
+				cell = row.createCell(lastCol-3);
+				cell.setCellStyle(headStyle);
+				
 				
 				row = sheet.createRow(rowNo++);
 				
@@ -862,4 +868,207 @@ public class EmpController {
     		  return null;
     	  }
       }
+      
+      @PostMapping(value="salesManager", produces="text/html; charset=utf-8")
+      @AdminChk
+      public String salesManager(String yearMonth, Model model) {
+    	  SalesSpending list = service.selectSalesManager(yearMonth);
+    	  
+    	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
+    	  YearMonth yearMonthDate = YearMonth.parse(yearMonth, formatter);
+    	  
+    	  LocalDate newDate = yearMonthDate.atDay(1);
+    	  
+    	  model.addAttribute("year", newDate.getYear());
+    	  model.addAttribute("month", newDate.getMonthValue());
+    	  model.addAttribute("salesSpendingList", list);
+    	  model.addAttribute("salesSpendingListJson", new Gson().toJson(list));
+    	  
+    	  return "emp/salesManager";
+      }
+      
+      @GetMapping(value="salesManagerExport.do")
+      public void salesManagerExport(String year, String month,String salesManager,  HttpServletResponse response){
+    	  System.out.println(salesManager);
+			try {
+				ObjectMapper objectMapper = new ObjectMapper();
+				SalesSpending salesSpending = objectMapper.readValue(salesManager, new TypeReference<SalesSpending>() {
+				});
+
+				// ExcelDown시작
+				Workbook workbook = new HSSFWorkbook();
+
+				// 시트생성
+
+				Sheet sheet = workbook.createSheet(String.format("%s년 %s월 %s", year, month,"매출 및 지출 관리"));
+
+				sheet.setDefaultColumnWidth((short)15);
+				sheet.setDefaultRowHeightInPoints(20);
+				// 행,열,열번호
+
+				Row row = null;
+
+				Cell cell = null;
+
+				int rowNo = 0;
+
+				 // 값 스타일
+			    CellStyle valueStyle = workbook.createCellStyle();
+			    valueStyle.setBorderTop(BorderStyle.THIN);
+			    valueStyle.setBorderBottom(BorderStyle.THIN);
+			    valueStyle.setBorderLeft(BorderStyle.THIN);
+			    valueStyle.setBorderRight(BorderStyle.THIN);
+			    valueStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+			    valueStyle.setAlignment(HorizontalAlignment.CENTER);
+			    valueStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			    valueStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex());
+			    Font valueFont = workbook.createFont();
+			    valueFont.setFontHeightInPoints((short) 12);
+			    valueStyle.setFont(valueFont);
+
+			    //메뉴 스타일
+			    CellStyle menuStyle = workbook.createCellStyle();
+			    menuStyle.cloneStyleFrom(valueStyle);
+			    menuStyle.setFillForegroundColor(HSSFColorPredefined.GREY_40_PERCENT.getIndex());
+			    Font menuFont = workbook.createFont();
+			    menuFont.setFontHeightInPoints((short) 18);
+			    menuStyle.setFont(menuFont);
+			    
+			    //헤더 스타일
+			    CellStyle headStyle = workbook.createCellStyle();
+			    headStyle.cloneStyleFrom(valueStyle);
+			    headStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex());
+			    Font headFont = workbook.createFont();
+			    headFont.setFontHeightInPoints((short) 15);
+			    headStyle.setFont(headFont);
+
+			  
+
+				row = sheet.createRow(rowNo++);
+				cell = row.createCell(0);
+				cell.setCellStyle(valueStyle);
+				cell.setCellValue(String.format("%s년 %s월 %s", year, month,"매출 및 지출 관리"));
+				sheet.addMergedRegion(new CellRangeAddress( 0, 1, 0, 8));
+				// 헤더명설정
+				
+				rowNo +=3;
+				row = sheet.createRow(rowNo++);
+				sheet.addMergedRegion(new CellRangeAddress( 4, 5, 1, 3));
+				
+				cell = row.createCell(1);
+				cell.setCellStyle(menuStyle);
+				cell.setCellValue("매출");
+				cell = row.createCell(2);
+				cell.setCellStyle(menuStyle);
+				cell = row.createCell(3);
+				cell.setCellStyle(menuStyle);
+				
+				
+				sheet.addMergedRegion(new CellRangeAddress( 4, 5, 4, 6));
+				cell = row.createCell(4);
+				cell.setCellStyle(menuStyle);
+				cell.setCellValue("지출");
+				cell = row.createCell(5);
+				cell.setCellStyle(menuStyle);
+				cell = row.createCell(6);
+				cell.setCellStyle(menuStyle);
+				
+				rowNo++;
+				row = sheet.createRow(rowNo++);
+				
+				String[] headers = { "매출일", "거래일", "내역", "지출일", "거래일", "내역" };
+				for (int i = 0; i < headers.length; i++) {
+					cell = row.createCell(i+1);
+					cell.setCellStyle(headStyle);
+					cell.setCellValue(headers[i]);
+				}
+				
+				
+				
+				int totalCount = Math.max(salesSpending.getSalesList().size(), salesSpending.getSpendingList().size());
+
+				for (int i = 0; i < totalCount; i++) {
+				    Sales sales = null;
+				    Spending spending = null;
+
+				    // salesList의 범위를 벗어나지 않는 경우에만 가져오기
+				    if (i < salesSpending.getSalesList().size()) {
+				        sales = salesSpending.getSalesList().get(i);
+				    }
+
+				    // spendingList의 범위를 벗어나지 않는 경우에만 가져오기
+				    if (i < salesSpending.getSpendingList().size()) {
+				        spending = salesSpending.getSpendingList().get(i);
+				    }
+
+				    row = sheet.createRow(rowNo++);
+				    int col = 1;
+
+				    // Sales 데이터 처리
+				    if (sales != null) {
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell.setCellValue(sales.getSalesDay());
+
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell.setCellValue(sales.getSalesCost());
+
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell.setCellValue(sales.getSalesContent());
+				    } else {
+				        // Sales 데이터가 없는 경우 빈 셀 추가
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				    }
+
+				    // Spending 데이터 처리
+				    if (spending != null) {
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell.setCellValue(spending.getSpendingDay());
+
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell.setCellValue(spending.getSpendingCost());
+
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell.setCellValue(spending.getSpendingContent());
+				    } else {
+				        // Spending 데이터가 없는 경우 빈 셀 추가
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				        cell = row.createCell(col++);
+				        cell.setCellStyle(valueStyle);
+				    }
+				}
+
+				
+				// 컨텐츠타입과파일명지정
+				response.setContentType("ms-vnd/excel");
+				String fileName = java.net.URLEncoder.encode(String.format("%s년 %s월 %s", year, month,"매출 및 지출 관리.xls"), "UTF8");
+				fileName = fileName.replaceAll("\\+", "%20");
+				response.setHeader("Content-Disposition",
+						"attachment;filename=" + fileName);
+
+				// 엑셀출력
+
+				workbook.write(response.getOutputStream());
+
+				workbook.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+		}
 }

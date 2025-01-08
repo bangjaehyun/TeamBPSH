@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.document.model.vo.Sales;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
@@ -24,6 +26,7 @@ import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
+import kr.or.iei.emp.model.vo.SalesSpending;
 import kr.or.iei.emp.model.vo.Team;
 
 @Service("empService")
@@ -342,17 +345,34 @@ public class EmpService {
 
 	public ArrayList<Emp> empCheckMonth(String yearMonth) {
 		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
-		
-		for(Emp e : empList) {
-			HashMap<String,String> map = new HashMap<String, String>();
-			map.put("empCode", e.getEmpCode());
-			map.put("yearMonth", yearMonth);
+		for(int i = empList.size()-1; i >= 0; i--) {
+				//입사년월
+				int empYearMonth = Integer.parseInt(empList.get(i).getEmpDate().substring(0, 7).replace("-", ""));
+				//찾으려는 출퇴근 기록부 년월 보다 입사일이 늦으면 찾지 않음
+		        if (Integer.parseInt(yearMonth) < empYearMonth) {
+		        	empList.remove(i);
+		        	continue;
+		        } 
 			
+			HashMap<String,String> map = new HashMap<String, String>();
+			map.put("empCode", empList.get(i).getEmpCode());
+			map.put("yearMonth", yearMonth);
+			//해당 사원의 해당월의 기록 가져오기
 			ArrayList<Check> checkList = (ArrayList<Check>)dao.empCheckMonth(map);
-			e.setCheckList(checkList);
+			empList.get(i).setCheckList(checkList);
 		}
 		
 		return empList;
+	}
+
+	public SalesSpending selectSalesManager(String yearMonth) {
+		SalesSpending salesSpending = new SalesSpending();
+		ArrayList<Sales> salesList = (ArrayList<Sales>)dao.selectSalesMonth(yearMonth);
+		ArrayList<Spending> spendingList = (ArrayList<Spending>)dao.selectSpendingMonth(yearMonth);
+		salesSpending.setSalesList(salesList);
+		salesSpending.setSpendingList(spendingList);
+		
+		return salesSpending;
 	}
 
 }

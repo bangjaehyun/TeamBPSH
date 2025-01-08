@@ -544,7 +544,8 @@
         	select dept_code 
         	  from tbl_dept 
         	 where dept_code = t.dept_code
-        	)as deptCode
+        	)as deptCode,
+        	emp_date as empDate
        from tbl_emp e
        join tbl_team t using(team_code)
      </select>
@@ -627,6 +628,7 @@
 		from tbl_vacation_count where emp_code=#{_string}
     </select>
     
+
      <select id="empCheckMonth"
      parameterType="map"
      resultType="empCheck">
@@ -636,5 +638,34 @@
              check_note as checkNote
        from tbl_check
       where emp_code = #{empCode} and att_date like #{yearMonth} || '%'
+     </select>
+
+     <insert id="insertAttBt"
+     parameterType="commute">
+     insert into tbl_check
+     (att_date,emp_code,check_note)
+     values
+     (#{attDate},#{empCode},#{checkNote})
+     </insert>
+
+	<select id="selectSalesMonth"
+     parameterType="string"
+     resultType="sales">
+     select document_code as documentCode,
+             TO_CHAR(TO_DATE(sales_day, 'YYYYMMDD'), 'YYYY-MM-DD') as salesDay,
+             sales_cost as salesCost,
+             sales_content as salesContent
+       from tbl_sales where sales_day like #{yearMonth} || '%' order by sales_day
+     </select>
+     
+      <select id="selectSpendingMonth"
+     parameterType="string"
+     resultType="spending">
+     select spending_code as spendingCode,
+             document_code as documentCode,
+             TO_CHAR(TO_DATE(spending_day, 'YYYYMMDD'), 'YYYY-MM-DD')  as spendingDay,
+             spending_cost as spendingCost,
+             spending_content as spendingContent
+       from tbl_spending where spending_day like #{yearMonth} || '%' order by spending_day
      </select>
 </mapper>

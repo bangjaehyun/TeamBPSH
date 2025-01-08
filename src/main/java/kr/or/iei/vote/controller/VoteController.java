@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
+
 import kr.or.iei.common.exception.CommonException;
 import kr.or.iei.vote.model.service.VoteService;
 import kr.or.iei.vote.model.vo.Vote;
 import kr.or.iei.vote.model.vo.VoteList;
+import kr.or.iei.vote.model.vo.VotePaging;
 
 @Controller("voteController")
 @RequestMapping("/vote/")
@@ -32,15 +35,16 @@ public class VoteController {
 	private MessageSource message;
 	
 	
-	@PostMapping("list.do")
-	public String voteList(Model model) {
-		ArrayList<Vote> list = service.selectVoteList();
+	@PostMapping(value="list.do", produces="text/html; charset=utf-8")
+	public String voteList(VotePaging votePaging, Model model) {
+		VotePaging voteNavi = service.selectVoteList(votePaging);
 		
-		model.addAttribute("voteList", list);
+		model.addAttribute("voteList", voteNavi.getVoteList());
+		model.addAttribute("voteTotalCount", voteNavi.getTotalCount());
 		return "vote/voteList";
 	}
 	
-	@PostMapping("createVote.do")
+	@PostMapping(value="createVote.do", produces="text/html; charset=utf-8")
 	public String createVote() {
 		
 		return "vote/createVote";
@@ -53,7 +57,7 @@ public class VoteController {
 		return String.valueOf(result);
 	}
 	
-	@PostMapping(value="voteDetail.do")
+	@PostMapping(value="voteDetail.do", produces="text/html; charset=utf-8")
 	public String voteDetail(Vote vote, Model model) {
 		Vote selectVote = service.selectVote(vote);
 		
@@ -80,6 +84,14 @@ public class VoteController {
 		int result = service.doVoteEmp(voteList);
 		System.out.println(result);
 		return String.valueOf(result);
+	}
+	
+	@PostMapping(value="addVoteList.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String addVoteList(VotePaging votePaging) {
+		VotePaging voteNavi = service.addVoteList(votePaging);
+		
+		return new Gson().toJson(voteNavi.getVoteList());
 	}
 	
 }

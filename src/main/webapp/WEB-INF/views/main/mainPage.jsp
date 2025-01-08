@@ -7,8 +7,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
+	.total-wrap{
+		min-width: 1400px;
+	}
 	.wrap{
 		display: flex;
+		width: 100%;
 	}
 	.side{
 		width: 55px;	
@@ -24,6 +28,10 @@
 		background: black;
 		opacity : 0.5;
 		display: none;
+	}
+	
+	.page-div{
+		width: 100%;
 	}
 	
  		.myPage{
@@ -84,6 +92,7 @@
 </style>
 </head>
 <body>
+	<div class="total-wrap">
 	<jsp:include page="/WEB-INF/views/main/header.jsp"></jsp:include>
 	<div class="wrap">
 		<div class="side">
@@ -116,6 +125,7 @@
             	 </div>
 		</div>
 	</div>
+	</div>
 	<script>
 	function chatOpen(){
 		let popupWidth = 700;
@@ -130,9 +140,12 @@
 		        f.setAttribute('action', '/emp/chatFrm.do');
 		popupWindow.document.body.appendChild(f);
 		f.submit();
+		$('.myPage').removeClass('act');
 	}
 	
 	function myPage(){
+		$('.myPage').removeClass('act');
+		
 		pageMoveParam("/emp/myPage.do", {"empCode" : "${loginEmp.empCode}"});
 	}
 	

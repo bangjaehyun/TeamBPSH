@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.document.model.vo.Document;
+import kr.or.iei.document.model.vo.Sales;
+import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Check;
@@ -245,6 +247,14 @@ public class EmpDao {
 
 	public List<Check> empCheckMonth(HashMap<String, String> map) {
 		return sqlSession.selectList("emp.empCheckMonth", map);
+	}
+
+	public List<Sales> selectSalesMonth(String yearMonth) {
+		return sqlSession.selectList("emp.selectSalesMonth", yearMonth);
+	}
+
+	public List<Spending> selectSpendingMonth(String yearMonth) {
+		return sqlSession.selectList("emp.selectSpendingMonth", yearMonth);
 	}
 
 }
