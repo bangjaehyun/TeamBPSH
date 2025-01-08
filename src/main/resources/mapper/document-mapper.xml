@@ -1,188 +1,186 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="document">
-	<!-- 달력에 문서 목록 출력 -->
-	<select id="apiDocumentList" parameterType="string"
-		resultType="document">
-		select distinct
-		tbl_document.document_code as documentCode,
-		tbl_document.document_type_code as documentTypeCode,
-		tbl_document.document_title as documentTitle,
-		tbl_document.document_content as documentContent,
-		tbl_document.emp_code as empCode,
-		to_char(tbl_document.document_date,
-		'YYYYMMDD HH:MI') as documentDate,
-		tbl_document_type.document_type_name as documentTypeName,
-		tbl_document_sign.sign_yn as progress
-		from tbl_document
-		join tbl_document_type
-		on tbl_document.document_type_code =
-		tbl_document_type.document_type_code
-		join tbl_document_sign
-		on tbl_document_sign.emp_code = tbl_document.emp_code
-		where tbl_document.document_type_code != 'pj' and tbl_document.emp_code =
-		#{empCode}
+   <!-- 달력에 문서 목록 출력 -->
+   <select id="apiDocumentList" parameterType="string"
+      resultType="document">
+      select distinct
+      tbl_document.document_code as documentCode,
+      tbl_document.document_type_code as documentTypeCode,
+      tbl_document.document_title as documentTitle,
+      tbl_document.document_content as documentContent,
+      tbl_document.emp_code as empCode,
+      to_char(tbl_document.document_date, 'YYYYMMDD HH:MI') as documentDate,
+      tbl_document_type.document_type_name as documentTypeName,
+        tbl_document_sign.sign_yn as progress
+      from tbl_document 
+      join tbl_document_type
+      on tbl_document.document_type_code = tbl_document_type.document_type_code
+        join tbl_document_sign
+        on tbl_document_sign.emp_code = tbl_document.emp_code
+        where tbl_document.document_type_code != 'pj' and tbl_document.emp_code = #{empCode}
+      
+   </select>
 
-	</select>
+   <!-- 메인화면에 출력할 문서들의 query -->
+   <select id="docMain" parameterType="string"
+      resultType="document">
+      select distinct
+         tbl_document.document_code as documentCode,
+         tbl_document.document_type_code as documentTypeCode,
+         tbl_document.document_title as documentTitle,
+         to_char(tbl_document.document_date, 'YYYYMMDD HH:MI') as documentDate,
+         tbl_emp.emp_name as empName,
+         tbl_document_type.document_type_name as documentTypeName,
+            tbl_document_sign.sign_yn as progress
+      from tbl_document 
+      join tbl_emp
+      on tbl_document.emp_code = tbl_emp.emp_code
+         join tbl_document_type
+      on tbl_document_type.document_type_code =
+         tbl_document.document_type_code
+        join tbl_document_sign 
+        on tbl_document.document_code = tbl_document_sign.document_code
+      where tbl_document.emp_code = #{empCode} 
+   </select>
+   
 
-	<!-- 메인화면에 출력할 문서들의 query -->
-	<select id="docMain" parameterType="string"
-		resultType="document">
-		select distinct
-		tbl_document.document_code as documentCode,
-		tbl_document.document_type_code as documentTypeCode,
-		tbl_document.document_title as documentTitle,
-		to_char(tbl_document.document_date, 'YYYYMMDD HH:MI') as documentDate,
-		tbl_emp.emp_name as empName,
-		tbl_document_type.document_type_name as documentTypeName,
-		tbl_document_sign.sign_yn as progress
-		from tbl_document
-		join tbl_emp
-		on tbl_document.emp_code = tbl_emp.emp_code
-		join tbl_document_type
-		on tbl_document_type.document_type_code =
-		tbl_document.document_type_code
-		join tbl_document_sign
-		on tbl_document.document_code = tbl_document_sign.document_code
-		where
-		tbl_document.emp_code = #{empCode}
-	</select>
+   <select id="selectDocumentCode"
+     resultType="string">
+        select to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,8,'0') as document_code from dual
+     </select>
+   
+   <select id="selectSpendingCode"
+   resultType="string">
+      select to_char(sysdate,'yyyymmdd')||lpad(seq_spending.nextVal,4,'0') as spending_code from dual
+   </select>
+   
+   <insert id="insertDocument"
+     parameterType="document">
+        insert into tbl_document values(
+           #{documentCode},
+           #{documentTypeCode},
+           #{empCode},
+           #{documentTitle},
+           #{documentContent},
+           sysdate
+        )
+        
+     </insert>
+     <insert id="insertVacationHalf"
+     parameterType="vacHalf">
+        insert into tbl_half
+        values(
+           #{documentCode},
+           #{vacDate},
+           #{halfTime}
+        )
+        
+     </insert>
+     
+     <insert id="insertVacationAnnual"
+     parameterType="selDay">
+        insert into tbl_annual
+        values(
+         #{documentCode},
+         #{startDay},
+         #{endDay}        
+        )
+     </insert>
+     
+     <insert id="inserDocumentFile"
+     parameterType="file">
+        insert into tbl_files
+        values(
+           to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,4,'0'),
+           #{documentCode},
+           #{fileName},
+           #{filePath}
+        )
+     </insert>
+     
+     <insert id="insertDocumentSign"
+     parameterType="sign">
+        insert into tbl_document_sign
+        values(
+           #{documentCode},
+           #{empCode},
+           0,
+           #{documentSeq}
+        )
+     </insert>
+     
+     <insert id="insertDocumentRef"
+     parameterType="ref">
+        insert into tbl_reference
+        values(
+           #{documentCode},
+           #{empCode}
+        )
+     </insert>
+     
+     
+     
+     <insert id="insertSpending"
+     parameterType="map">
+     insert into tbl_spending
+     values(
+        #{spendingCode},
+        #{documentCode},
+        #{spendingDay},
+        #{spendingCost},
+        #{spendingContent}
+     )
+     </insert>
 
-	<select id="selectDocumentCode"
-  	resultType="string">
-  		select to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,8,'0') as document_code from dual
-  	</select>
-	
-	<select id="selectSpendingCode"
-	resultType="string">
-		select to_char(sysdate,'yyyymmdd')||lpad(seq_spending.nextVal,4,'0') as spending_code from dual
-	</select>
-
-	<select id="selectSpendingCode" resultType="string">
-		select
-		to_char(sysdate,'yyyymmdd')||lpad(seq_spending.nextVal,4,'0') as
-		document_code from dual
-	</select>
-
-	<insert id="insertDocument" parameterType="document">
-		insert into tbl_document values(
-		#{documentCode},
-		#{documentTypeCode},
-		#{empCode},
-		#{documentTitle},
-		#{documentContent},
-		sysdate
-		)
-
-	</insert>
-	<insert id="insertVacationHalf" parameterType="vacHalf">
-		insert into tbl_half
-		values(
-		#{documentCode},
-		#{vacDate},
-		#{halfTime}
-		)
-
-	</insert>
-
-	<insert id="insertVacationAnnual" parameterType="selDay">
-		insert into tbl_annual
-		values(
-		#{documentCode},
-		#{startDay},
-		#{endDay}
-		)
-	</insert>
-
-	<insert id="inserDocumentFile" parameterType="file">
-		insert into tbl_files
-		values(
-		to_char(sysdate,'yyyymmdd')||lpad(seq_document.nextVal,4,'0'),
-		#{documentCode},
-		#{fileName},
-		#{filePath}
-		)
-	</insert>
-
-	<insert id="insertDocumentSign" parameterType="sign">
-		insert into tbl_document_sign
-		values(
-		#{documentCode},
-		#{empCode},
-		0,
-		#{documentSeq}
-		)
-	</insert>
-
-	<insert id="insertDocumentRef" parameterType="ref">
-		insert into tbl_reference
-		values(
-		#{documentCode},
-		#{empCode}
-		)
-	</insert>
-
-
-
-	<insert id="insertSpending" parameterType="map">
-		insert into tbl_spending
-		values(
-		#{spendingCode},
-		#{documentCode},
-		#{spendingDay},
-		#{spendingCost},
-		#{spendingContent}
-		)
-	</insert>
-
-
-	<select id="apiPageDocType" parameterType="string"
-		resultType="documentType">
-		select DISTINCT
-		document_type_name as documentTypeName,
-		document_type_code as documentTypeCode
-		from tbl_document_type
-
-	</select>
-
-	<select id="viewDocOne" parameterType="map"
-		resultType="document">
-		select
-		document_code as documentCode,
-		emp_code as empCode,
-		document_title as documentTitle,
-		document_content as documentContent,
-		document_date as documentDate,
-		document_type_code as documentTypeCode
-		from tbl_document
-		where document_code =
-		#{documentCode} and document_type_code = #{documentTypeCode}
-
-	</select>
-	<select id="selectFileList" parameterType="map"
-		resultType="file">
-		select
-		file_no as fileNo,
-		document_code as documentCode,
-		file_name as fileName,
-		file_fath as fileFath
-		from tbl_file
-		where document_code = #{documentCode}
-	</select>
-	<select id="viewSignList" parameterType="map" resultType="sign">
-		select
-		document_code as documentCode,
-		emp_code as empCode,
-		sign_yn as signYn,
-		document_seq as documentSeq
-		from tbl_document_sign
-		where document_code = #{documentCode}
-			
-	</select>
-	
-	<select id="selectDocList"
-	parameterType="string"
-	resultType="document">
+   
+   <select id="apiPageDocType" parameterType="string"
+   resultType="documentType">
+      select DISTINCT
+         document_type_name as documentTypeName,
+         document_type_code as documentTypeCode
+      from tbl_document_type
+      
+   </select>
+   
+   <select id="viewDocOne" parameterType="map"
+   resultType="document">
+      select 
+         document_code as documentCode,
+         emp_code as empCode,
+         document_title as documentTitle,
+         document_content as documentContent,
+         document_date as documentDate,
+         document_type_code as documentTypeCode
+      from tbl_document
+      where document_code = #{documentCode} and document_type_code = #{documentTypeCode}
+      
+   </select>
+   <select id="selectFileList" parameterType="map"
+   resultType="file">
+      select
+         file_no as fileNo,
+         document_code as documentCode,
+         file_name as fileName,
+         file_fath as fileFath
+      from tbl_file
+      where document_code = #{documentCode}
+   </select>
+   <select id="viewSignList" parameterType="map"
+   resultType="sign">
+      select 
+         document_code as documentCode,
+         emp_code as empCode,
+         sign_yn as signYn,
+         document_seq as documentSeq
+      from tbl_document_sign
+      where document_code = #{documentCode}
+         
+   </select>
+   
+   <select id="selectDocList"
+   parameterType="string"
+   resultType="document">
    select 
     document_code as documentCode,
     emp_name as empName,
@@ -190,7 +188,7 @@
     document_title as documentTitle,
     document_type_code as documentTypeCode,
     document_type_name as documentTypeName
-	
+   
         from
             tbl_document 
         join 
@@ -207,190 +205,158 @@
         order by document_date desc
    
 
-	</select>
+   </select>
+   
+   <select id="selectDocType"
+   resultType="documentType">
+      select
+      document_type_code as documentTypeCode,
+      document_type_name as documentTypeName
+      from
+      tbl_document_type
+   </select>
+   
+   <select id="selectSignList"
+   parameterType="string"
+   resultType="sign">
+      select
+      document_code as documentCode,
+      emp_code as empCode,
+      sign_yn as signYn,
+      document_seq as documentSeq,
+      emp_name as empName,
+      rank_name as empRank
+      from tbl_document_sign join tbl_emp using(emp_code) join tbl_rank using(rank_code)
+      where document_code=#{_string} order by document_seq  
+   </select> 
+   
+   
+   <select id="selectOneDoc"
+   parameterType="string"
+   resultType="document">
+   select 
+         document_code as documentCode,
+         emp_code as empCode,
+         emp_name as empName,
+         document_title as documentTitle,
+         document_content as documentContent,
+         document_date as documentDate,
+         document_type_code as documentTypeCode,
+         document_type_name as documentTypeName
+   from tbl_document join tbl_emp using(emp_code)
+   join tbl_document_type using(document_type_code)      
+   where document_code = #{documentCode}
+   
+   </select>
 
-	<select id="selectDocList" parameterType="string"
-		resultType="document">
-		select
-		document_code as documentCode,
-		emp_name as empName,
-		document_date as documentDate,
-		document_title as documentTitle,
-		document_type_code as documentTypeCode,
-		document_type_name as documentTypeName
-		from (
-		select rownum as rnum, a.*
-		from (
-		select
+   <select id="selectOneDocSpending"
+   parameterType="string"
+   resultType="spending">
+      select 
+         spending_code as spendingCode,
+         spending_cost as spendingCost,
+         spending_day as spendingDay,
+         spending_content as spendingContent,
+         document_code as documentCode
+      from tbl_spending
+      where document_code =#{_string}   
+   </select>
+   
+   <select id="selectOneDocFile"
+   parameterType="string"
+   resultType="file">
+   select
+      file_no as fileNo,
+      document_code as documentCode,
+      file_name as fileName,
+      file_path as filePath
+   from tbl_files
+   where document_code =#{_string}
+   </select>
+   
+   <select id="selectAnnual"
+   parameterType="string"
+   resultType="selDay">
+   select 
+      annual_start as startDay,
+      annual_end as endDay,
+      document_code as documentCode
+   from tbl_annual
+   where document_code =#{_string}
+   </select>
+   <select id="selectHalf"
+   parameterType="string"
+   resultType="vacHalf">
+      select
+         document_code as documentCode,
+         half_day as vacDate,
+         Half_type as halfTime
+      from tbl_half
+      where document_code=#{_string} 
+   </select>
+   <update id="approveDoc"
+   parameterType="map">
+      update
+         tbl_document_sign
+         set sign_yn=#{check}
+      where emp_code=#{empCode} and document_code=#{documentCode}
+   </update>
+   <select id="selectRefList"
+   parameterType="string"
+   resultType="ref">
+      select
+         emp_code as empCode,
+         document_code as documentCode
+      from tbl_reference
+      where document_code=#{_string}
+   </select>
 
-		d.document_code,
-		document_type_code,
-		e.emp_name,
-		d.document_date,
-		d.document_title,
-		t.document_type_name
-		from
-		tbl_document d
-		join
-		tbl_emp e
-		using (emp_code)
-		join
-		tbl_document_type t
-		using (document_type_code)
-		<choose>
-			<when test='!type.equals("all")'>
-				where document_type_code = #{_string}
-			</when>
-		</choose>
-		order by d.document_date desc
-		) a
-		)
-
-	</select>
-
-	<select id="selectDocType" resultType="documentType">
-		select
-		document_type_code
-		as documentTypeCode,
-		document_type_name as documentTypeName
-		from
-		tbl_document_type
-	</select>
-
-	<select id="selectSignList" parameterType="string"
-		resultType="sign">
-		select
-		document_code as documentCode,
-		emp_code as empCode,
-		sign_yn as signYn,
-		document_seq as documentSeq,
-		emp_name as empName,
-		rank_name as empRank
-		from tbl_document_sign join tbl_emp
-		using(emp_code) join tbl_rank using(rank_code)
-		where
-		document_code=#{_string} order by document_seq
-	</select>
-
-
-	<select id="selectOneDoc" parameterType="string"
-		resultType="document">
-		select
-		document_code as documentCode,
-		emp_code as empCode,
-		emp_name as empName,
-		document_title as documentTitle,
-		document_content as documentContent,
-		document_date as documentDate,
-		document_type_code as documentTypeCode,
-		document_type_name as documentTypeName
-		from tbl_document join tbl_emp using(emp_code)
-		join tbl_document_type using(document_type_code)
-		where document_code = #{documentCode}
-
-	</select>
-
-	<select id="selectOneDocSpending" parameterType="string"
-		resultType="spending">
-		select
-		spending_code as spendingCode,
-		spending_cost as spendingCost,
-		spending_day as spendingDay,
-		spending_content as spendingContent,
-		document_code as documentCode
-		from tbl_spending
-		where document_code =#{_string}
-	</select>
-
-	<select id="selectOneDocFile" parameterType="string"
-		resultType="file">
-		select
-		file_no as fileNo,
-		document_code as documentCode,
-		file_name as fileName,
-		file_path as filePath
-		from tbl_files
-		where document_code =#{_string}
-	</select>
-
-	<select id="selectAnnual" parameterType="string"
-		resultType="selDay">
-		select
-		annual_start as startDay,
-		annual_end as endDay,
-		document_code as documentCode
-		from tbl_annual
-		where document_code =#{_string}
-	</select>
-	<select id="selectHalf" parameterType="string"
-		resultType="vacHalf">
-		select
-		document_code as documentCode,
-		half_day as vacDate,
-		Half_type as halfTime
-		from tbl_half
-		where document_code=#{_string}
-	</select>
-	<update id="approveDoc" parameterType="map">
-		update
-		tbl_document_sign
-		set sign_yn=#{check}
-		where emp_code=#{empCode} and
-		document_code=#{documentCode}
-	</update>
-	<select id="selectRefList" parameterType="string"
-		resultType="ref">
-		select
-		emp_code as empCode,
-		document_code as documentCode
-		from tbl_reference
-		where document_code=#{_string}
-	</select>
-
-	<insert id="insertBusiness" parameterType="business">
-		insert into tbl_business_trip
-		values(
-		#{documentCode},
-		#{businessTo},
-		#{businessPerpose},
-		#{businessStart},
-		#{businessEnd}
-		)
-	</insert>
-	<select id="selectOneBt" parameterType="string"
-		resultType="business">
-		select
-		document_code as documentCode,
-		business_to as businessTo,
-		business_perpose as businessPerpose,
-		business_start as businessStart,
-		business_end as businessEnd
-		from tbl_business_trip
-		where document_code=#{_string}
-	</select>
-	<select id="selectEstimateCode"
-	resultType="string">
-		select
-			to_char(sysdate,'yyyyMMddHHmmss')||lpad(seq_estimate.nextVal,4,'0')
-		as estimateCode from dual
-	</select>
-	<insert id="insertEstimate"
-	parameterType="map">
-		insert into tbl_estimate
-		values(
-			#{estEntity},
-			#{team},
-			#{rank},
-			#{people},
-			#{price},
-			#{workDays},
-			#{documentCode}
-			
-		)
-	</insert>
-	<select id="selectEstimate"
-	parameterType="string"
-	resultType="estimate">
+   <insert id="insertBusiness"
+   parameterType="business">
+   insert into tbl_business_trip
+   values(
+      #{documentCode},
+      #{businessTo},
+      #{businessPerpose},
+      #{businessStart},
+      #{businessEnd}
+   )
+   </insert>
+   <select id="selectOneBt"
+   parameterType="string"
+   resultType="business">
+      select
+         document_code as documentCode,
+         business_to as businessTo,
+         business_perpose as businessPerpose,
+         business_start as businessStart,
+         business_end as businessEnd
+      from tbl_business_trip
+      where document_code=#{_string}
+   </select>
+   <select id="selectEstimateCode"
+   resultType="string">
+      select
+         to_char(sysdate,'yyyyMMddHHmmss')||lpad(seq_estimate.nextVal,4,'0')
+      as estimateCode from dual
+   </select>
+   <insert id="insertEstimate"
+   parameterType="map">
+      insert into tbl_estimate
+      values(
+         #{estEntity},
+         #{team},
+         #{rank},
+         #{people},
+         #{price},
+         #{workDays},
+         #{documentCode}
+         
+      )
+   </insert>
+   <select id="selectEstimate"
+   parameterType="string"
+   resultType="estimate">
 SELECT
     team_code AS teamCode,
     team_name AS teamName,
@@ -403,5 +369,5 @@ JOIN tbl_team USING (team_code)
 WHERE document_code = #{_string}
 GROUP BY team_code, team_name
 
-	</select>
+   </select>
 </mapper>
