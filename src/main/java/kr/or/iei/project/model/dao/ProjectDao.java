@@ -105,6 +105,11 @@ public class ProjectDao {
 		
 		return sqlSession.insert("project.addProjectPartemp", params);
 	}
+
+	public int removeEmp(HashMap<String, Object> params) {
+		
+		return sqlSession.delete("project.removeEmp", params);
+	}
 	
 
 

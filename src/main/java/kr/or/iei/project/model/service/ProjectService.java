@@ -121,6 +121,14 @@ public class ProjectService {
 		
 	}
 
+	public int removeEmp(String projectNo, String empCode) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("projectNo", projectNo);
+		params.put("empCode", empCode);
+		
+		return dao.removeEmp(params);
+	}
+
 
 
 	

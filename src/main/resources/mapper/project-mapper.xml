@@ -239,11 +239,16 @@
 		)
 		values
 		(
-		('PT' || TO_CHAR(SYSDATE, 'yymmddHH24MM')),
+		(('PT' || TO_CHAR(SYSDATE, 'yymm')) || lpad(SEQ_PROJECT_PARTEMP.NEXTVAL, 4, '0')),
 		#{projectNo},
 		#{empCode},
 		#{partempContent}
 		)
 	</insert>
+	
+	<delete id="removeEmp" parameterType="map">
+		delete tbl_project_partemp
+		where emp_code = #{empCode} and project_no = #{projectNo}
+	</delete>
 
 </mapper>

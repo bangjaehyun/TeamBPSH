@@ -39,6 +39,7 @@ import kr.or.iei.project.model.service.ProjectService;
 import kr.or.iei.project.model.vo.Comment;
 import kr.or.iei.project.model.vo.Project;
 import kr.or.iei.project.model.vo.ProjectPartemp;
+import oracle.jdbc.proxy.annotation.Post;
 
 
 @Controller("projectController")
@@ -237,8 +238,7 @@ public class ProjectController {
         }
         
         
-        System.out.println(deleteFile);
-        System.out.println("111");
+        
         comment.setCommContent(commContent);
 
      // 기존 파일 삭제 처리 (deleteFile 값이 "1"일 경우)
@@ -336,13 +336,18 @@ public class ProjectController {
     
     @PostMapping("addProjectPartemp.do")
     @ResponseBody
-    public int addProjectEmp(String projectNo, String empCode, String partempContent) {
+    public String addProjectEmp(String projectNo, String empCode, String partempContent) {
     	int result = service.addProjectPartemp(partempContent, projectNo, empCode);
-    	System.out.println(result);
-    	return result;
+    	
+    	return String.valueOf(result);
     }
     
-
+    @PostMapping("removeEmp.do")
+    @ResponseBody
+    public String removeEmp(String projectNo, String empCode) {
+    	int result = service.removeEmp(projectNo, empCode);
+    	return String.valueOf(result);
+    }
 }
     
 		

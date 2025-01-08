@@ -242,7 +242,7 @@ th {
 							<td>${addProjectEmp.empName}</td>
 							<td>${addProjectEmp.rankCode}</td>
 							<td><textarea>test값</textarea>
-							<td><button id="addPartEmp" data-empcode="${addProjectEmp.empCode}">추가</button></td>
+							<td><button id="addPartEmp">추가</button></td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -269,7 +269,7 @@ th {
 							<td>${projectPartempList.rankCode}</td>
 							<td>${projectPartempList.partempContent}</td>
 							<td>
-                    			<button id="removeEmp" data-empcode="${projectEmp.empCode}">삭제</button>
+                    			<button id="removeEmp">삭제</button>
                				</td>
 						</tr>
 					</c:forEach>
@@ -644,9 +644,48 @@ th {
 	            }
 				
 			});
+
 		});
 		
-		$('remove')
+		$('#removeEmp').on('click',function(){
+		let projectNo = $('#projectNo').text();
+		let empCode = '';
+			$('#pjBody tbody tr').each(function() {
+				empCode = $(this).find('td:first-child').text();
+			});
+			$.ajax({
+				url : '/project/removeEmp.do',
+				type : 'post',
+				data : {'projectNo' : projectNo,
+						'empCode'   : empCode
+					   },
+				success : function(res){
+					console.log(res);
+	            	if(res > 0){
+	                       swal({
+	                          title : "완료",
+	                          text : "팀원이 제거 되었습니다.",
+	                          icon : "success"
+	                       }).then(function(){
+	                          pageMove('/project/list.do');
+	                       });
+	                    }else{
+	                       swal({
+	                          title : "오류",
+	                          text : "팀원 제거 중 오류가 발생하였습니다.",
+	                          icon : "error"
+	                       }).then(function(){
+	                          pageMove('/project/list.do');
+	                       });
+	                    }
+	            },
+	            error : function(){
+	            	console.log('ajax 오류');
+	            }
+			});
+		});
+		
+		
 	</script>
 </body>
 </html>
