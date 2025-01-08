@@ -19,7 +19,6 @@ import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
-import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
@@ -224,13 +223,17 @@ public class EmpDao {
 	public List<Emp> selectDeptLeaderList() {
 		return sqlSession.selectList("emp.selectDeptLeaderList");
 	}
+	
+	public List<Emp> selectTeamLeaderList() {
+		return sqlSession.selectList("emp.selectTeamLeaderList");
+	}
 
 	public List<Emp> selectEmpList() {
 		return sqlSession.selectList("emp.selectEmpList");
 	}
 
 	public int selectLeader(Emp emp) {
-		return sqlSession.selectOne("emp.selectLeader");
+		return sqlSession.selectOne("emp.selectLeader", emp);
 	}
 
 	public int updateLeader(Emp emp) {
@@ -240,6 +243,19 @@ public class EmpDao {
 	public int insertLeader(Emp emp) {
 		return sqlSession.insert("emp.insertLeader",emp);
 	}
+	
+	public int selectTeamLeader(Emp emp) {
+		return sqlSession.selectOne("emp.selectTeamLeader", emp);
+	}
+
+	public int updateTeamLeader(Emp emp) {
+		return sqlSession.update("emp.updateTeamLeader", emp);
+	}
+
+	public int insertTeamLeader(Emp emp) {
+		return sqlSession.insert("emp.insertTeamLeader",emp);
+	}
+	
 
 	public int selectAlarmCount(String empCode) {
 		return sqlSession.selectOne("emp.selectAlarmCount", empCode);

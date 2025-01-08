@@ -70,9 +70,9 @@ import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
-import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Leader;
 import kr.or.iei.emp.model.vo.SalesSpending;
 
 
@@ -377,7 +377,7 @@ public class EmpController {
         
         if(emp != null) {
             EmpSessionListener.getInstance().removeSession(emp.getEmpCode());
-        
+            
             session.setAttribute("loginEmp", emp);
             session.setMaxInactiveInterval(600);
             EmpSessionListener.getInstance().setSession(session, emp.getEmpCode());
@@ -509,7 +509,7 @@ public class EmpController {
     	  return String.valueOf(result);
       }
       
-      @PostMapping("myPage.do")
+      @PostMapping(value="myPage.do", produces="text/html; charset=utf-8")
       public String myPage(String empCode, Model model) {
     	  Commute commute = service.selectCommute(empCode);
     	  
@@ -589,15 +589,28 @@ public class EmpController {
           return "emp/empDevelopPrice";
       }
       
+      //부서장 관리
       @PostMapping(value="deptLeaderApPoint.do", produces="text/html; charset=utf-8;")
       @AdminChk
       public String deptLeaderApPoint(Model model) {
-    	  DeptLeader deptLeader = service.selectDeptLeaderList();
+    	  Leader deptLeader = service.selectDeptLeaderList();
     	  model.addAttribute("leaderList", new Gson().toJson(deptLeader.getLeaderList()));
     	  model.addAttribute("empList",deptLeader.getEmpList());
     	  
     	  return "emp/deptReaderApPoint";
       }
+      
+      //팀장 관리
+      @PostMapping(value="teamLeaderApPoint.do", produces="text/html; charset=utf-8;")
+      @AdminChk
+      public String teamLeaderApPoint(Model model) {
+    	  Leader teamLeader = service.selectTeamLeaderList();
+    	  model.addAttribute("leaderList", new Gson().toJson(teamLeader.getLeaderList()));
+    	  model.addAttribute("empList",teamLeader.getEmpList());
+    	  
+    	  return "emp/teamReaderApPoint";
+      }
+      
       
       @PostMapping(value="changeLeader.do", produces="application/json; charset=utf-8")
       @ResponseBody
@@ -607,7 +620,16 @@ public class EmpController {
     	  return String.valueOf(result);
       }
       
+      @PostMapping(value="changeTeamLeader.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String changeTeamLeader(Emp emp) {
+    	  int result = service.chageTeamLeader(emp);
+    	  
+    	  return String.valueOf(result);
+      }
+      
       @PostMapping(value="empCheck.do", produces="text/html; charset=utf-8;")
+      @AdminChk
       public String empCheck(Model model,String yearMonth) {
     	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");
     	  YearMonth yearMonthDate = YearMonth.parse(yearMonth, formatter);

@@ -99,6 +99,7 @@
        		display: flex;
        		justify-content: flex-start;
        		border-bottom: 1px solid black;
+       		margin : 0 5px;
        }
     </style>
 </head>

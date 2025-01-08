@@ -90,7 +90,7 @@
 	<div class="side-bar">
 		<ul>
 			<li class="side-li">
-				<div class="side-div mainPage">
+				<div id="mainPage" class="side-div mainPage">
 					<div class="img-div"><img class="side-img" src="/resources/images/main.png" /></div>
 					<p class="side-text">main</p>
 				</div>
@@ -137,6 +137,7 @@
 					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="teamLeaderApPoint()">팀장 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empCheck()">출퇴근 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="salesManager()">매출관리</a></li>
 				</ul>
@@ -144,9 +145,16 @@
 		</ul>
     </div>
     <script>
+	$(document).ready(function(){
+		$('#mainPage').addClass('div-color');
+	});
     <%-- 부서장 관리 --%>
     function deptLeaderApPoint(){
     	pageMove("/emp/deptLeaderApPoint.do");	
+    }
+    <%-- 팀장 관리 --%>
+    function teamLeaderApPoint(){
+    	pageMove("/emp/teamLeaderApPoint.do");	
     }
     <%--매출 관리 페이지 이동--%>
     function salesManager(){
