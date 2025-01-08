@@ -531,10 +531,20 @@
        join tbl_emp using(emp_code)
      </select>
      
+      <select id="selectTeamLeaderList"
+     resultType="emp">
+       select f.team_code as teamCode, 
+     		  f.emp_code as empCode,
+     		  e.emp_name as empName 
+         from tbl_team_leader f
+         join tbl_emp e on f.emp_code = e.emp_code
+     </select>
+     
      <select id="selectEmpList"
      resultType="emp">
      select emp_code as empCode,
      		emp_name as empName,
+     		team_code as teamCode,
      		(
      		select rank_name 
      		  from tbl_rank 
@@ -575,6 +585,35 @@
      values
      (
      	#{deptCode},
+     	#{empCode}
+     )
+     </insert>
+     
+      <select id="selectTeamLeader"
+     parameterType="emp"
+     resultType="int">
+     select count(*)
+       from tbl_team_leader
+      where team_code = #{teamCode}
+     </select>
+     
+      <update id="updateTeamLeader"
+     parameterType="emp">
+     update tbl_team_leader
+        set emp_code = #{empCode}
+      where team_code = #{teamCode}
+     </update>
+     
+     <insert id="insertTeamLeader"
+     parameterType="emp">
+     insert into tbl_team_leader
+     (
+     	team_code,
+     	emp_code
+     )
+     values
+     (
+     	#{teamCode},
      	#{empCode}
      )
      </insert>

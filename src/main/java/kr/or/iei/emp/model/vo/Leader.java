@@ -2,16 +2,16 @@ package kr.or.iei.emp.model.vo;
 
 import java.util.ArrayList;
 
-public class DeptLeader {
+public class Leader {
 	private ArrayList<Emp> leaderList;
 	private ArrayList<Emp> empList;
 
-	public DeptLeader() {
+	public Leader() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DeptLeader(ArrayList<Emp> leaderList, ArrayList<Emp> empList) {
+	public Leader(ArrayList<Emp> leaderList, ArrayList<Emp> empList) {
 		super();
 		this.leaderList = leaderList;
 		this.empList = empList;

@@ -22,9 +22,9 @@ import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
-import kr.or.iei.emp.model.vo.DeptLeader;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Leader;
 import kr.or.iei.emp.model.vo.Rank;
 import kr.or.iei.emp.model.vo.SalesSpending;
 import kr.or.iei.emp.model.vo.Team;
@@ -324,11 +324,18 @@ public class EmpService {
 		return 1;
 	}
 
-	public DeptLeader selectDeptLeaderList() {
+	public Leader selectDeptLeaderList() {
 		ArrayList<Emp> leaderList = (ArrayList<Emp>)dao.selectDeptLeaderList();
 		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
 		
-		return new DeptLeader(leaderList, empList);
+		return new Leader(leaderList, empList);
+	}
+	
+	public Leader selectTeamLeaderList() {
+		ArrayList<Emp> leaderList = (ArrayList<Emp>)dao.selectTeamLeaderList();
+		ArrayList<Emp> empList = (ArrayList<Emp>)dao.selectEmpList();
+		
+		return new Leader(leaderList, empList);
 	}
 
 	public int chageLeader(Emp emp) {
@@ -338,6 +345,18 @@ public class EmpService {
 			result = dao.updateLeader(emp);
 		}else {
 			result = dao.insertLeader(emp);
+		}
+		
+		return result;
+	}
+	
+	public int chageTeamLeader(Emp emp) {
+		int result = dao.selectTeamLeader(emp);
+		
+		if(result > 0) {
+			result = dao.updateTeamLeader(emp);
+		}else {
+			result = dao.insertTeamLeader(emp);
 		}
 		
 		return result;
