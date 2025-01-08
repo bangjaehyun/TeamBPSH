@@ -2,6 +2,8 @@ package kr.or.iei.project.model.vo;
 
 import java.util.ArrayList;
 
+import kr.or.iei.emp.model.vo.Team;
+
 public class Project {
 	private String projectNo;
 	private String documentTypeCode;
@@ -12,6 +14,7 @@ public class Project {
 	
 	//종속 변수
 	private String documentDate;
+	private ArrayList<Team> teamList;
 	private String empName;
 	private String teamLeader;
 	private ArrayList<ProjectPartemp> projectPartemp;
@@ -24,8 +27,8 @@ public class Project {
 
 
 	public Project(String projectNo, String documentTypeCode, String projectTitle, String projectContent,
-			String projectEnd, String empCode, String documentDate, String empName, String teamLeader,
-			ArrayList<ProjectPartemp> projectPartemp) {
+			String projectEnd, String empCode, String documentDate, ArrayList<Team> teamList, String empName,
+			String teamLeader, ArrayList<ProjectPartemp> projectPartemp) {
 		super();
 		this.projectNo = projectNo;
 		this.documentTypeCode = documentTypeCode;
@@ -34,6 +37,7 @@ public class Project {
 		this.projectEnd = projectEnd;
 		this.empCode = empCode;
 		this.documentDate = documentDate;
+		this.teamList = teamList;
 		this.empName = empName;
 		this.teamLeader = teamLeader;
 		this.projectPartemp = projectPartemp;
@@ -110,6 +114,16 @@ public class Project {
 	}
 
 
+	public ArrayList<Team> getTeamList() {
+		return teamList;
+	}
+
+
+	public void setTeamList(ArrayList<Team> teamList) {
+		this.teamList = teamList;
+	}
+
+
 	public String getEmpName() {
 		return empName;
 	}
@@ -144,13 +158,14 @@ public class Project {
 	public String toString() {
 		return "Project [projectNo=" + projectNo + ", documentTypeCode=" + documentTypeCode + ", projectTitle="
 				+ projectTitle + ", projectContent=" + projectContent + ", projectEnd=" + projectEnd + ", empCode="
-				+ empCode + ", documentDate=" + documentDate + ", empName=" + empName + ", teamLeader=" + teamLeader
-				+ ", projectPartemp=" + projectPartemp + "]";
+				+ empCode + ", documentDate=" + documentDate + ", teamList=" + teamList + ", empName=" + empName
+				+ ", teamLeader=" + teamLeader + ", projectPartemp=" + projectPartemp + "]";
 	}
 
 
-
 	
+
+
 	
 
 	

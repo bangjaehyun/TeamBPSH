@@ -12,9 +12,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Team;
 import kr.or.iei.project.model.vo.Comment;
 
 import kr.or.iei.project.model.vo.Project;
+import kr.or.iei.project.model.vo.ProjectPartemp;
 
 @Repository("projectDao")
 public class ProjectDao {
@@ -39,7 +41,7 @@ public class ProjectDao {
 		return sqlSession.selectOne("project.projectView", projectNo);
 	}
 
-	public List<Emp> projectEmpList(String projectNo) {
+	public List<ProjectPartemp> projectEmpList(String projectNo) {
 		
 		return sqlSession.selectList("project.projectPartempList", projectNo);
 	}
@@ -76,9 +78,6 @@ public class ProjectDao {
 
 	public Comment getCommentNo(String commNo) {
 	        Comment comment = sqlSession.selectOne("project.selectCommNo", commNo);
-	        if (comment == null) {
-	            System.out.println("🚨 getCommentNo: 해당 commNo(" + commNo + ")가 존재하지 않음.");
-	        }
 	        return comment;
 	    }
 
@@ -91,6 +90,13 @@ public class ProjectDao {
 	public int deleteComment(String commNo) {
 		return sqlSession.delete("project.deleteComment",commNo);
 	}
+
+	public List<Team> projectTeamLit(String projectNo) {
+		
+		return sqlSession.selectList("project.projectTeamList",projectNo);
+	}
+	
+
 
 
 	

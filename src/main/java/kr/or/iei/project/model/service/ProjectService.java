@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Team;
 import kr.or.iei.project.model.dao.ProjectDao;
 import kr.or.iei.project.model.vo.Comment;
 import kr.or.iei.project.model.vo.Project;
+import kr.or.iei.project.model.vo.ProjectPartemp;
+import kr.or.iei.project.model.vo.ProjectTeam;
 
 
 @Service("projectService")
@@ -36,13 +39,14 @@ public class ProjectService {
 	}
 
 	public Project projectView(String projectNo) {
-		
-		return dao.projectView(projectNo);
+		 Project project =  dao.projectView(projectNo);
+		 ArrayList<Team> projectTeam = (ArrayList<Team>) dao.projectTeamLit(projectNo);
+		 ArrayList<ProjectPartemp> projectPartempList = (ArrayList<ProjectPartemp>) dao.projectEmpList(projectNo);
+		 project.setTeamList(projectTeam);
+		 project.setProjectPartemp(projectPartempList);
+		return project;
 	}
 
-	public List<Emp> projectEmpList(String projectNo) {
-		return  dao.projectEmpList(projectNo);
-	}
 	
 	@Transactional
 	public int projectWrite(Project project, List<String> teamCode) {
@@ -77,16 +81,16 @@ public class ProjectService {
 	public Comment getCommentNo(String commNo) {
 	        Comment comment = dao.getCommentNo(commNo);
 	        if (comment == null) {
-	            System.out.println("🚨 getCommentNo 실패: commNo(" + commNo + ")에 해당하는 데이터 없음.");
+	            System.out.println("commNo(" + commNo + ")에 해당하는 데이터 없음.");
 	        } else {
-	            System.out.println("✅ getCommentNo 성공: " + comment.getCommContent());
+	            System.out.println("getCommentNo 성공: " + comment.getCommContent());
 	        }
 	        return comment;
 	    }
 	@Transactional
     public boolean updateComment(Comment comment) {
         int updatedRows = dao.updateComment(comment);
-        System.out.println("✅ updateComment 결과: " + updatedRows + " 개 행이 업데이트됨.");
+        
         return updatedRows > 0;
     }
 
@@ -94,5 +98,11 @@ public class ProjectService {
 		
 		return dao.deleteComment(commNo) > 0;
 	}
+
+
+
+	
+	
+	
 
 }

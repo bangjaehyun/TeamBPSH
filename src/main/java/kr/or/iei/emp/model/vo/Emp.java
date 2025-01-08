@@ -22,6 +22,7 @@ public class Emp {
 	private boolean login;
 	private int readCount; // 읽지않은 채팅 갯수
 	private int alarmCount;// 읽지 않은 알람 갯수
+	private String teamName;
 
 	private ArrayList<Check> checkList;
 
@@ -33,7 +34,7 @@ public class Emp {
 	public Emp(String empCode, String teamCode, String rankCode, String deptCode, String empId, String empPw,
 			String empName, String empPhone, String empRetire, String empDate, String rankName, String deptName,
 			String salary, String vacationTotal, String vacationUse, boolean admin, boolean login, int readCount,
-			int alarmCount, ArrayList<Check> checkList) {
+			int alarmCount, String teamName, ArrayList<Check> checkList) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
@@ -54,6 +55,7 @@ public class Emp {
 		this.login = login;
 		this.readCount = readCount;
 		this.alarmCount = alarmCount;
+		this.teamName = teamName;
 		this.checkList = checkList;
 	}
 
@@ -209,6 +211,14 @@ public class Emp {
 		this.alarmCount = alarmCount;
 	}
 
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
 	public ArrayList<Check> getCheckList() {
 		return checkList;
 	}
@@ -224,7 +234,13 @@ public class Emp {
 				+ ", empRetire=" + empRetire + ", empDate=" + empDate + ", rankName=" + rankName + ", deptName="
 				+ deptName + ", salary=" + salary + ", vacationTotal=" + vacationTotal + ", vacationUse=" + vacationUse
 				+ ", admin=" + admin + ", login=" + login + ", readCount=" + readCount + ", alarmCount=" + alarmCount
-				+ ", checkList=" + checkList + "]";
+				+ ", teamName=" + teamName + ", checkList=" + checkList + "]";
 	}
+	
+	
+	
+	
+
+	
 
 }

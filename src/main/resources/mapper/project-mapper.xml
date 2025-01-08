@@ -7,7 +7,8 @@
 		tbl_project.project_no as projectNo,
 		tbl_project.project_title as
 		projectTitle,
-		tbl_project.project_content as projectContent,
+		tbl_project.project_content
+		as projectContent,
 		tbl_project.project_end as projectEnd,
 		tbl_project_partemp.emp_code as
 		empCode,
@@ -29,8 +30,10 @@
 		tbl_document_type.document_type_code
 		join
 		tbl_project_team
-		on tbl_project.project_no = tbl_project_team.project_no
-		where tbl_project_team.team_code = #{loginEmp.teamCode}
+		on
+		tbl_project.project_no = tbl_project_team.project_no
+		where
+		tbl_project_team.team_code = #{loginEmp.teamCode}
 	</select>
 
 	<select id="projectList" parameterType="string"
@@ -38,27 +41,26 @@
 		select
 		tbl_project.project_no as projectNo,
 		tbl_project.project_title as projectTitle,
-		tbl_project.project_content as projectContent,
+		tbl_project.project_content
+		as projectContent,
 		tbl_project.project_end as projectEnd
-		from tbl_project
+		from
+		tbl_project
 	</select>
 
 	<select id="projectView" parameterType="string"
 		resultType="project">
-		SELECT
-		tbl_project.project_no AS projectNo,
-		tbl_project.project_title AS projectTitle,
-		tbl_project.project_content AS projectContent,
-		tbl_project.project_end AS projectEnd,
-		tbl_emp.emp_name as empName
-
+		select
+		project_no AS projectNo,
+		project_title AS
+		projectTitle,
+		project_content AS projectContent,
+		project_end AS
+		projectEnd
 		FROM
 		tbl_project
-		JOIN
-		tbl_emp
-		ON tbl_project.emp_code = tbl_emp.emp_code
-		WHERE
-		tbl_project.project_no = #{projectNo}
+		where tbl_project.project_no =
+		#{projectNo}
 
 	</select>
 
@@ -66,13 +68,16 @@
 		resultType="projectPartemp">
 		select
 		tbl_emp.emp_code as empCode,
-		tbl_emp.emp_name as empName,
+		tbl_emp.emp_name as
+		empName,
 		tbl_project_partemp.partemp_content as partempContent,
 		tbl_emp.team_code as teamCode,
 		tbl_emp.rank_code as rankCode
-		from tbl_project_partemp
+		from
+		tbl_project_partemp
 		join tbl_emp
-		on tbl_project_partemp.emp_code = tbl_emp.emp_code
+		on tbl_project_partemp.emp_code =
+		tbl_emp.emp_code
 		where tbl_project_partemp.project_no = #{projectNo}
 	</select>
 
@@ -106,7 +111,8 @@
 	<insert id="insertTeam" parameterType="map">
 		INSERT ALL
 		<foreach collection="teamCode" item="code">
-			INTO tbl_project_team (project_no, team_code)
+			INTO tbl_project_team
+			(project_no, team_code)
 			VALUES (#{projectNo}, #{code})
 		</foreach>
 		SELECT 1 FROM DUAL
@@ -121,12 +127,14 @@
 	<insert id="insertComment" parameterType="string">
 		insert into
 		tbl_project_comm (
-		comm_no, project_no, emp_code, comm_gb, comm_content, file_name, file_path,
+		comm_no, project_no, emp_code, comm_gb,
+		comm_content, file_name, file_path,
 		comm_date
 		)
 		values
 		(
-		#{commNo}, #{projectNo}, #{empCode}, #{commGb}, #{commContent}, #{fileName},
+		#{commNo},
+		#{projectNo}, #{empCode}, #{commGb}, #{commContent}, #{fileName},
 		#{filePath}, sysdate
 		)
 	</insert>
@@ -141,13 +149,17 @@
 		r.rank_name AS rankName,
 		t.team_name AS teamName,
 		pc.comm_content AS commContent,
-		pc.file_name AS fileName,
+		pc.file_name AS
+		fileName,
 		pc.file_path AS folePath,
 		pc.comm_date AS commDate
-		from tbl_project_comm pc
+		from
+		tbl_project_comm pc
 		join tbl_emp e on pc.emp_code = e.emp_code
-		join tbl_rank r on e.rank_code = r.rank_code
-		join tbl_team t on e.team_code = t.team_code
+		join
+		tbl_rank r on e.rank_code = r.rank_code
+		join tbl_team t on e.team_code
+		= t.team_code
 		order by pc.comm_date desc
 	</select>
 
@@ -156,13 +168,16 @@
 		select
 		comm_no as commNo,
 		emp_code as empCode,
-		comm_gb as commGb,
+		comm_gb as
+		commGb,
 		comm_content as commContent,
 		file_name as fileName,
-		file_path as filePath,
+		file_path as
+		filePath,
 		comm_date as commDate
 		from tbl_project_comm
-		where comm_no = #{commNo}
+		where comm_no =
+		#{commNo}
 	</select>
 
 	<update id="updateComment" parameterType="comment">
@@ -170,7 +185,8 @@
 		set
 		comm_content = #{commContent},
 		comm_gb = #{commGb},
-		file_path = #{filePath},
+		file_path =
+		#{filePath},
 		file_name = #{fileName}
 		where comm_no = #{commNo}
 	</update>
@@ -180,4 +196,51 @@
 		tbl_project_comm
 		where comm_no = #{commNo}
 	</delete>
+	<select id="projectTeamList" parameterType="string"
+		resultType="team">
+
+		SELECT
+		tbl_team.team_code as teamCode,
+		tbl_team.team_name as
+		teamName
+		FROM
+		tbl_project
+		JOIN
+		tbl_project_team
+		on tbl_project.project_no =
+		tbl_project_team.project_no
+		JOIN tbl_team ON tbl_project_team.team_code
+		= tbl_team.team_code
+		where tbl_project_team.project_no = #{projectNo}
+	</select>
+
+	<select id="teamEmpList" parameterType="map" resultType="emp">
+		select e.emp_code, e.emp_name, e.rank_code, e.team_code
+		from tbl_emp e
+		where e.team_code = (select team_code from tbl_emp where emp_code =
+		#{empCode})
+		and e.emp_code != #{empCode} 
+		and e.emp_code not in (
+		select emp_code from tbl_project_partemp where project_no = #{projectNo}
+		) 
+	</select>
+
+	<insert id="addProjectPartemp" parameterType="map">
+		insert into
+		tbl_project_partemp
+		(
+		partemp_no,
+		project_no,
+		emp_code,
+		partemp_content
+		)
+		values
+		(
+		('PT' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24'),
+		#{projectNo},
+		#{empCode},
+		#{partempContent}
+		)
+	</insert>
+
 </mapper>

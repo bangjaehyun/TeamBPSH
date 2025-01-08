@@ -193,24 +193,17 @@ th {
 				<td>${project.projectTitle}</td>
 			</tr>
 			<tr>
-				<th>프로젝트 작성자</th>
-				<td>${project.empCode}</td>
+				<th>프로젝트 참가팀</th>
+				<td>
+				<c:forEach var="team" items="${project.teamList}" varStatus="status">
+        			${team.teamName} <c:if test="${!status.last}">, </c:if>
+    			</c:forEach>
+    			</td>
 				<th>프로젝트 마감일</th>
 				<td>${project.projectEnd}</td>
 			</tr>
 		</table>
-		
-		<div id="addEmp">
-				<label for="empSelect">사원 선택 : </label>
-				<select id="empSelect">
-					<c:forEach var="emp" items="${empList}">
-						<option value="${emp.empCode}">${emp.empName}(${emp.rankCode})</option>
-					</c:forEach>
-				</select>
-				<input type="text" name="partempContent" placeholder="역할 입력">
-				<button type="button" id="addEmp">참여추가</button>
-			</div>
-		
+
 		<!-- 참여 사원 리스트 -->
 		<div class="participants">
 			<h2>참여 사원 리스트</h2>
@@ -557,65 +550,7 @@ th {
 		        });
 		    });
 
-		    // 📌 참여 사원 추가 버튼 클릭 이벤트
-		    $("#addEmpBtn").on("click", function() {
-		        var empCode = $("#empSelect").val();
-		        var partempContent = $('input[name="partempContent"]').val();
-		        var projectNo = $('input[name="projectNo"]').val();
-
-		        if (!partempContent) {
-		            alert("역할을 입력하세요.");
-		            return;
-		        }
-
-		        $.ajax({
-		            url: "/project/addPartEmp.do",
-		            type: "POST",
-		            data: {
-		                empCode: empCode,
-		                partempContent: partempContent,
-		                projectNo: projectNo
-		            },
-		            success: function(response) {
-		                if (response.success) {
-		                    alert("참여 사원이 추가되었습니다.");
-		                    loadEmployeeList(); // 참여 사원 리스트 새로고침
-		                } else {
-		                    alert("참여 사원 추가 실패");
-		                }
-		            },
-		            error: function() {
-		                alert("서버 오류 발생");
-		            }
-		        });
-		    });
-
-		    // 📌 참여 사원 삭제 버튼 클릭 이벤트
-		    $(document).on("click", ".removeEmp", function() {
-		        var empCode = $(this).data("empcode");
-		        var projectNo = $('input[name="projectNo"]').val();
-
-		        $.ajax({
-		            url: "/project/removeEmployee.do",
-		            type: "POST",
-		            data: {
-		                empCode: empCode,
-		                projectNo: projectNo
-		            },
-		            success: function(response) {
-		                if (response.success) {
-		                    alert("참여 사원이 삭제되었습니다.");
-		                    loadEmployeeList(); // 참여 사원 리스트 새로고침
-		                } else {
-		                    alert("삭제 실패");
-		                }
-		            },
-		            error: function() {
-		                alert("서버 오류 발생");
-		            }
-		        });
-		    });
-
+		    
 		    // 📌 참여 사원 리스트 로딩 함수
 		    function loadEmployeeList() {
 		        var projectNo = $('input[name="projectNo"]').val();

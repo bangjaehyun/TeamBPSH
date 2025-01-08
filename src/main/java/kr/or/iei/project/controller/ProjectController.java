@@ -19,6 +19,7 @@ import java.util.Random;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +38,7 @@ import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.project.model.service.ProjectService;
 import kr.or.iei.project.model.vo.Comment;
 import kr.or.iei.project.model.vo.Project;
-import kr.or.iei.project.model.vo.ProjectPartemp;
+
 
 @Controller("projectController")
 @RequestMapping("/project/")
@@ -67,10 +68,11 @@ public class ProjectController {
 	@PostMapping("view.do")
 	public String projectView(Model model, String projectNo) {
 		Project project = service.projectView(projectNo);
-		List<Emp> projectPartempList = service.projectEmpList(projectNo);
+		
+		
 		 model.addAttribute("project", project);
-		 //model.addAttribute("projectPartempList", projectPartempList);
-	     System.out.println(project);
+
+	     
 	    return "project/projectView";
 	}
 	
@@ -299,7 +301,6 @@ public class ProjectController {
     @ResponseBody
     public Map<String, Boolean> deleteComment(@RequestParam String commNo, HttpServletRequest request) {
         Map<String, Boolean> response = new HashMap<>();
-        
         Comment comment = service.getCommentNo(commNo);
         if (comment == null) {
             response.put("success", false);
@@ -307,19 +308,19 @@ public class ProjectController {
         }
 
         //기존 파일 삭제 처리 (첨부파일이 있을 경우)
-        if (comment.getFilePath() != null) {
-            String realPath = request.getSession().getServletContext().getRealPath(comment.getFilePath());
+        if (comment.getFilePath() != null && !comment.getFilePath().isEmpty()) {
+            String realPath = request.getSession().getServletContext().getRealPath("/resources/projectUpload/"+comment.getFilePath());
             File file = new File(realPath);
 
             if (file.exists()) {
                 boolean deleted = file.delete();
-                
+                System.out.println("파일 삭제 성공 여부: " + deleted);
             } else {
-                System.out.println("삭제가 안됨");
+                System.out.println("파일이 존재하지 않음: " + realPath);
             }
         }
 
-        // 
+
         boolean result = service.deleteComment(commNo);
 
         
@@ -327,6 +328,8 @@ public class ProjectController {
         response.put("success", result);
         return response;
     }
+    
+
 }
     
 		
