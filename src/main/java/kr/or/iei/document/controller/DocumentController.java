@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.catalina.connector.Response;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.maven.classrealm.ClassRealmRequest;
+import org.apache.tomcat.jni.Mmap;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,13 +52,16 @@ import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
+import kr.or.iei.document.model.vo.Estimate;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.Dept;
+import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Rank;
 import kr.or.iei.emp.model.vo.Team;
 
 @Controller("documentController")
@@ -75,7 +79,7 @@ public class DocumentController {
 	@Qualifier("emitter")
 	private Emitter emitter;
 	@PostMapping("writeDoc.do")//작성창 이동 메소드
-	public String writeDoc(String type) {
+	public String writeDoc(String type,Model m) {
 		String folder="/document/";
 		
 		String file="";
@@ -91,7 +95,13 @@ public class DocumentController {
 			}
 			
 			case("es"):{
-				file="writeEstimate";	
+				file="writeEstimate";
+				 ArrayList<Team> teamList = (ArrayList<Team>) servletContext.getAttribute("teamList");
+				 ArrayList<Rank> rankList=(ArrayList<Rank>)servletContext.getAttribute("rankList");
+				 ArrayList<DevelopPrice>priceList=(ArrayList<DevelopPrice>)service.selectPriceList();
+				 m.addAttribute("rankList", rankList);
+				 m.addAttribute("teamList",teamList);
+				 m.addAttribute("priceList", priceList);
 				return folder + file;
 			}
 			
@@ -658,6 +668,131 @@ public class DocumentController {
 		
 		
 		
+		//견적서작성
+		@PostMapping(value="writeEstimate.do",produces="application/json; charset=utf-8")
+		@ResponseBody
+		public int writeEstimate(HttpSession session,HttpServletRequest request,Document document,@RequestParam MultipartFile[] files,@RequestParam List<String> signEmpList, @RequestParam List<String> refEmpList,@RequestParam List<String> estimateList,Model m ) {
+			String root=request.getSession().getServletContext().getRealPath("/resources/");
+			
+			//파일관련 기능
+			ArrayList<DocumentFile>fileList=new ArrayList<DocumentFile>();
+			
+			String documentCode=service.selectDocumentCode();
+			document.setDocumentCode(documentCode);
+			Date date=new Date();
+			String today=new SimpleDateFormat("yyyyMMdd").format(date);
+			
+			String savePath = root + "documentFiles" + File.separator + today + File.separator;
+
+			File directory=new File(savePath);
+			if(!directory.exists()) {
+				directory.mkdir();
+			}
+			today=new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+			for (int i=0;i<files.length;i++) {
+				MultipartFile file=files[i];
+				
+			
+				if(!file.isEmpty()) {
+					
+					String originalFileName =file.getOriginalFilename();
+					String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+					
+					
+					int ranNum = new Random().nextInt(9999)+1;
+					String filePath=fileName+"_"+today+"_"+ranNum+extension;
+					savePath+=filePath;
+					
+					BufferedOutputStream bos=null;
+					
+					try {
+							byte []bytes=file.getBytes();
+							FileOutputStream fos=new FileOutputStream(new File(savePath));
+							bos = new BufferedOutputStream(fos);
+							bos.write(bytes);
+							
+							DocumentFile docFile=new DocumentFile();
+							docFile.setFileName(originalFileName);
+							docFile.setFilePath(filePath);
+							docFile.setDocumentCode(documentCode);
+							fileList.add(docFile);
+					}catch(IOException e) {
+						e.printStackTrace();
+					}finally {
+						try {
+							bos.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			document.setFileList(fileList);
+			
+			
+			//결재자
+			 ArrayList<DocumentSign> signList = new ArrayList<>();
+			    for (int i = 0; i < signEmpList.size(); i++) {
+			        DocumentSign sign = new DocumentSign();
+			        sign.setEmpCode(signEmpList.get(i));
+			        sign.setDocumentSeq(String.valueOf(i + 1));
+			        sign.setDocumentCode(documentCode);
+			        signList.add(sign);
+			    }
+			    document.setSignList(signList);
+			
+			    ArrayList<DocumentReference> refList = new ArrayList<>();
+			    for (String refCode : refEmpList) {
+			        DocumentReference ref = new DocumentReference();
+			        ref.setEmpCode(refCode);
+			        ref.setDocumentCode(documentCode);
+			        refList.add(ref);
+			    }
+			    document.setRefList(refList);
+
+			int result=service.insertEstimate(document,estimateList);
+			
+			
+			
+			ArrayList<DocumentSign> signs=service.selectSignList(documentCode);
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
+			alarm.setEmpCode(signs.get(0).getEmpCode());
+			alarm.setRefUrl("/doc/selectOneEs.do");
+			
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			int res=service.insertAlarm(alarm);
+			if(result>0&&res>0) {
+				emitter.sendEvent(signs.get(0).getEmpCode(), alarm.getAlarmComment());
+			}
+			
+			ArrayList<DocumentReference>refs=service.selectRefList(documentCode);
+			
+			for(int i=0;i<refs.size();i++) {
+				Alarm refAlarm=new Alarm();
+				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
+				refAlarm.setEmpCode(refs.get(i).getEmpCode());
+				refAlarm.setRefUrl("/doc/selectOneEs.do");
+				JSONObject json2=new JSONObject();
+				json2.put("documentCode", documentCode);
+				refAlarm.setUrlParam(json2.toJSONString());
+				 int res2=service.insertAlarm(refAlarm);
+				if(res2>0&&result>0) {
+					emitter.sendEvent(refs.get(i).getEmpCode(), refAlarm.getAlarmComment());
+				}
+				
+				}
+			
+			return result;
+		}
+		
+		
+		
 		
 		
 
@@ -819,12 +954,40 @@ public class DocumentController {
 	
 	//견적서 불러오기
 	@PostMapping("selectOneEs.do")
-	public String SelectOneEstimate(String documentCode) {
+	public String SelectOneEstimate(String documentCode,Model model) {
+	
 		Document doc=service.selectOneDoc(documentCode);
-		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
 		
+		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
 		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
-		return "";
+		String signableEmp="";
+		for(int i=0;i<signList.size();i++) {
+			if(Integer.parseInt(signList.get(i).getSignYn())==0) {
+				signableEmp=signList.get(i).getEmpCode();
+				break;//결재할 순서인 사람
+			}else if(Integer.parseInt(signList.get(i).getSignYn())==-1) {
+				break; //반려된 상황
+			}
+		}
+		ArrayList<Estimate> estimateList=service.selectOneEstimateList(documentCode);
+		int totalPrice=0;
+		int workDay=estimateList.get(0).getWorkDays();
+		for(int i=0;i<estimateList.size();i++) {
+			int price=estimateList.get(i).getPrice();
+			
+			totalPrice+=price;
+		}
+		totalPrice=totalPrice*workDay;
+		
+		model.addAttribute("signList",signList);
+		model.addAttribute("fileLsst",fileList);
+		model.addAttribute("doc",doc);
+		model.addAttribute("documentCode",documentCode);
+		model.addAttribute("signableEmp",signableEmp);
+		model.addAttribute("estimateList",estimateList);
+		model.addAttribute("totalPrice",totalPrice);
+		
+		return "document/viewEstimate";
 	}
 	
 //	프로젝트 관련 문서 불러오기 (태욱형님 기능에 따라 달라질 예정)

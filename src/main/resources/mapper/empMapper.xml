@@ -693,6 +693,18 @@
      (#{attDate},#{empCode},#{checkNote})
      </insert>
 
+	<select id="selectDevPrice"
+	resultType="developPrice">
+		select
+			team_code as teamCode,
+			rank_code as rankCode,
+			price as price,
+			team_name as teamName,
+			rank_name as rankName
+		from tbl_day_price join tbl_rank using(rank_code) join tbl_team using(team_code)
+	</select>
+
+
 	<select id="selectSalesMonth"
      parameterType="string"
      resultType="sales">
@@ -713,4 +725,5 @@
              spending_content as spendingContent
        from tbl_spending where spending_day like #{yearMonth} || '%' order by spending_day
      </select>
+
 </mapper>

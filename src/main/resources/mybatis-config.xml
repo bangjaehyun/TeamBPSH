@@ -34,8 +34,8 @@
 		<typeAlias type="kr.or.iei.vote.model.vo.VoteEmpList" alias="VoteEmpList"/>
 
 		<typeAlias type="kr.or.iei.emp.model.vo.Check" alias="empCheck"/>
-
+		<typeAlias type="kr.or.iei.document.model.vo.Estimate" alias="estimate"/>
 		<typeAlias type="kr.or.iei.document.model.vo.Business" alias="business"/>
-
+		
 	</typeAliases>
 </configuration>

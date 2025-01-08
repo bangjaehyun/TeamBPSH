@@ -14,10 +14,12 @@ import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
+import kr.or.iei.document.model.vo.Estimate;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Commute;
+import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Repository("documentDao")
@@ -210,6 +212,29 @@ public class DocumentDao {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("emp.insertAttBt", commute);
 	}
+
+	public List<DevelopPrice> selectPriceList() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("emp.selectDevPrice");
+	}
+
+	public String getEstimateCode() {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("document.selectEstimateCode");
+	}
+
+	public int insertEstimate(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("document.insertEstimate", map);
+	}
+
+	public List<Estimate> selectOneEstimateList(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectEstimate", documentCode);
+	}
+
+
+	
 
 	
 
