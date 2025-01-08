@@ -18,10 +18,12 @@ import kr.or.iei.document.model.vo.DocumentReference;
 import kr.or.iei.document.model.vo.DocumentSelectDay;
 import kr.or.iei.document.model.vo.DocumentSign;
 import kr.or.iei.document.model.vo.DocumentType;
+import kr.or.iei.document.model.vo.Estimate;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.document.model.vo.VacationHalf;
 import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Commute;
+import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
 
 @Service("documentService")
@@ -431,6 +433,109 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		return dao.insertAttBt(commute);
 	}
+
+	
+
+	public List<DevelopPrice> selectPriceList() {
+		// TODO Auto-generated method stub
+		return dao.selectPriceList();
+	}
+
+	//견적서 작성
+	public int insertEstimate(Document document, List<String> estimateList) {
+		// TODO Auto-generated method stub
+		int result=0;
+		int check=0;
+		result+=dao.insertDocument(document);
+		
+		if(result>0) {
+			for(int i=0;i<document.getFileList().size();i++){
+				DocumentFile file=document.getFileList().get(i);
+				check+=dao.insertFile(file);
+			}
+			if(check<document.getFileList().size()) {
+				//파일삽입에 문제가 발생할 경우 추가 삽입 X
+				return result;
+			}else {
+				result+=1;//다음 기능 실행
+			}
+		}
+		if(result>1) {
+			//결재자, 참조자 삽입
+			check=0;
+			//참조자가 있는가 없는가의 차이
+			if(document.getRefList().size()>0) {
+				for(int i=0;i<document.getSignList().size();i++) {
+					DocumentSign sign=document.getSignList().get(i);
+					sign.setDocumentSeq(String.valueOf(i+1));
+					check+=dao.insertDocumentSign(sign);
+				}
+				for(int i=0;i<document.getRefList().size();i++) {
+					DocumentReference ref=document.getRefList().get(i);
+					check+=dao.insertDocumentRef(ref);
+				}
+				//참조자 포함 삽입결과가 목록의 합계와 동일한가?
+				if(check==document.getSignList().size()+document.getRefList().size()) {
+					result+=1;
+				}else {
+					return result;
+				}
+			}else {
+				for(int i=0;i<document.getSignList().size();i++) {
+					DocumentSign sign=document.getSignList().get(i);
+					sign.setDocumentSeq(String.valueOf(i+1));
+					check+=dao.insertDocumentSign(sign);
+				}
+					if(check<document.getSignList().size()) {
+						
+					}else {
+						result+=1;
+					}
+			}
+		}
+			
+		if(result>2) {
+				check=0;
+				String documentCode=document.getDocumentCode();
+				System.out.println(documentCode);
+				for(String estimate:estimateList) {
+					String estimateCode=dao.getEstimateCode();
+				        String[] details = estimate.split(" "); // 세부 정보 분리
+				        
+					        String team = details[0];
+					        String rank=details[1];
+					        String price=details[2];
+					        String people=details[3];
+					        String days=details[4];
+					        System.out.println(team);
+					        System.out.println(rank);
+					        System.out.println(price);
+					        System.out.println(people);
+					        System.out.println(days);
+			        HashMap<String, String> map=new HashMap<String, String>();
+					map.put("estEntity", estimateCode);
+					map.put("documentCode", documentCode);
+					map.put("team", team);
+					map.put("rank",rank );
+					map.put("price",price );
+					map.put("people",people );
+					map.put("workDays", days);
+					check+=dao.insertEstimate(map);
+				}
+				if(check==estimateList.size()) {
+					result+=1;
+				}
+			}
+		return result;
+	}
+
+	public ArrayList<Estimate> selectOneEstimateList(String documentCode) {
+		// TODO Auto-generated method stub
+		
+		return (ArrayList<Estimate>)dao.selectOneEstimateList(documentCode);
+	}
+
+	
 
 	
 

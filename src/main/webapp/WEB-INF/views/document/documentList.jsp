@@ -9,8 +9,14 @@
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
 <style>
 	.container{
+		 min-height: 900px;
+		 height:800px;
+	}
+	.list-content{
+		height:100%;
 		
 	}
+	
 	.head-title{
 		display: flex;
 		justify-content: center;
@@ -19,6 +25,7 @@
 	.head-title h1{
 		font-size:30px;
 	}
+
 
 	
 	.title-container{
@@ -51,8 +58,9 @@
 	
 	#grid{
 		width: 1200px;
-		height: 900px;
-		overflow: scroll;
+ 		height:60%;  
+    	 
+   		
 	}
 	::-webkit-scrollbar{
 	 width: 0;  /* remove scrollbar space */
@@ -76,7 +84,7 @@
 		</c:forEach>
 	</div>
 	</div>
-	<div>
+	<div class="list-content">
 		<div id="grid"></div>
 	</div>
 </div>
@@ -107,9 +115,11 @@ $(document).ready(function(){
         rowSelection:"single",
         enableRangeSelection: true,//이거 수정 예정
         suppressRowClickSelection: false,
+        
         onRowDoubleClicked : function(event){
         	viewOneDoc(event.data);
         },
+        
         pagination: true,
         paginationPageSize: 10,        
         paginationPageSizeSelector: [10, 20, 50],
@@ -127,17 +137,19 @@ $(document).ready(function(){
 //             groupSelects: "descendants",
 //           },
         columnDefs: [
-            { field: "documentCode", headerName: "문서번호"},
-            { field: "documentTypeName", headerName: "문서타입" },
-            { field: "progress", headerName: "진행상황" },
-            { field: "documentTitle", headerName: "제목",},
-            { field: "empName", headerName: "작성자" },
-            { field: "documentDate", headerName: "작성일" }
+            { field: "documentCode", headerName: "문서번호",suppressMovable: true},
+            { field: "documentTypeName", headerName: "문서타입",suppressMovable: true},
+            { field: "progress", headerName: "진행상황",suppressMovable: true},
+            { field: "documentTitle", headerName: "제목",suppressMovable: true},
+            { field: "empName", headerName: "작성자",suppressMovable: true},
+            { field: "documentDate", headerName: "작성일",suppressMovable: true}
         ],
-        
-        onGridReady: function (event) {
-            event.api.sizeColumnsToFit();
-
+        rowHeight:40,
+       
+        	onGridReady: function(event) {
+              
+                event.api.sizeColumnsToFit();
+			
         }
        
     };

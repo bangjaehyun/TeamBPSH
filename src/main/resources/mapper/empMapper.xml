@@ -646,5 +646,14 @@
      values
      (#{attDate},#{empCode},#{checkNote})
      </insert>
-
+	<select id="selectDevPrice"
+	resultType="developPrice">
+		select
+			team_code as teamCode,
+			rank_code as rankCode,
+			price as price,
+			team_name as teamName,
+			rank_name as rankName
+		from tbl_day_price join tbl_rank using(rank_code) join tbl_team using(team_code)
+	</select>
 </mapper>

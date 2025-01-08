@@ -3,18 +3,22 @@ package kr.or.iei.emp.model.vo;
 public class DevelopPrice {
 	private String teamCode;
 	private String rankCode;
-	private String price;
-
+	private int price;
+	private String teamName;
+	private String rankName;
+	
 	public DevelopPrice() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DevelopPrice(String teamCode, String rankCode, String price) {
+	public DevelopPrice(String teamCode, String rankCode, int price, String teamName, String rankName) {
 		super();
 		this.teamCode = teamCode;
 		this.rankCode = rankCode;
 		this.price = price;
+		this.teamName = teamName;
+		this.rankName = rankName;
 	}
 
 	public String getTeamCode() {
@@ -33,17 +37,37 @@ public class DevelopPrice {
 		this.rankCode = rankCode;
 	}
 
-	public String getPrice() {
+	public int getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(int price) {
 		this.price = price;
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
+	public String getRankName() {
+		return rankName;
+	}
+
+	public void setRankName(String rankName) {
+		this.rankName = rankName;
 	}
 
 	@Override
 	public String toString() {
-		return "DevelopPrice [teamCode=" + teamCode + ", rankCode=" + rankCode + ", price=" + price + "]";
+		return "DevelopPrice [teamCode=" + teamCode + ", rankCode=" + rankCode + ", price=" + price + ", teamName="
+				+ teamName + ", rankName=" + rankName + "]";
 	}
+	
+
+	
 
 }

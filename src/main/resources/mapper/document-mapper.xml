@@ -52,7 +52,7 @@
 	
 	<select id="selectSpendingCode"
 	resultType="string">
-		select to_char(sysdate,'yyyymmdd')||lpad(seq_spending.nextVal,4,'0') as document_code from dual
+		select to_char(sysdate,'yyyymmdd')||lpad(seq_spending.nextVal,4,'0') as spending_code from dual
 	</select>
 	
 	<insert id="insertDocument"
@@ -181,40 +181,29 @@
 	<select id="selectDocList"
 	parameterType="string"
 	resultType="document">
-	select 
+   select 
     document_code as documentCode,
     emp_name as empName,
     document_date as documentDate,
     document_title as documentTitle,
     document_type_code as documentTypeCode,
     document_type_name as documentTypeName
-	from (
-    select rownum as rnum, a.* 
-    from (
-        select 
-        
-            d.document_code,
-            document_type_code, 
-            e.emp_name, 
-            d.document_date, 
-            d.document_title, 
-            t.document_type_name
-        from 
-            tbl_document d 
+	
+        from
+            tbl_document 
         join 
-            tbl_emp e 
+            tbl_emp  
         using (emp_code) 
         join 
-            tbl_document_type t 
+            tbl_document_type  
         using (document_type_code)
             <choose>
                 <when test='!type.equals("all")'>
                     where document_type_code = #{_string}
                 </when>
             </choose>
-        order by d.document_date desc
-    ) a
-) 
+        order by document_date desc
+   
 
 	</select>
 	
@@ -344,5 +333,41 @@
 			business_end as businessEnd
 		from tbl_business_trip
 		where document_code=#{_string}
+	</select>
+	<select id="selectEstimateCode"
+	resultType="string">
+		select
+			to_char(sysdate,'yyyyMMddHHmmss')||lpad(seq_estimate.nextVal,4,'0')
+		as estimateCode from dual
+	</select>
+	<insert id="insertEstimate"
+	parameterType="map">
+		insert into tbl_estimate
+		values(
+			#{estEntity},
+			#{team},
+			#{rank},
+			#{people},
+			#{price},
+			#{workDays},
+			#{documentCode}
+			
+		)
+	</insert>
+	<select id="selectEstimate"
+	parameterType="string"
+	resultType="estimate">
+SELECT
+    team_code AS teamCode,
+    team_name AS teamName,
+    SUM(price*people) AS price,
+    SUM(people) AS people,
+    SUM(work_days) AS WorkDays
+FROM tbl_estimate
+JOIN tbl_rank USING (rank_code)
+JOIN tbl_team USING (team_code)
+WHERE document_code = #{_string}
+GROUP BY team_code, team_name
+
 	</select>
 </mapper>
