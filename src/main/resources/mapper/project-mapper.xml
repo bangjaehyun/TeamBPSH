@@ -232,14 +232,14 @@
 		insert into
 		tbl_project_partemp
 		(
-		partemp_no,
+		PROTEMP_NO,
 		project_no,
 		emp_code,
 		partemp_content
 		)
 		values
 		(
-		('PT' || TO_CHAR(SYSDATE, 'YYYYMMDDHH24'),
+		('PT' || TO_CHAR(SYSDATE, 'yymmddHH24MM')),
 		#{projectNo},
 		#{empCode},
 		#{partempContent}

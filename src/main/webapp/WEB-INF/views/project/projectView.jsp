@@ -205,7 +205,7 @@ th {
 		<table id="pjHeader">
 			<tr>
 				<th>프로젝트 번호</th>
-				<td>${project.projectNo}</td>
+				<td id="projectNo">${project.projectNo}</td>
 				<th>프로젝트 이름</th>
 				<td>${project.projectTitle}</td>
 			</tr>
@@ -241,7 +241,7 @@ th {
 							<td>${addProjectEmp.empCode}</td>
 							<td>${addProjectEmp.empName}</td>
 							<td>${addProjectEmp.rankCode}</td>
-							<td><textarea></textarea>
+							<td><textarea>test값</textarea>
 							<td><button id="addPartEmp" data-empcode="${addProjectEmp.empCode}">추가</button></td>
 						</tr>
 					</c:forEach>
@@ -264,12 +264,12 @@ th {
 				<tbody>
 					<c:forEach var="projectPartempList" items="${projectPartempList}">
 						<tr>
-							<td class="empNo">${projectPartempList.empCode}</td>
+							<td>${projectPartempList.empCode}</td>
 							<td>${projectPartempList.empName}</td>
 							<td>${projectPartempList.rankCode}</td>
 							<td>${projectPartempList.partempContent}</td>
 							<td>
-                    			<button class="removeEmp" data-empcode="${projectEmp.empCode}">삭제</button>
+                    			<button id="removeEmp" data-empcode="${projectEmp.empCode}">삭제</button>
                				</td>
 						</tr>
 					</c:forEach>
@@ -599,6 +599,54 @@ th {
 			   
 		   });
 		});
+		
+		$('#addPartEmp').on('click',function(){
+			let projectNo = $('#projectNo').text();
+			let empCode = '';
+			let partempContent = '';
+			$('#teamEmpTable tbody tr').each(function(){
+				empCode = $(this).find('td:first-child').text();
+				partempContent = $(this).find('td:nth-child(4)').text();
+				
+				
+				});
+			
+			
+			$.ajax({
+				url : '/project/addProjectPartemp.do',
+				type : 'post',
+				data : {'projectNo' : projectNo,
+						'empCode' 	: empCode,
+						'partempContent' : partempContent
+						},
+	            success : function(res){
+	            	console.log(res);
+	            	if(res > 0){
+	                       swal({
+	                          title : "완료",
+	                          text : "팀원이 추가 되었습니다.",
+	                          icon : "success"
+	                       }).then(function(){
+	                          pageMove('/project/list.do');
+	                       });
+	                    }else{
+	                       swal({
+	                          title : "오류",
+	                          text : "팀원 추가 중 오류가 발생하였습니다.",
+	                          icon : "error"
+	                       }).then(function(){
+	                          pageMove('/project/list.do');
+	                       });
+	                    }
+	            },
+	            error : function(){
+	            	console.log('ajax 오류');
+	            }
+				
+			});
+		});
+		
+		$('remove')
 	</script>
 </body>
 </html>

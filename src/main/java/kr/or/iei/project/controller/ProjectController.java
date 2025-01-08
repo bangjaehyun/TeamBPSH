@@ -334,6 +334,14 @@ public class ProjectController {
         return response;
     }
     
+    @PostMapping("addProjectPartemp.do")
+    @ResponseBody
+    public int addProjectEmp(String projectNo, String empCode, String partempContent) {
+    	int result = service.addProjectPartemp(partempContent, projectNo, empCode);
+    	System.out.println(result);
+    	return result;
+    }
+    
 
 }
     

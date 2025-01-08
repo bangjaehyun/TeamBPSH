@@ -100,6 +100,11 @@ public class ProjectDao {
 		
 		return sqlSession.selectList("project.addProjectList",params);
 	}
+
+	public int addProjectPartemp(HashMap<String, Object> params) {
+		
+		return sqlSession.insert("project.addProjectPartemp", params);
+	}
 	
 
 

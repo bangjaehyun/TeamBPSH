@@ -110,6 +110,16 @@ public class ProjectService {
 		
 		return (ArrayList<ProjectPartemp>) dao.projectEmpList(projectNo);
 	}
+	@Transactional
+	public int addProjectPartemp(String partempContent, String projectNo, String empCode) {
+		
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("projectNo", projectNo);
+		params.put("empCode", empCode);
+		params.put("partempContent", partempContent);
+		return dao.addProjectPartemp(params);
+		
+	}
 
 
 
