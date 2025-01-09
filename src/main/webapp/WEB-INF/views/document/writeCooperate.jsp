@@ -557,15 +557,6 @@ function msg(title, text, icon, callback){
 
 
 
-//     function deleteInput(event) {
-//         // 삭제 버튼이 클릭된 이벤트 객체를 통해 버튼이 속한 div 요소를 찾아서 삭제
-//         const row = event.target.closest('.column-row'); // .column-row 부모 요소 찾기
-//         if (row) {
-//             row.remove(); // 해당 div 삭제
-//         }
-//     }
-    
-    
 
 
 
