@@ -151,7 +151,7 @@
  	</insert>
  	
 	<select id="filterEmp"
-	parameterType="string"
+	parameterType="map"
 	resultType="emp">
 		select emp_code as empCode,
  		   team_code as teamCode,
@@ -165,7 +165,8 @@
  		   rank_name as rankName
  	  from tbl_emp
  	  join tbl_rank using(rank_code) 
- 	 where team_code = #{_string} 
+ 	 where team_code = #{teamCode}
+
 	</select>
  	
  	 <select id="chatEmpList"

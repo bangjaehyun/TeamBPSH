@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import kr.or.iei.document.model.vo.Business;
+import kr.or.iei.document.model.vo.Cooperate;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
@@ -34,9 +35,9 @@ public class DocumentDao {
 		return sqlSession.selectList("document.apiDocumentList",empCode);
 	}
 
-	public List<Emp> filterEmp(String teamCode) {
+	public List<Emp> filterEmp(HashMap<String, String> srchMap) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("emp.filterEmp",teamCode);
+		return sqlSession.selectList("emp.filterEmp",srchMap);
 	}
 
 
@@ -232,6 +233,30 @@ public class DocumentDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("document.selectEstimate", documentCode);
 	}
+
+	public int insertCooperate(Cooperate cooperate) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("document.insertCooperate",cooperate);
+	}
+
+	public List<Cooperate> selectCooperate(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("document.selectCoop",documentCode);
+	}
+
+
+
+	public int approveSpending(String documentCode) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("document.approveSpending",documentCode);
+	}
+
+	public int insertSales(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("document.insertSales", map);
+	}
+
+	
 
 
 	

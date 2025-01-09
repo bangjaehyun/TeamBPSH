@@ -11,18 +11,17 @@
       
 
       
-         .container {
-/* 				display: flex; */
-/* 				justify-content: center; */
-/* 				align-items: center; */
-				box-sizing: border-box;
-			}
+        .container {
+         	display: flex;
+			justify-content: center;
+			align-items: center;
+			box-sizing: border-box;
+			flex-direction: column;
+		}
         
 
         .header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+           
             margin-bottom: 20px;
         }
 
@@ -70,6 +69,8 @@
         height:100%;
         align-items: center;
         border: none;
+        border: 1px solid #ccc;
+        border-radius: 5px;
         
        }
 
@@ -181,15 +182,7 @@
 	background: #f9f9f9;
 }
 
-/* 파일 업로드 */
-.insert-file input {
-	padding: 10px;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	cursor: pointer;
-	background: #fff;
-	width: 100%;
-}
+
 
 /* 버튼 스타일 */
 .buttons {
@@ -241,10 +234,10 @@
             </div>
         </div>
         <div class="main-container">
-            <form action="" method="post"  enctype="multipart/form-data">
+           
                 <div class="doc-title">
                     <div class="content">
-                        <div class="type">제목</div>
+                        
                         <div  class="title">
                         <input id="title" type="text" name="title" placeholder="제목 입력" />
                         </div>
@@ -304,15 +297,14 @@
 					<div class="insert-file">
 						<input type="file" name="files" multiple>
 					</div>
-				</form>
+				
 				<div class="buttons">
 					<button class="submit" type="button" onclick="writeDocument()">작성</button>
 					<button class="cancel" type="button" onclick="cancel()">취소</button>
 				</div>
 			</div>
 		</div>
-	</div>
-	</div>
+	
 <script src="/resources/summernote/summernote-lite.js"></script>
 <script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
               
@@ -320,13 +312,12 @@
     var checkDocument={
     		"docTitle":	false,
     		"sign":		false,
-    		"date":		false,
-    		
-    		
-    		
+    		"date":		false,	
     };
     
+   
     
+   
     var signList = [];
     var refList = [];
 

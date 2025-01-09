@@ -46,6 +46,7 @@ import com.google.gson.Gson;
 import kr.or.iei.common.emitter.Emitter;
 import kr.or.iei.document.model.service.DocumentService;
 import kr.or.iei.document.model.vo.Business;
+import kr.or.iei.document.model.vo.Cooperate;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
@@ -90,7 +91,9 @@ public class DocumentController {
 			}
 			
 			case("co"):{
-				file="writeCooperate";				
+				
+				file="writeCooperate";
+				
 				break;
 			}
 			
@@ -181,8 +184,12 @@ public class DocumentController {
 	
 	@PostMapping("srchEmp.do")
 	@ResponseBody
-	public ArrayList<Emp>filterEmp(String teamCode){
-		ArrayList<Emp>list=service.filterEmp(teamCode);
+	public ArrayList<Emp>filterEmp(String teamCode,String empCode){
+		HashMap<String,String>srchMap=new HashMap<String, String>();
+		srchMap.put("teamCode",teamCode);
+		srchMap.put("empCode", empCode);
+		ArrayList<Emp>list=service.filterEmp(srchMap);
+		
 		
 		return list;
 		
@@ -791,7 +798,128 @@ public class DocumentController {
 			return result;
 		}
 		
-		
+		//협조전작성
+		@PostMapping(value="writeCooperate.do",produces="application/json; charset=utf-8")
+		@ResponseBody
+		public int writeCooperate(HttpSession session,HttpServletRequest request,Document document,@RequestParam MultipartFile[] files,@RequestParam List<String> signEmpList, @RequestParam List<String> refEmpList,@RequestParam List<String> cooperateList,Model m ) {
+			String root=request.getSession().getServletContext().getRealPath("/resources/");
+			
+			//파일관련 기능
+			ArrayList<DocumentFile>fileList=new ArrayList<DocumentFile>();
+			
+			String documentCode=service.selectDocumentCode();
+			document.setDocumentCode(documentCode);
+			Date date=new Date();
+			String today=new SimpleDateFormat("yyyyMMdd").format(date);
+			
+			String savePath = root + "documentFiles" + File.separator + today + File.separator;
+
+			File directory=new File(savePath);
+			if(!directory.exists()) {
+				directory.mkdir();
+			}
+			today=new SimpleDateFormat("yyyyMMddHHmmss").format(date);
+			for (int i=0;i<files.length;i++) {
+				MultipartFile file=files[i];
+				
+			
+				if(!file.isEmpty()) {
+					
+					String originalFileName =file.getOriginalFilename();
+					String fileName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+					String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+					
+					
+					int ranNum = new Random().nextInt(9999)+1;
+					String filePath=fileName+"_"+today+"_"+ranNum+extension;
+					savePath+=filePath;
+					
+					BufferedOutputStream bos=null;
+					
+					try {
+							byte []bytes=file.getBytes();
+							FileOutputStream fos=new FileOutputStream(new File(savePath));
+							bos = new BufferedOutputStream(fos);
+							bos.write(bytes);
+							
+							DocumentFile docFile=new DocumentFile();
+							docFile.setFileName(originalFileName);
+							docFile.setFilePath(filePath);
+							docFile.setDocumentCode(documentCode);
+							fileList.add(docFile);
+					}catch(IOException e) {
+						e.printStackTrace();
+					}finally {
+						try {
+							bos.close();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+			document.setFileList(fileList);
+			
+			
+			//결재자
+			 ArrayList<DocumentSign> signList = new ArrayList<>();
+			    for (int i = 0; i < signEmpList.size(); i++) {
+			        DocumentSign sign = new DocumentSign();
+			        sign.setEmpCode(signEmpList.get(i));
+			        sign.setDocumentSeq(String.valueOf(i + 1));
+			        sign.setDocumentCode(documentCode);
+			        signList.add(sign);
+			    }
+			    document.setSignList(signList);
+			
+			    ArrayList<DocumentReference> refList = new ArrayList<>();
+			    for (String refCode : refEmpList) {
+			        DocumentReference ref = new DocumentReference();
+			        ref.setEmpCode(refCode);
+			        ref.setDocumentCode(documentCode);
+			        refList.add(ref);
+			    }
+			    document.setRefList(refList);
+
+			int result=service.insertCooperate(document,cooperateList);
+			
+			
+			
+			ArrayList<DocumentSign> signs=service.selectSignList(documentCode);
+			Alarm alarm = new Alarm();
+			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
+			alarm.setEmpCode(signs.get(0).getEmpCode());
+			alarm.setRefUrl("/doc/selectOneSp.do");
+			
+			JSONObject json=new JSONObject();
+			json.put("documentCode", documentCode);
+			alarm.setUrlParam(json.toJSONString());
+			
+			int res=service.insertAlarm(alarm);
+			if(result>0&&res>0) {
+				emitter.sendEvent(signs.get(0).getEmpCode(), alarm.getAlarmComment());
+			}
+			
+			ArrayList<DocumentReference>refs=service.selectRefList(documentCode);
+			
+			for(int i=0;i<refs.size();i++) {
+				Alarm refAlarm=new Alarm();
+				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
+				refAlarm.setEmpCode(refs.get(i).getEmpCode());
+				refAlarm.setRefUrl("/doc/selectOneSp.do");
+				JSONObject json2=new JSONObject();
+				json2.put("documentCode", documentCode);
+				refAlarm.setUrlParam(json2.toJSONString());
+				 int res2=service.insertAlarm(refAlarm);
+				if(res2>0&&result>0) {
+					emitter.sendEvent(refs.get(i).getEmpCode(), refAlarm.getAlarmComment());
+				}
+				
+				}
+			
+			return result;
+		}
 		
 		
 		
@@ -849,6 +977,9 @@ public class DocumentController {
 			model.addAttribute("vacType",vacType);
 			try {
 				SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
+				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				String writeDate=format.format(writeDay);
+				doc.setDocumentDate(writeDate);
 				Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
 				Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay());
 				String StartDay = format.format(startDay);
@@ -903,7 +1034,30 @@ public class DocumentController {
 				break; //반려된 상황
 			}
 		}
+		for (Spending spend : spendingList) {
+	        
+	        String spending = spend.getSpendingDay();
+	        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
+			
+			try {
+				
+				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				String writeDate=format.format(writeDay);
+				doc.setDocumentDate(writeDate);
+				Date spendingDay = new SimpleDateFormat("yyyyMMdd").parse(spending);
+				String spendDay = format.format(spendingDay);
+				spend.setSpendingDay(spendDay);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+
+	        
+	        
+	        
 		
+		}
 		doc.setFileList(fileList);
 		model.addAttribute("documentCode",documentCode);
 		model.addAttribute("signableEmp",signableEmp);
@@ -932,6 +1086,24 @@ public class DocumentController {
 			}
 		}
 		
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
+		
+		try {
+			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			String writeDate=format.format(writeDay);
+			doc.setDocumentDate(writeDate);
+			Date startDay = new SimpleDateFormat("yyyyMMdd").parse(business.getBusinessStart());
+			Date endDay = new SimpleDateFormat("yyyyMMdd").parse(business.getBusinessEnd());
+			String start = format.format(startDay);
+			String end = format.format(endDay);
+			business.setBusinessStart(start);
+			business.setBusinessEnd(end);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		doc.setFileList(fileList);
 		model.addAttribute("signList",signList);
 		model.addAttribute("documentCode",documentCode);
@@ -945,11 +1117,41 @@ public class DocumentController {
 	
 	//협조전 불러오기
 	@PostMapping("selectOneCo.do")
-	public String SelectOneCooperation(String documentCode) {
+	public String SelectOneCooperation(String documentCode,Model model) {
 		Document doc=service.selectOneDoc(documentCode);
 		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
 		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
-		return "";
+		ArrayList<Cooperate>coopList=service.selectCoopList(documentCode);
+		String signableEmp="";
+		for(int i=0;i<signList.size();i++) {
+			if(Integer.parseInt(signList.get(i).getSignYn())==0) {
+				signableEmp=signList.get(i).getEmpCode();
+				break;//결재할 순서인 사람
+			}else if(Integer.parseInt(signList.get(i).getSignYn())==-1) {
+				break; //반려된 상황
+			}
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
+		
+		try {
+			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			String writeDate=format.format(writeDay);
+			doc.setDocumentDate(writeDate);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		model.addAttribute("documentCode",documentCode);
+		model.addAttribute("signableEmp",signableEmp);
+		model.addAttribute("signList",signList);
+		model.addAttribute("coopList",coopList);
+		model.addAttribute("fileList",fileList);
+		model.addAttribute("doc",doc);
+		
+		
+		return "document/viewCooperate";
 	}
 	
 	//견적서 불러오기
@@ -958,6 +1160,17 @@ public class DocumentController {
 	
 		Document doc=service.selectOneDoc(documentCode);
 		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
+		
+		try {
+			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			String writeDate=format.format(writeDay);
+			doc.setDocumentDate(writeDate);
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ArrayList<DocumentSign>signList=service.selectSignList(documentCode);
 		ArrayList<DocumentFile>fileList=service.selectOneDocFile(documentCode);
 		String signableEmp="";
@@ -1008,6 +1221,8 @@ public class DocumentController {
 		map.put("check",check );
 		map.put("documentCode", documentCode);
 		int result=service.approveDoc(map);
+		
+		//결재가 기각인가?
 		if(result>0 &&Integer.parseInt(check)==-1) {
 			Alarm alarm = new Alarm();
 			alarm.setAlarmComment("요청하신 서류가 반려되었습니다");
@@ -1040,6 +1255,7 @@ public class DocumentController {
 			}
 			
 			}
+			
 			JSONObject json=new JSONObject();
 			json.put("documentCode", documentCode);
 			alarm.setUrlParam(json.toJSONString());
@@ -1056,9 +1272,10 @@ public class DocumentController {
 		for(int i=0;i<signList.size();i++) {
 			find=Integer.parseInt(signList.get(i).getSignYn());
 			if(find==-1) {
+				//이미 반려된 서류일 경우
 				break;
 			}else if(find==0) {
-				
+				//결재를 하지 않은 사람을 발견할 경우 해당 결재자에게 알림 송신
 				
 				Alarm alarm = new Alarm();
 				alarm.setAlarmComment(signList.get(i).getEmpName()+"님 결재할 차례입니다");
@@ -1103,6 +1320,8 @@ public class DocumentController {
 				
 			}
 		}
+		
+		//최종승인인 경우
 		if(find==1) {
 			
 
@@ -1150,7 +1369,8 @@ public class DocumentController {
 			//최종승인 시 각 문서에 따른 추가기능
 			switch(type) {
 			case "sp":{
-				//지출결의서는 딱히적용할 것이 없음(추후 추가작업 있을시 추가구현)
+				//최종승인시 지출내역 승인여부 전환
+				int spChk=service.approveSpending(documentCode);
 				break;
 			}
 			case "va":{
@@ -1218,10 +1438,10 @@ public class DocumentController {
 			}
 			
 			case "bt":{
-				//여기서 적용 안됨
+				
 				Business business=service.selectOneBt(documentCode);
 				
-				int chk=0;
+				int btChk=0;
 				try {
 					DateTimeFormatter formatter=DateTimeFormatter.ofPattern("yyyyMMdd");
 					
@@ -1240,7 +1460,7 @@ public class DocumentController {
 					
 					for(int i=0;i<btList.size();i++) {
 						Commute commute=btList.get(i);
-						chk+=service.insertAttBt(commute);
+						btChk+=service.insertAttBt(commute);
 					}
 					
 					
@@ -1251,9 +1471,40 @@ public class DocumentController {
 			}
 			
 			case "es":{
+				ArrayList<Estimate>estList=service.selectOneEstimateList(documentCode);
+				Document doc=service.selectOneDoc(documentCode);
+				
+				
+				
+				try {
+					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+					Date documentDate = new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+					String writeDay = dateFormat.format(documentDate);
+					String content=doc.getDocumentContent();
+					long totalPrice=0;
+					int date = estList.get(0).getWorkDays();
+					for (int i = 0; i < estList.size(); i++) {
+					    long price = estList.get(i).getPrice();
+					   
+					    totalPrice += price* date; // 각 행에서 date를 곱함
+					   
+					}
+					System.out.println(totalPrice);
+					HashMap<String, String> estimateMap=new HashMap<String, String>();
+					map.put("documentCode", documentCode);
+					map.put("salesDay", writeDay);
+					map.put("salesCost", String.valueOf(totalPrice));
+					map.put("salesContent", content);
+					int esChk=service.insertSales(map);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 				
 				break;
 			}
+			
 			
 			}
 		}

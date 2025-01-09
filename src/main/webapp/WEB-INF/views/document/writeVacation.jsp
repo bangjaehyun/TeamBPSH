@@ -20,7 +20,7 @@
 }
 
 .board{
-	margin-left:300px;
+	
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -244,7 +244,7 @@
 			<h1>휴가 신청서</h1>
 
 			<div class="main-container">
-				<form action="/doc/writeVacation.do" method="post" enctype="multipart/form-data">
+				
 					<div class="doc-title">
 						 <input id="title" type="text"name="title" placeholder="제목 입력" />
 					</div>
@@ -303,7 +303,7 @@
 					<div class="insert-file">
 						<input type="file" name="files" multiple>
 					</div>
-				</form>
+				
 				<div class="buttons">
 					<button class="submit" type="button" onclick="writeDocument()">작성</button>
 					<button class="cancel" type="button" onclick="cancel()">취소</button>

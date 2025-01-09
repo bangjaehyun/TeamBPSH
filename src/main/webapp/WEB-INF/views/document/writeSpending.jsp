@@ -22,7 +22,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-left:300px;
+	
 }
 
 .container {
@@ -81,26 +81,32 @@ button:hover{
 		font-size: 18px;
 	}
 
+/* 결재자 및 참조자 버튼 스타일 */
 .ref {
 	display: flex;
-}
-.ref>button{
-	padding: 7px 4px;
-	border-radius: 4px;
-	background-color:gray;
-	border:none;
-	color:white;
-	
-	
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 15px;
 }
 
-.ref>button:hover{
-	scale:1.1;
+.ref > button {
+	padding: 8px 12px;
+	border-radius: 6px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
+	transition: all 0.3s;
 }
 
-.ref>button:active{
-	scale:1;
-	background-color:black;
+.ref > button:hover {
+	background-color: #0056b3;
+	transform: scale(1.05);
+}
+
+.ref > button:active {
+	background-color: #003f80;
+	transform: scale(1);
 }
 
 .sign {
@@ -228,29 +234,41 @@ button:hover{
 		resize: none;
 	}
 	
-	.buttons {
-		display: flex;
-		justify-content: flex-end;
-		gap: 20px;
-		margin-right: 3%;
-	}
-	
-	.buttons button {
-		padding: 10px 20px;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		font-size: 14px;
-	}
-	
-	.buttons .submit {
-		background-color: gray;
-		color: white;
-	}
-	
-	.buttons .cancel {
-		background-color: gray;
-		color: white;
+/* 버튼 스타일 */
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 15px;
+	margin-top: 20px;
+}
+
+.buttons button {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.buttons .submit {
+	background-color: #28a745;
+	color: white;
+}
+
+.buttons .submit:hover {
+	background-color: #218838;
+	transform: scale(1.05);
+}
+
+.buttons .cancel {
+	background-color: #dc3545;
+	color: white;
+}
+
+.buttons .cancel:hover {
+	background-color: #c82333;
+	transform: scale(1.05);
 }
 </style>
 </head>
@@ -261,7 +279,7 @@ button:hover{
 			<h1>지출 결의서</h1>
 
 			<div class="main-container">
-				<form action="/doc/writeVacation.do" method="post" enctype="multipart/form-data">
+				
 					<div class="doc-title">
 						 <input id="title" type="text"name="title" placeholder="제목 입력" />
 					</div>
@@ -322,7 +340,7 @@ button:hover{
 					<div class="insert-file">
 						<input type="file" name="files" multiple>
 					</div>
-				</form>
+				
 				<div class="buttons">
 					<button class="submit" type="button" onclick="writeDocument()">작성</button>
 					<button class="cancel" type="button" onclick="cancel()">취소</button>

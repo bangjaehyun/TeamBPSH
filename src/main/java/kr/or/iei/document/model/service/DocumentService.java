@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.iei.document.model.dao.DocumentDao;
 import kr.or.iei.document.model.vo.Business;
+import kr.or.iei.document.model.vo.Cooperate;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.DocumentFile;
 import kr.or.iei.document.model.vo.DocumentReference;
@@ -37,9 +38,9 @@ public class DocumentService {
 		return (ArrayList<Document>) dao.apiDocumentList(empCode);
 	}
 
-	public ArrayList<Emp> filterEmp(String teamCode) {
+	public ArrayList<Emp> filterEmp(HashMap<String, String> srchMap) {
 		// TODO Auto-generated method stub
-		return (ArrayList<Emp>)dao.filterEmp(teamCode);
+		return (ArrayList<Emp>)dao.filterEmp(srchMap);
 	}
 
 
@@ -533,6 +534,99 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		
 		return (ArrayList<Estimate>)dao.selectOneEstimateList(documentCode);
+	}
+
+	public int insertCooperate(Document document, List<String> cooperateList) {
+		int result=0;
+		int check=0;
+		result+=dao.insertDocument(document);
+		
+		if(result>0) {
+			for(int i=0;i<document.getFileList().size();i++){
+				DocumentFile file=document.getFileList().get(i);
+				check+=dao.insertFile(file);
+			}
+			if(check<document.getFileList().size()) {
+				//파일삽입에 문제가 발생할 경우 추가 삽입 X
+				return result;
+			}else {
+				result+=1;//다음 기능 실행
+			}
+		}
+		if(result>1) {
+			//결재자, 참조자 삽입
+			check=0;
+			//참조자가 있는가 없는가의 차이
+			if(document.getRefList().size()>0) {
+				for(int i=0;i<document.getSignList().size();i++) {
+					DocumentSign sign=document.getSignList().get(i);
+					sign.setDocumentSeq(String.valueOf(i+1));
+					check+=dao.insertDocumentSign(sign);
+				}
+				for(int i=0;i<document.getRefList().size();i++) {
+					DocumentReference ref=document.getRefList().get(i);
+					check+=dao.insertDocumentRef(ref);
+				}
+				//참조자 포함 삽입결과가 목록의 합계와 동일한가?
+				if(check==document.getSignList().size()+document.getRefList().size()) {
+					result+=1;
+				}else {
+					return result;
+				}
+			}else {
+				for(int i=0;i<document.getSignList().size();i++) {
+					DocumentSign sign=document.getSignList().get(i);
+					sign.setDocumentSeq(String.valueOf(i+1));
+					check+=dao.insertDocumentSign(sign);
+				}
+					if(check<document.getSignList().size()) {
+						
+					}else {
+						result+=1;
+					}
+				}
+			}
+		
+		if(result>2) {
+			check=0;
+			String documentCode=document.getDocumentCode();
+			System.out.println(documentCode);
+			for(String coop:cooperateList) {
+				        String[] details = coop.split(" "); // 세부 정보 분리
+				        String teamCode=details[1];
+				  Cooperate cooperate= new Cooperate();
+				  cooperate.setDocumentCode(documentCode);
+				  cooperate.setTeamCode(teamCode);
+				  check+=dao.insertCooperate(cooperate);
+				    
+			}
+			if(check<cooperateList.size()) {
+				
+			}else {
+				result+=1;
+			}
+			}
+		
+		return result;
+	}
+
+	public ArrayList<Cooperate> selectCoopList(String documentCode) {
+		// TODO Auto-generated method stub
+		
+		return (ArrayList<Cooperate>)dao.selectCooperate(documentCode);
+	}
+
+	
+
+	public int approveSpending(String documentCode) {
+		// TODO Auto-generated method stub
+		return dao.approveSpending(documentCode);
+	}
+
+	public int insertSales(HashMap<String, String> map) {
+		// TODO Auto-generated method stub
+		
+		return dao.insertSales(map);
 	}
 
 	

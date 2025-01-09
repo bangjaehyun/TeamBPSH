@@ -129,7 +129,8 @@
         #{documentCode},
         #{spendingDay},
         #{spendingCost},
-        #{spendingContent}
+        #{spendingContent},
+        0
      )
      </insert>
 
@@ -352,6 +353,7 @@
          #{workDays},
          #{documentCode}
          
+         
       )
    </insert>
    <select id="selectEstimate"
@@ -370,4 +372,45 @@ WHERE document_code = #{_string}
 GROUP BY team_code, team_name
 
    </select>
+   
+   <insert id="insertCooperate"
+   parameterType="coop">
+   	insert into tbl_cooperate
+   		values(
+   		#{documentCode},
+   		#{teamCode}
+   		
+   		)
+   </insert>
+   <select id="selectCoop"
+   parameterType="string"
+   resultType="coop">
+   		select
+   			document_code as documentCode,
+   			team_code as teamCode,
+   			team_name as teamName
+		from tbl_cooperate
+		join tbl_team using(team_code)
+		where document_code=#{_string}
+   </select>
+   
+   
+   <update id="approveSpending"
+   parameterType="string">
+   	update tbl_spending
+   		set approve=1
+   	where document_code=#{_string}
+   </update>
+   <insert id="insertSales"
+   parameterType="map"
+   >
+   	insert into tbl_sales
+   		values(
+   			#{documentCode},
+   			#{salesDay},
+   			#{salesCost},
+   			#{salesContent},
+   			1
+   		)
+   </insert>
 </mapper>
