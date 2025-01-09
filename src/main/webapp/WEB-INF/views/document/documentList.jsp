@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+
 <style>
 	*{
 		box-sizing: border-box;
@@ -117,14 +118,14 @@ $(document).ready(function(){
         };
         obj.push(rowData);
     </c:forEach>
-
+    
     const gridOption = {
         rowData: obj,
         pagention:true,
         rowSelection:"single",
-        enableRangeSelection: true,//이거 수정 예정
+       
         suppressRowClickSelection: false,
-        
+        suppressNoRowsOverlay:true,
         onRowDoubleClicked : function(event){
         	viewOneDoc(event.data);
         },

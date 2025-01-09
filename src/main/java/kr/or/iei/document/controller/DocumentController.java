@@ -1034,23 +1034,25 @@ public class DocumentController {
 				break; //반려된 상황
 			}
 		}
-		for (Spending spend : spendingList) {
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 	        
-	        String spending = spend.getSpendingDay();
-	        SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 			
 			try {
-				
 				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				
 				String writeDate=format.format(writeDay);
 				doc.setDocumentDate(writeDate);
-				Date spendingDay = new SimpleDateFormat("yyyyMMdd").parse(spending);
-				String spendDay = format.format(spendingDay);
-				spend.setSpendingDay(spendDay);
+				for (int i=0;i<spendingList.size();i++) {
+					String spending = spendingList.get(i).getSpendingDay();
+					Date spendingDay = new SimpleDateFormat("yyyyMMdd").parse(spending);
+					String spendDay = format.format(spendingDay);
+					spendingList.get(i).setSpendingDay(spendDay);
+				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			
 			
 
 	        
@@ -1453,7 +1455,7 @@ public class DocumentController {
 						comm.setAttDate(startDate.format(formatter));
 						comm.setCheckNote("출장");
 						comm.setEmpCode(writer);
-						System.out.println(comm);
+						
 						btList.add(comm);
 						startDate = startDate.plusDays(1); 
 					}
@@ -1489,7 +1491,7 @@ public class DocumentController {
 					    totalPrice += price* date; // 각 행에서 date를 곱함
 					   
 					}
-					System.out.println(totalPrice);
+					
 					HashMap<String, String> estimateMap=new HashMap<String, String>();
 					map.put("documentCode", documentCode);
 					map.put("salesDay", writeDay);

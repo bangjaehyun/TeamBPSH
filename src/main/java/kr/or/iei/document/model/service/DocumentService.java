@@ -58,13 +58,13 @@ public class DocumentService {
 			
 			
 			ArrayList<Document>list=(ArrayList<Document>)dao.selectDocList(type);
-			System.out.println(list);
+			
 			for(int i=0;i<list.size();i++) {
 				int check=1;
 				ArrayList<DocumentSign>signList=(ArrayList<DocumentSign>)dao.selectDocSign(list.get(i).getDocumentCode());
-				System.out.println(signList);
+				
 				list.get(i).setSignList(signList);
-				System.out.println(list);
+				
 				for(int j=0;j<signList.size();j++) {
 					
 					int res=Integer.parseInt(signList.get(j).getSignYn());
@@ -243,7 +243,7 @@ public class DocumentService {
 		if(result>2) {
 			check=0;
 			String documentCode=document.getDocumentCode();
-			System.out.println(documentCode);
+			
 			for(String spend:spendingList) {
 				String spendingCode=dao.getSpendingCode();
 				
@@ -498,7 +498,7 @@ public class DocumentService {
 		if(result>2) {
 				check=0;
 				String documentCode=document.getDocumentCode();
-				System.out.println(documentCode);
+				
 				for(String estimate:estimateList) {
 					String estimateCode=dao.getEstimateCode();
 				        String[] details = estimate.split(" "); // 세부 정보 분리
@@ -508,11 +508,7 @@ public class DocumentService {
 					        String price=details[2];
 					        String people=details[3];
 					        String days=details[4];
-					        System.out.println(team);
-					        System.out.println(rank);
-					        System.out.println(price);
-					        System.out.println(people);
-					        System.out.println(days);
+					       
 			        HashMap<String, String> map=new HashMap<String, String>();
 					map.put("estEntity", estimateCode);
 					map.put("documentCode", documentCode);
@@ -590,7 +586,7 @@ public class DocumentService {
 		if(result>2) {
 			check=0;
 			String documentCode=document.getDocumentCode();
-			System.out.println(documentCode);
+			
 			for(String coop:cooperateList) {
 				        String[] details = coop.split(" "); // 세부 정보 분리
 				        String teamCode=details[1];

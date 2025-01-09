@@ -399,7 +399,11 @@ function selectScope(event){
     // select 옵션 초기화
     scope.empty(); // jQuery의 empty() 메서드를 사용하여 기존 항목을 지움
 
-    
+	    const defaultOption = document.createElement('option');
+	    defaultOption.className = "selectOption";
+	    defaultOption.value = ""; 
+	    defaultOption.textContent = "선택";
+	    scope.append(defaultOption);
         // deptList를 순회하여 데이터 추가
         <c:forEach var="selectOpt" items="${teamList}">
             var Data = {
@@ -424,7 +428,7 @@ function selectScope(event){
 
     console.log(selectOptList);  // 리스트 출력 (디버깅용)
 }
-
+//새 항목 추가
 function addInput() {
 	 var selectOptList = [];
 	 <c:forEach var="selectOpt" items="${deptList}">
@@ -453,8 +457,8 @@ function addInput() {
        
         <button type="button" class="add-btn" onclick="deleteInput(event)">삭제</button>
     `;
-    const selectScope=newRow.querySelector('.scope');
-    
+    	const selectScope=newRow.querySelector('.scope');
+    	 const selectOption = newRow.querySelector('.selectOption');
 	    const option1 = document.createElement('option');
 	    option1.value = "";
 	    option1.textContent = "선택";
@@ -467,19 +471,44 @@ function addInput() {
         selectScope.appendChild(option);
     }
     
-//     const selectElement = newRow.querySelector('.selectOption');
-//     for (let i = 0; i < selectOptList.length; i++) {
-//         const option = document.createElement('option');
-//         option.value = selectOptList[i].deptCode;
-//         option.textContent = selectOptList[i].deptName;
-//         selectElement.appendChild(option);
-//     }
+    selectOption.addEventListener('change', function() {
+       checkTeam(this);
+    });
     
     column.appendChild(newRow);
     
 }
 
+function checkTeam(event){
+    const teamList = [];
 
+    const teamCode = event.value; 
+    const currentRow = event.closest('.column-row'); 
+
+    let isDuplicate = false; // 중복 체크 변수
+
+    // 모든 row를 순회하여 중복된 팀 코드가 있는지 확인
+    document.querySelectorAll('.column-row').forEach(row => {
+        const teamInput = row.querySelector('.selectOption');
+        const team = teamInput.value;
+
+        if (team === teamCode && row !== currentRow) {
+          
+            isDuplicate = true;
+        } else {
+           
+            if (!teamList.includes(team)) {
+                teamList.push(team);
+            }
+        }
+    });
+
+    
+    if (isDuplicate) {
+        currentRow.remove();
+       
+    }
+}
 
 
 

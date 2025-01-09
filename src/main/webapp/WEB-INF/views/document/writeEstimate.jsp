@@ -426,7 +426,7 @@ var checkDocument={
 };
 
 
-const priceList = [
+var priceList = [
     <c:forEach var="price" items="${priceList}" varStatus="status">
         {
             teamCode: "${price.teamCode}",
@@ -443,37 +443,54 @@ const priceList = [
 	const total=$('#totalPrice');
 //가격 출력
 function selectprice(event) {
-	
-        const row = event.target.closest('.column-row');
-        if (!row) return;
+    const chkCombinationList = []; // 팀 코드와 직급 코드의 조합을 저장
+    const row = event.target.closest('.column-row');
+    if (!row) return;
 
-        const team = row.querySelector('.team');
-        const rank = row.querySelector('.rank');
-        const priceInput = row.querySelector('input[name="price"]');
-        const daysInput = document.getElementById('days');
-		const peopleInput=row.querySelector('input[name="people"]');
-				
-        if (!team || !rank || !priceInput || !daysInput||!peopleInput) return;
+    const team = row.querySelector('.team');
+    const rank = row.querySelector('.rank');
+    const priceInput = row.querySelector('input[name="price"]');
+    const daysInput = document.getElementById('days');
+    const peopleInput = row.querySelector('input[name="people"]');
 
-        const selectedTeam = team.value;
-        const selectedRank = rank.value;
-        const days = parseInt(daysInput.value);
-		const people=parseInt(peopleInput.value);
-        const matchedPrice = priceList.find(
-            price => price.teamCode === selectedTeam && price.rankCode === selectedRank
-        );
+    // 중복된 팀 코드와 직급 코드 조합을 체크하여 행 제거
+    document.querySelectorAll('.column-row').forEach(row => {
+        const chkTeam = row.querySelector('.team');
+        const chkRank = row.querySelector('.rank');
+        const teamCode = chkTeam.value;
+        const rankCode = chkRank.value;
+        const combination = teamCode+rankCode; // 팀 코드와 직급 코드의 조합
 
-        if (matchedPrice) {
-            
-            priceInput.value = (matchedPrice.price*1.1).toFixed(0);
+        if (chkCombinationList.includes(combination)&&teamCode!=""&&rankCode!="") {
+            // 중복된 조합이 이미 존재한다면 해당 행을 삭제
+            row.remove();
         } else {
-            
-            priceInput.value = '해당하는 인원이 없습니다..';
+            // 중복되지 않았다면 조합을 리스트에 추가
+            chkCombinationList.push(combination);
         }
+    });
 
-        // 합계 계산
-        calculateTotal();
+    if (!team || !rank || !priceInput || !daysInput || !peopleInput) return;
+
+    const selectedTeam = team.value;
+    const selectedRank = rank.value;
+    const days = parseInt(daysInput.value);
+    const people = parseInt(peopleInput.value);
+
+    // 선택된 팀 코드와 직급 코드에 맞는 가격 찾기
+    const matchedPrice = priceList.find(
+        price => price.teamCode === selectedTeam && price.rankCode === selectedRank
+    );
+
+    if (matchedPrice) {
+        priceInput.value = (matchedPrice.price * 1.1).toFixed(0);
+    } else {
+        priceInput.value = '해당하는 인원이 없습니다.';
     }
+
+    // 합계 계산
+    calculateTotal();
+}
 
     // 합계 계산
     function calculateTotal() {
