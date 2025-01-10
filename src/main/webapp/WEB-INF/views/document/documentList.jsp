@@ -131,7 +131,7 @@ $(document).ready(function(){
     
     const gridOption = {
         rowData: obj,
-        pagintion:true,
+        pagination:true,
         rowSelection:"single",		
 	    suppressRowClickSelection: false,
         suppressNoRowsOverlay:true,
