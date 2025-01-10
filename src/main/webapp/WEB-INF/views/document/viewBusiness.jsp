@@ -90,7 +90,7 @@
         
     }
     
-    .form label {
+    .form .span-title {
         width: 30%;
         font-weight: bold;
         text-align: center;
@@ -114,7 +114,7 @@
     	gap:20px;
     	
     }
-    .let-date label{
+    .let-date span{
     	font-weight: bold;
     	font-size: 20px;
     }
@@ -123,39 +123,41 @@
     
    
    .file{
-   	margin-top:1%;
+   	 margin-top:5px;
     display: flex;
    }
-   .file>label{
+   .file>span{
    align-content: center;
    background-color: gray;
    padding: 0px 2px;
    }
    .detail-content{
-    width:98%;
+    width:100%;
     height: 30px;
     border: 1px solid black;
     background-color: gray;
    display: flex;
    justify-content: center;
    }
-   .detail-content label{
+   .detail-content span{
     text-align: center;
     
     font-size: 26px;
    }
 
    .content{
-        width:98%;
+        width:100%;
         height:300px;
         margin-bottom: 10px;
         padding:0;
     }
   
-
+	.sign-content{
+		margin-top:2%;
+	}
     .sign-text{
     	display:flex;
-    	margin-top: 1%;
+    	
     	width:100%;
     	font-size: 20px;
     	justify-content: center;
@@ -197,24 +199,24 @@
         <div class="header">
             <div>
                 <div class="form">
-                    <label for="date">신청일</label>
+                    <span class="span-title" >신청일</span>
                     <span>${doc.documentDate }</span>
                 </div>
                 <div class="form">
-                    <label for="emp">신청인</label>
+                    <span class="span-title">신청인</span>
                     <span>${doc.empName }</span>
                     
                 </div>
                 <div class="form">
-                    <label for="title" name="title" readonly>제목</label>
+                    <span class="span-title">제목</span>
                     <span>${doc.documentTitle }</span>
                 </div>
                 <div class="form">
-                    <label for="place" name="place" readonly>출장지</label>
+                    <span class="span-title">출장지</span>
                     <span>${business.businessTo }</span>
                 </div>
                 <div class="form">
-                    <label for="perpose" name="perpose" readonly>출장목적</label>
+                    <span class="span-title">출장목적</span>
                     <span>${doc.documentTitle }</span>
                 </div>
             </div>
@@ -245,11 +247,11 @@
          		
            				
 							<div class="date">
-								<label for="bt-start">출장 시작일</label> <div>${business.businessStart}</div>
+								<span >출장 시작일</span> <div>${business.businessStart}</div>
 									
 							</div>
 							<div class="date" >
-								<label for="bt-end">출장 종료일</label> <div>${business.businessEnd }</div>
+								<span >출장 종료일</span> <div>${business.businessEnd }</div>
 							</div>
 						
 						
@@ -257,7 +259,7 @@
         </section>
         <div>
             <div class="file">
-                <label for="file">첨부파일</label>
+                <span>첨부파일</span>
                 <c:forEach var="file" items="${doc.fileList}">
                     <a href="javascript:void(0)" onclick="fileDown('${file.fileName}', '${file.filePath}',)">${file.fileName} </a>
                 </c:forEach>
@@ -265,19 +267,19 @@
             </div>
         </div>
         <div class="detail-content">
-            <label for="content">내용</label>
+            <span>내용</span>
         </div>
             <div class="content" >
-                <textarea id=summernote name="docContent" escapeXml="false"  readonly>${doc.documentContent }</textarea>
+                <textarea id=summernote name="docContent"   readonly>${doc.documentContent }</textarea>
             </div>
        <c:if test="${loginEmp.empCode eq signableEmp  }">
-       	
+       	<div class="sign-content">
        	<div class="sign-text">결재하기</div>
        		<div class="sign-buttons">
 				<button class="confirm" type="button" onclick="signDocument('1')">승인</button>
 				<button class="reject" type="button" onclick="signDocument('-1')">반려</button>
 			</div>
-			
+		</div>
        </c:if>
 
     </div>

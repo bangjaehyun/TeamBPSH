@@ -9,7 +9,7 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
  <style>
     body {
-        font-family: Arial, sans-serif;
+        
         margin: 0;
         padding: 0;
         background-color: #f3f3f3;
@@ -89,7 +89,7 @@
         
     }
     
-    .form label {
+    .form .span-title{
         width: 30%;
         font-weight: bold;
         text-align: center;
@@ -113,7 +113,7 @@
     	gap:20px;
     	
     }
-    .let-date label{
+    .let-date span{
     	font-weight: bold;
     	font-size: 20px;
     }
@@ -122,39 +122,42 @@
     
    
    .file{
-   	margin-top:1%;
+   	 margin-top:5px;
     display: flex;
    }
-   .file>label{
+   .file>span{
    align-content: center;
    background-color: gray;
    padding: 0px 2px;
    }
    .detail-content{
-    width:98%;
+    width:100%;
     height: 30px;
     border: 1px solid black;
     background-color: gray;
    display: flex;
    justify-content: center;
    }
-   .detail-content label{
+   .detail-content span{
     text-align: center;
     
     font-size: 26px;
    }
 
    .content{
-        width:98%;
+        width:100%;
         height:300px;
         margin-bottom: 10px;
         padding:0;
     }
+    .sign-content{
+		margin-top:2%;
+	}
   
 
     .sign-text{
     	display:flex;
-    	margin-top: 1%;
+    	
     	width:100%;
     	font-size: 20px;
     	justify-content: center;
@@ -196,16 +199,16 @@
         <div class="header">
             <div>
                 <div class="form">
-                    <label for="date">신청일</label>
+                    <span class="span-title">신청일</span>
                     <span>${doc.documentDate }</span>
                 </div>
                 <div class="form">
-                    <label for="emp">신청인</label>
+                    <span class="span-title">신청인</span>
                     <span>${doc.empName }</span>
                     
                 </div>
                 <div class="form">
-                    <label for="title" name="title" readonly>제목</label>
+                    <span class="span-title">제목</span>
                     <span>${doc.documentTitle }</span>
                 </div>
             </div>
@@ -236,20 +239,20 @@
          		<c:choose>
            				<c:when test="${vacType eq 'annual' }">
 							<div class="date">
-								<label for="vac-start">휴가 시작일자</label> <div>${startDay }</div>
+								<span>휴가 시작일자</span> <div>${startDay }</div>
 									
 							</div>
 							<div class="date" >
-								<label for="vac-end">휴가 종료일자</label> <div>${endDay }</div>
+								<span>휴가 종료일자</span> <div>${endDay }</div>
 							</div>
 						</c:when>
 						<c:otherwise>
 							<div class="date">
-								<label for="vac-start">반차 날짜</label> <div>${vacDate }</div>
+								<span>반차 날짜</span> <div>${vacDate }</div>
 									
 							</div>
 							<div class="date" >
-								<label for="vac-end">반차시간대</label>
+								<span>반차시간대</span>
 								<c:if test="${time eq 'a'}">
 								<div>오전</div>
 								</c:if>
@@ -263,7 +266,7 @@
         </section>
         <div>
             <div class="file">
-                <label for="file">첨부파일</label>
+                <span>첨부파일</span>
                 <c:forEach var="file" items="${doc.fileList}">
                     <a href="javascript:void(0)" onclick="fileDown('${file.fileName}', '${file.filePath}',)">${file.fileName} </a>
                 </c:forEach>
@@ -271,19 +274,19 @@
             </div>
         </div>
         <div class="detail-content">
-            <label for="content">내용</label>
+            <span>내용</span>
         </div>
             <div class="content" >
-                <textarea id=summernote name="docContent" escapeXml="false"  readonly>${doc.documentContent }</textarea>
+                <textarea id=summernote name="docContent"   readonly>${doc.documentContent }</textarea>
             </div>
        <c:if test="${loginEmp.empCode eq signableEmp  }">
-       	
-       	<div class="sign-text">결재하기</div>
-       		<div class="sign-buttons">
-				<button class="confirm" type="button" onclick="signDocument('1')">승인</button>
-				<button class="reject" type="button" onclick="signDocument('-1')">반려</button>
+       	<div class="sign-content">
+       		<div class="sign-text">결재하기</div>
+       			<div class="sign-buttons">
+					<button class="confirm" type="button" onclick="signDocument('1')">승인</button>
+					<button class="reject" type="button" onclick="signDocument('-1')">반려</button>
+				</div>
 			</div>
-			
        </c:if>
 
     </div>

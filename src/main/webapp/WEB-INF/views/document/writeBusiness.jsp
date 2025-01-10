@@ -85,9 +85,9 @@
             width:30%;
             height:100%;
             font-weight: bold;
-            background-color: #ccc;
+           background-color:#ccc;
             padding:3px;
-            border: 1px solid black;
+            
             box-sizing: border-box;
            text-align: center;
         }
@@ -149,7 +149,7 @@
 	gap: 5px;
 }
 
-.date label {
+.date span {
 	background: none;
 	border: none;
 	color: #333;
@@ -186,7 +186,10 @@
 	background: #f9f9f9;
 }
 
-
+	.insert-file input {
+	   padding: 10px;
+	   cursor: pointer;
+	  }
 
 /* 버튼 스타일 */
 .buttons {
@@ -279,12 +282,12 @@
 
 					<div class="set-date">
 						<div class="date">
-							<label for="vac-start">시작일자</label> <input type="date"
+							<span >시작일자</span> <input type="date"
 								id="btStart" name="start" max="9999-12-31"
 								onchange="onDateChange()">
 						</div>
 						<div class="date" id="endDate">
-							<label for="vac-end">종료일자</label> <input type="date" id="btEnd"
+							<span >종료일자</span> <input type="date" id="btEnd"
 								name="end" max="9999-12-31" onchange="totalDays()">
 						</div>
 						<div class="result">
@@ -293,7 +296,7 @@
 					</div>
 
 					<div>
-						<label for="bui-content">내용</label>
+						<span >내용</span>
 						<textarea  id="summernote" class="vac-content">
 							
 						</textarea>

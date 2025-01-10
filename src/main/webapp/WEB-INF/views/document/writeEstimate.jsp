@@ -149,13 +149,10 @@ button:hover{
 		width:250px;
 		font-size:16px;
 	}
-	
-	label {
+	span{
 		font-weight: bold;
-		background-color: #ccc;
-		
-		border: 1px solid black;
 	}
+
 
 	.selectedBtn:hover{
 		cursor: pointer;
@@ -187,7 +184,7 @@ button:hover{
            align-items: center;
 	}
 	
-	.column-title label{
+	.column-title span{
 		background-color: white;
 		border: none;
 		font-size:20px;
@@ -270,6 +267,11 @@ button:hover{
 		resize: none;
 	}
 	
+	.insert-file input {
+	   padding: 10px;
+	   cursor: pointer;
+	  }
+	
 /* 버튼 스타일 */
 .buttons {
 	display: flex;
@@ -336,39 +338,42 @@ button:hover{
 			<div class="spending">
              
              	<div class="work-days">
-					<label>총 진행일 수</label>
+					<span>총 진행일 수</span>
                 	<input type="number" id="days" min="1" onchange="selectprice(event)" placeholder="총 작업일수를 먼저 입력하시오.">
                	</div>
                	
 				<div class="content-title">
-                	<label>참여인원</label>
+                	<span>참여인원</span>
                	</div>
                 <div class="form-content">
 						<div class="column-title">
-							<label>팀</label>
+							<span>팀</span>
 						
-							<label>직급</label>
+							<span>직급</span>
 						
-							<label>금액</label>
+							<span>금액</span>
 
-                            <label>인원수</label>
+                            <span>인원수</span>
                             
-                            <label>삭제</label>
+                            <span>삭제</span>
                             
 						</div>
                     <div id="projectMem" class="form-column">
 						<div  class="column-row">	
                             <div>
                                <select class="team"  onchange="selectprice(event)">
-                               		<option value="${team.teamCode }">선택</option>
+                               		<option value="">선택</option>
                                		<c:forEach var="team" items="${teamList }">
-                               			<option value="${team.teamCode }">${team.teamName }</option>
+                               			<c:if test="${team.deptCode eq 'RI' or team.deptCode eq 'DD' }">
+                               				<option value="${team.teamCode }">${team.teamName }</option>
+                               			</c:if>
                                		</c:forEach>
                                </select>
                             </div>
                             <div>
                                <select class="rank"  onchange="selectprice(event)">
-                               		<option value="${team.teamCode }">선택</option>
+                               		<option value="">선택</option>
+                               		
                                		<c:forEach var="rank" items="${rankList }">
                                			<option value="${rank.rankCode }">${rank.rankName}</option>
                               		</c:forEach>
@@ -384,9 +389,9 @@ button:hover{
 						</div>
                     </div>
 						<div class="column-result">
-							<div class="result-label">합계</div>
+							<div class="result-span">합계</div>
 							<div >
-								<span id="totalPrice"></span>
+								<p id="totalPrice"></p>
 							</div>
 						</div>
                 </div>
@@ -397,7 +402,7 @@ button:hover{
             </div>
 
 					<div>
-						<label for="vac-content" class="content-title">내용</label>
+						<span class="content-title">내용</span>
 						<textarea  id="summernote" class="vac-content">
 							
 						</textarea>
@@ -556,13 +561,15 @@ function addInput() {
     	<select class="team" onchange="selectprice(event)">
     		<option value="${team.teamCode }">선택</option>
        		<c:forEach var="team" items="${teamList }">
-       			<option value="${team.teamCode }" >${team.teamName }</option>
+       			<c:if test="${team.deptCode eq 'RI' or team.deptCode eq 'DD'}">
+       				<option value="${team.teamCode }" >${team.teamName }</option>
+       			</c:if>
        		</c:forEach>
      	</select>
         </div>
         <div>
         <select class="rank"onchange="selectprice(event)">
-        	<option value="${team.teamCode }">선택</option>
+        	<option value="">선택</option>
        		<c:forEach var="rank" items="${rankList }">
        			<option value="${rank.rankCode}" >${rank.rankName}</option>
       		</c:forEach>

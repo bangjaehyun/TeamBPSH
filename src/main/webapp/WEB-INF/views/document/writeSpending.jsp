@@ -137,11 +137,9 @@ button:hover{
 		margin-bottom: 5px;
 	}
 	
-	label {
+	span {
 		font-weight: bold;
-		background-color: #ccc;
 		
-		border: 1px solid black;
 	}
 
 	.selectedBtn:hover{
@@ -172,7 +170,7 @@ button:hover{
            align-items: center;
 	}
 	
-	.column-title label{
+	.column-title span{
 		background-color: white;
 		border: none;
 		font-size:20px;
@@ -236,6 +234,12 @@ button:hover{
 		height: 100%;
 		resize: none;
 	}
+	
+	.insert-file input {
+   padding: 10px;
+   cursor: pointer;
+  }
+	
 	
 /* 버튼 스타일 */
 .buttons {
@@ -301,16 +305,16 @@ button:hover{
 					</div>
 
 			<div class="spending">
-                <label class="content-title">지출내역</label>
+                <span class="content-title">지출내역</span>
                 <div class="form-content">
 						<div class="column-title">
-							<label>지출일</label>
+							<span>지출일</span>
 						
-							<label>금액</label>
+							<span>금액</span>
 						
-							<label>사용용도</label>
+							<span>사용용도</span>
 
-                            <label>삭제</label>
+                            <span>삭제</span>
                             
 						</div>
                     <div id="spending" class="form-column">
@@ -335,7 +339,7 @@ button:hover{
             </div>
 
 					<div>
-						<label for="vac-content" class="content-title">내용</label>
+						<span class="content-title">내용</span>
 						<textarea  id="summernote" class="vac-content">
 							
 						</textarea>
