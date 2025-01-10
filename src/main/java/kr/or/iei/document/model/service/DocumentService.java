@@ -79,7 +79,7 @@ public class DocumentService {
 				if(check==0) {
 					list.get(i).setProgress("진행중");
 				}else if(check==-1) {
-					list.get(i).setProgress("기각");
+					list.get(i).setProgress("반려");
 				}else {
 					list.get(i).setProgress("승인");
 				}

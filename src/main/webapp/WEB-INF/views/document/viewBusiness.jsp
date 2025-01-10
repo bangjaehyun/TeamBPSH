@@ -228,7 +228,7 @@
                         <div class="sign">
                         <c:choose>
                         	<c:when test="${signEmp.signYn==1 }">승인</c:when>
-                        	<c:when test="${signEmp.signYn==-1 }">기각</c:when>
+                        	<c:when test="${signEmp.signYn==-1 }">반려</c:when>
                         	<c:otherwise>진행중</c:otherwise>
                         </c:choose>
                         </div>
@@ -275,7 +275,7 @@
        	<div class="sign-text">결재하기</div>
        		<div class="sign-buttons">
 				<button class="confirm" type="button" onclick="signDocument('1')">승인</button>
-				<button class="reject" type="button" onclick="signDocument('-1')">기각</button>
+				<button class="reject" type="button" onclick="signDocument('-1')">반려</button>
 			</div>
 			
        </c:if>
