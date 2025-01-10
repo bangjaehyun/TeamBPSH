@@ -22,12 +22,16 @@
 
         .header {
            
-            margin-bottom: 20px;
+         margin : auto 0;
         }
 
         .header h1 {
-            font-size: 24px;
-            margin: 0;
+          display: flex;
+			justify-content: center;
+			font-size: 26px;
+		   color: #333;
+		   margin-bottom: 20px;
+		   text-align: center;
         }
 
 

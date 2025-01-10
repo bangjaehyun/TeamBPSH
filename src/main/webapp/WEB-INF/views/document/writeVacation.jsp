@@ -36,6 +36,7 @@
 .header {
    margin : auto 0;
    align-items: center;
+   
 }
 
 /* 제목 */
@@ -56,15 +57,17 @@
 }
 
 /* 제목 입력 필드 */
-.doc-title {
-   width: 100%;
-   display: flex;
-   align-items: center;
-   border: 1px solid #ddd;
-   border-radius: 8px;
-   padding: 10px;
-   margin-bottom: 15px;
-   background: #f9f9f9;
+	.doc-title {
+	width: 550px;
+	display: flex;
+	border:none;
+	border: 1px solid #ccc;
+	
+	
+	border-radius: 8px;
+	align-items:center;	
+	margin: 0px;
+	margin-bottom: 10px;
 }
 
 .doc-title input {

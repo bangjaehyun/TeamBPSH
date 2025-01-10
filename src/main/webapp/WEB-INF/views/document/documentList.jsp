@@ -58,6 +58,16 @@
 		font-size:16px;
 	}
 	
+	.filter-btn:hover{
+		cursor: pointer;
+		scale:1.1;
+	}
+	.filter-btn:active{
+	cursor: pointer;
+	scale:0.9;
+	background-color: black;	
+	}
+	
 	
 	.detail{
 		display: flex;
@@ -121,14 +131,13 @@ $(document).ready(function(){
     
     const gridOption = {
         rowData: obj,
-        pagention:true,
-        rowSelection:"single",
-       
-        suppressRowClickSelection: false,
+        pagination:true,
+        rowSelection:"single",		
+	    suppressRowClickSelection: false,
         suppressNoRowsOverlay:true,
         onRowDoubleClicked : function(event){
         	viewOneDoc(event.data);
-        	console.log(event.data);
+        	
         },
         
         pagination: true,
@@ -168,7 +177,6 @@ $(document).ready(function(){
     const gridDiv = document.querySelector('#grid');
     const gridApi = agGrid.createGrid(gridDiv, gridOption);
 
-    console.log(obj);
 });
 
 <%-- 필터링 기능--%>
@@ -224,7 +232,7 @@ function viewOneDoc(e){
 	
 	}
 	
-	console.log(type);
+	
 	$.ajax({
 		url:urls,
 		type:"post",

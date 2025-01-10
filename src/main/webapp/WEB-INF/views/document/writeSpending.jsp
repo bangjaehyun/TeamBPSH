@@ -46,8 +46,11 @@ button:hover{
 .header h1 {
 	display: flex;
 	justify-content: center;
-	font-size: 24px;
+	font-size: 26px;
 	margin: 0;
+   color: #333;
+   margin-bottom: 20px;
+   text-align: center;
 }
 
 .main-container {
