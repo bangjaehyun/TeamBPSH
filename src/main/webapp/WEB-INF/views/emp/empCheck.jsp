@@ -116,7 +116,7 @@
 								<c:when test="${fn:substring(check.day,6,8) eq (i < 10 ? '0' : '') + i}">
 									<td class="checkTime">${check.checkIn}</td>
 									<td class="checkTime">${check.checkOut}</td>
-									<td class="checkTime">${check.checkNote}</td>
+									<td>${check.checkNote}</td>
 									<c:set var="found" value="true" />
 								</c:when>
 							</c:choose>

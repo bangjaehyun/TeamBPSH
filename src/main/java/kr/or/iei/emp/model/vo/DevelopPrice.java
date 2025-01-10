@@ -3,16 +3,16 @@ package kr.or.iei.emp.model.vo;
 public class DevelopPrice {
 	private String teamCode;
 	private String rankCode;
-	private int price;
+	private String price;
 	private String teamName;
 	private String rankName;
-	
+
 	public DevelopPrice() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DevelopPrice(String teamCode, String rankCode, int price, String teamName, String rankName) {
+	public DevelopPrice(String teamCode, String rankCode, String price, String teamName, String rankName) {
 		super();
 		this.teamCode = teamCode;
 		this.rankCode = rankCode;
@@ -37,11 +37,11 @@ public class DevelopPrice {
 		this.rankCode = rankCode;
 	}
 
-	public int getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(String price) {
 		this.price = price;
 	}
 
@@ -66,8 +66,5 @@ public class DevelopPrice {
 		return "DevelopPrice [teamCode=" + teamCode + ", rankCode=" + rankCode + ", price=" + price + ", teamName="
 				+ teamName + ", rankName=" + rankName + "]";
 	}
-	
-
-	
 
 }

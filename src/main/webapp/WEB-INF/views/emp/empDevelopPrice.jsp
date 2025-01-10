@@ -90,7 +90,7 @@
 								<tr>
 									<td>${rank.rankName}</td>
 									<td>
-									<input type="number" id="${team.teamCode}${rank.rankCode}" name="price" value="0">
+									<input type="number" min="0" id="${team.teamCode}${rank.rankCode}" name="price" value="0">
 									<span>원</span>
 									</td>
 									<td><button class="change-btn" onclick="changePrice(this)">변경</button></td>

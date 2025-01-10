@@ -107,7 +107,7 @@
 					</td>
 					<td>
 						<div class="salary-div">
-							<input type="number" name="salary" placeholder="급여" autocomplete="off">
+							<input type="number" min="0" name="salary" placeholder="급여" autocomplete="off">
 							<span>원</span>
 						</div>
 					</td>

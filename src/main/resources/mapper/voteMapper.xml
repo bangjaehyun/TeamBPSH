@@ -168,4 +168,17 @@ values
 	#{urlParam}
 	)
 </insert>
+<update id="updateVote"
+parameterType="vote">
+update tbl_vote
+   set vote_title = #{voteTitle},
+   	   vote_content = #{voteContent},
+   	   vote_end = #{voteEnd}
+ where vote_no = #{voteNo}
+</update>
+<delete id="deleteVoteValList"
+parameterType="string">
+delete from tbl_votelist
+ where vote_no = #{voteNo}
+</delete>
 </mapper>

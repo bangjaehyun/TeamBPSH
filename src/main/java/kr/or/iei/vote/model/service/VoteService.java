@@ -143,5 +143,63 @@ public class VoteService {
 		
 		return voteNavi;
 	}
+
+	public Vote updateFrmVote(Vote vote) {
+		Vote v = dao.selectVote(vote);
+		
+		if(v != null) {
+			ArrayList<VoteList> list = (ArrayList<VoteList>)dao.selectVoteValList(vote);
+			v.setVoteList(list);
+		}
+		
+		return v;
+	}
+
+	@Transactional
+	public int updateVote(Vote vote, List<String> voteList) {
+		int result = dao.updateVote(vote);
+		System.out.println(result);
+		if(result > 0) {
+			result = dao.deleteVoteValList(vote.getVoteNo());
+			
+			if (result > 0) {
+				HashMap<String, String> map = new HashMap<String, String>();
+				map.put("voteNo", vote.getVoteNo());
+				for (String voteVal : voteList) {
+					map.put("voteVal", voteVal);
+					result = dao.insertVoteVal(map);
+					if (result < 1) {
+						break;
+					}
+				}
+
+				if (result > 0) {
+					ArrayList<String> allEmpList = (ArrayList<String>) dao.selectAllEmp(vote.getEmpCode());
+					Alarm alarm = new Alarm();
+					alarm.setAlarmComment("재투표 : " + vote.getVoteTitle());
+					alarm.setRefUrl("/vote/voteDetail.do");
+
+					for (String empCode : allEmpList) {
+						alarm.setEmpCode(empCode);
+
+						JSONObject json = new JSONObject();
+						json.put("voteNo", vote.getVoteNo());
+						json.put("empCode", empCode);
+
+						alarm.setUrlParam(json.toJSONString());
+						result = dao.insertAlarm(alarm);
+						if (result < 1) {
+							break;
+						} else {
+							emitter.sendEvent(empCode, alarm.getAlarmComment());
+						}
+					}
+				}
+			}
+		}
+		
+		
+		return result;
+	}
 	
 }

@@ -36,6 +36,8 @@
 		<typeAlias type="kr.or.iei.emp.model.vo.Check" alias="empCheck"/>
 		<typeAlias type="kr.or.iei.document.model.vo.Estimate" alias="estimate"/>
 		<typeAlias type="kr.or.iei.document.model.vo.Business" alias="business"/>
+		<typeAlias type="kr.or.iei.emp.model.vo.Salary" alias="salary"/>
+        <typeAlias type="kr.or.iei.emp.model.vo.Disciplinary" alias="disciplinary"/>
 		
 	</typeAliases>
 </configuration>
