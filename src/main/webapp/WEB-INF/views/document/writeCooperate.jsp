@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
 <style>
 
 .board{
@@ -138,11 +138,9 @@ button:hover{
 		margin-bottom: 5px;
 	}
 	
-	label {
+	span {
 		font-weight: bold;
-		background-color: #ccc;
 		
-		border: 1px solid black;
 	}
 
 	.selectedBtn:hover{
@@ -175,7 +173,7 @@ button:hover{
            align-items: center;
 	}
 	
-	.column-title label{
+	.column-title span{
 		background-color: white;
 		border: none;
 		font-size:20px;
@@ -260,6 +258,12 @@ button:hover{
 		resize: none;
 	}
 	
+	.insert-file input {
+	   padding: 10px;
+	   cursor: pointer;
+	  }
+	
+	
 /* 버튼 스타일 */
 .buttons {
 	display: flex;
@@ -327,11 +331,11 @@ button:hover{
          
                 <div class="form-content">
 						<div class="column-title">
-							<label>부서선택</label>
+							<span>부서선택</span>
 						
-							<label>협조 대상 팀</label>
+							<span>협조 대상 팀</span>
 						
-                            <label>삭제</label>
+                            <span>삭제</span>
                             
 						</div>
                     <div id="projectMem" class="form-column">
@@ -363,7 +367,7 @@ button:hover{
             </div>
 
 					<div>
-						<label for="vac-content" class="content-title">내용</label>
+						<span  class="content-title">내용</span>
 						<textarea  id="summernote" class="vac-content">
 							
 						</textarea>

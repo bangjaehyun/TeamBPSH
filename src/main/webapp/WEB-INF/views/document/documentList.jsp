@@ -74,7 +74,7 @@
 		gap:10px;
 	}
 	
-	#grid{
+	#documentList{
 		width: 1200px;
  		  
  		margin: 30px auto;
@@ -82,7 +82,7 @@
     	 
    		
 	}
-	#grid ::-webkit-scrollbar{
+	#documentList ::-webkit-scrollbar{
 	 width: 0;  /* remove scrollbar space */
      background: transparent;
 	}
@@ -105,13 +105,16 @@
 	</div>
 	</div>
 	<div class="list-content">
-		<div id="grid"></div>
+		<div id="documentList"></div>
 	</div>
 </div>
 
 
 <script>
 var obj=[];
+
+
+
 
 $(document).ready(function(){
   
@@ -129,11 +132,16 @@ $(document).ready(function(){
         obj.push(rowData);
     </c:forEach>
     
-    const gridOption = {
+    var gridOption = {
         rowData: obj,
         pagination:true,
-        rowSelection:"single",		
-	    suppressRowClickSelection: false,
+//         rowSelection:"single",	
+		 rowSelection: {
+        		mode: 'singleRow',
+        		checkboxes: false,
+        	    enableClickSelection: true,
+    		},
+	    //suppressRowClickSelection: false,
         suppressNoRowsOverlay:true,
         onRowDoubleClicked : function(event){
         	viewOneDoc(event.data);
@@ -174,10 +182,16 @@ $(document).ready(function(){
        
     };
 
-    const gridDiv = document.querySelector('#grid');
+    const gridDiv = document.querySelector('#documentList');
     const gridApi = agGrid.createGrid(gridDiv, gridOption);
+    
+
+   
 
 });
+
+
+
 
 <%-- 필터링 기능--%>
 function typeFilter(e){

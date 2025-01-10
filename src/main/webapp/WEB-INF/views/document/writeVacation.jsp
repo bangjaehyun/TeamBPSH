@@ -134,7 +134,7 @@
    gap: 5px;
 }
 
-.date label {
+.date span {
    background: none;
    border: none;
    color: #333;
@@ -170,7 +170,7 @@
    gap: 5px;
 }
 
-.half-time label {
+.half-time span {
    border: none;
    background: none;
    font-size: 16px;
@@ -193,11 +193,9 @@
 /* 파일 업로드 */
 .insert-file input {
    padding: 10px;
-   border: 1px solid #ccc;
-   border-radius: 6px;
    cursor: pointer;
-   background: #fff;
-   width: 100%;
+  
+  
 }
 
 /* 버튼 스타일 */
@@ -266,30 +264,30 @@
 					</div>
 
                <div>
-                  <label for="half">반차 신청 여부</label> <input type="checkbox"
+                  <span>반차 신청 여부</span> <input type="checkbox"
                      id="half" name="halfDay">
                </div>
 
                <div class="half-time">
 
                   <div>
-                     <label for="am" style="background-color: white; border: none;">
-                        오전</label><input type="radio" name="select" value="a">
+                     <span  style="background-color: white; border: none;">
+                        오전</span><input type="radio" name="select" value="a">
                   </div>
                   <div>
-                     <label for="pm" style="background-color: white; border: none;">
-                        오후</label><input type="radio" name="select" value="p">
+                     <span  style="background-color: white; border: none;">
+                        오후</span><input type="radio" name="select" value="p">
                   </div>
                </div>
 
                <div class="set-date">
                   <div class="date">
-                     <label for="vac-start">시작일자</label> <input type="date"
+                     <span >시작일자</span> <input type="date"
                         id="vacStart" name="start" max="9999-12-31"
                         onchange="onDateChange()">
                   </div>
                   <div class="date" id="endDate">
-                     <label for="vac-end">종료일자</label> <input type="date" id="vacEnd"
+                     <span >종료일자</span> <input type="date" id="vacEnd"
                         name="end" max="9999-12-31" onchange="totalDays()">
                   </div>
                   <div class="result">
@@ -299,7 +297,7 @@
 
 
 					<div>
-						<label for="vac-content">내용</label>
+						<span >내용</span>
 						<textarea  id="summernote" class="vac-content">
 							
 						</textarea>
