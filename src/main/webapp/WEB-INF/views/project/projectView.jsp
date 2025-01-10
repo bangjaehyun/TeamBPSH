@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 * {
@@ -291,7 +291,8 @@ th {
 		<div class="pjSection">
 			<div class="box">
 				<h2>프로젝트 진행률</h2>
-				<canvas id="progressChart" width="400" height="200"></canvas>
+				<canvas id="progressChart" width="100%" height="50%"></canvas>
+				<canvas id="overallProgressChart" width="100%" height="50%"></canvas>
 			</div>
 			<div class="box">
 				<h2>프로젝트 내용</h2>
@@ -532,58 +533,142 @@ th {
 		
 		
 	
-		$(document).ready(function() {
-		    loadComment();
-// 		    loadEmployeeList(); // 참여 사원 리스트 불러오기
+	    $(document).ready(function () {
+	        loadComment();
 
-		    // 📌 프로젝트 진행률 차트
-		    const labels = ${teamListJson};
-		    console.log(labels);
-		    const progressData = [75, 50, 90];
-			
-		    if (!labels.length || !progressData.length) {
-		        console.error("차트 데이터가 비어 있습니다.");
-		    }
+	        // ✅ 프로젝트 진행률 차트
+	        try {
+	            // 📌 JSON 데이터 변환
+	            const teamDataString = '<c:out value="${teamListJson}" escapeXml="false" />';
+	            const progressDataString = '<c:out value="${progressRate}" escapeXml="false" />';
 
-		    function loadChart() {
-		        const ctx = document.getElementById('progressChart');
+	            console.log("원본 팀 데이터 (문자열):", teamDataString);
+	            console.log("원본 진행률 데이터 (문자열):", progressDataString);
 
-		        if (ctx) {
-		            new Chart(ctx, {
-		                type: 'bar',
-		                data: {
-		                    labels: labels,
-		                    datasets: [{
-		                        label: '진행률 (%)',
-		                        data: progressData,
-		                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-		                        borderColor: 'rgba(75, 192, 192, 1)',
-		                        borderWidth: 1
-		                    }]
-		                },
-		                options: {
-		                    scales: {
-		                        y: {
-		                            beginAtZero: true,
-		                            max: 100
-		                        }
-		                    }
-		                }
-		            });
-		        } else {
-		            console.error("Canvas 요소를 찾을 수 없습니다.");
-		        }
-		    }
+	            // JSON 파싱 후 배열로 변환
+	            const teamData = JSON.parse(teamDataString);
+	            const progressData = JSON.parse(progressDataString);
 
-		    // 📌 파일 업로드 시 comm_gb 값 변경
-		    $("#fileUpload").on("change", function() {
-		        let commGbInput = $("#comm_gb");
-		        commGbInput.val(this.files.length > 0 ? "1" : "0");
-		    });
+	            console.log("팀 데이터 (객체 변환):", teamData);
+	            console.log("진행률 데이터 (객체 변환):", progressData);
 
+	            // ⚠️ 데이터가 비어 있는 경우 예외 처리
+	            if (!teamData || !Array.isArray(teamData) || teamData.length === 0) {
+	                console.error("⚠️ teamData가 비어 있습니다.");
+	                return;
+	            }
+	            if (!progressData || !Array.isArray(progressData) || progressData.length === 0) {
+	                console.error("⚠️ progressData가 비어 있습니다.");
+	                return;
+	            }
+
+	            // 📌 teamName 배열 변환 (팀별 진행률 차트)
+	            const labels = teamData.map(team => team.teamName);
+	            const teamProgressRates = progressData.map(data => parseFloat(data.teamProgressRate));
+
+	            console.log("팀 이름 리스트:", labels);
+	            console.log("팀 진행률 데이터:", teamProgressRates);
+
+	            // 📌 프로젝트 전체 진행률 데이터
+	            const projectProgressRates = progressData.map(data => parseFloat(data.projectProgressRate));
+	            console.log("프로젝트 진행률 데이터:", projectProgressRates);
+	            
+	            function loadTeamChart() {
+	                const ctx = document.getElementById('progressChart');
+	                if (ctx) {
+	                    new Chart(ctx, {
+	                        type: 'doughnut',
+	                        data: {
+	                            labels: labels,
+	                            datasets: [{
+	                                label: '팀별 진행률 (%)',
+	                                data: teamProgressRates,
+	                                backgroundColor: [
+	                                    'rgba(255, 99, 132, 0.7)',
+	                                    'rgba(54, 162, 235, 0.7)',
+	                                    'rgba(255, 206, 86, 0.7)',
+	                                    'rgba(75, 192, 192, 0.7)'
+	                                ],
+	                                borderColor: [
+	                                    'rgba(255, 99, 132, 1)',
+	                                    'rgba(54, 162, 235, 1)',
+	                                    'rgba(255, 206, 86, 1)',
+	                                    'rgba(75, 192, 192, 1)'
+	                                ],
+	                                borderWidth: 1
+	                            }]
+	                        },
+	                        options: {
+	                            responsive: true,
+	                            plugins: {
+	                                legend: { position: 'bottom' },
+	                                tooltip: {
+	                                    callbacks: {
+	                                        label: function (tooltipItem) {
+	                                            return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    });
+	                } else {
+	                    console.error("⚠️ 'progressChart' 요소를 찾을 수 없습니다.");
+	                }
+	            }
+
+	            /** ✅ 프로젝트 전체 진행률 차트 **/
+	            function loadProjectChart() {
+	                const ctx = document.getElementById('overallProgressChart');
+	                if (ctx) {
+	                    new Chart(ctx, {
+	                        type: 'bar',
+	                        data: {
+	                            labels: ["프로젝트 진행률"],
+	                            datasets: [{
+	                                label: '프로젝트 진행률 (%)',
+	                                data: projectProgressRates,
+	                                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+	                                borderColor: 'rgba(75, 192, 192, 1)',
+	                                borderWidth: 1
+	                            }]
+	                        },
+	                        options: {
+	                            responsive: true,
+	                            scales: {
+	                                y: {
+	                                    beginAtZero: true,
+	                                    max: 100
+	                                }
+	                            },
+	                            plugins: {
+	                                legend: { display: false },
+	                                tooltip: {
+	                                    callbacks: {
+	                                        label: function (tooltipItem) {
+	                                            return `${tooltipItem.raw}%`;
+	                                        }
+	                                    }
+	                                }
+	                            }
+	                        }
+	                    });
+	                } else {
+	                    console.error("⚠️ 'overallProgressChart' 요소를 찾을 수 없습니다.");
+	                }
+	            }
+
+	            loadTeamChart();
+	            loadProjectChart();
+	        } catch (e) {
+	            console.error("⚠️ JSON 데이터 파싱 오류:", e);
+	        }
+	    
+	    
 		    // 📌 댓글 추가 버튼 클릭 이벤트
-		    $("#submitComment").on("click", function() {
+		    $("#submitComment").on("click", function () {
 		        let formData = new FormData($("#commentForm")[0]);
+
 		        $.ajax({
 		            url: "/project/submitComment.do",
 		            type: "POST",
@@ -591,108 +676,87 @@ th {
 		            processData: false,
 		            contentType: false,
 		            dataType: "json",
-		            success: function(res) {
+		            success: function (res) {
 		                if (res) {
-		                    console.log(res);
+		                    console.log("✅ 댓글 추가 성공:", res);
 		                    alert("댓글이 추가되었습니다.");
-		                    loadComment(); // 댓글 목록 갱신
+		                    loadComment();
 		                } else {
 		                    alert("댓글 추가 실패");
 		                }
 		            },
-		            error: function() {
-		                console.log("ajax 오류");
+		            error: function () {
+		                console.error("⚠️ Ajax 오류 발생");
 		            }
 		        });
 		    });
-			
-		   $('#addPartEmp').on('click',function(){
-			   
-		   });
-		});
-		
-		$('#addPartEmp').on('click',function(){
-			let projectNo = $('#projectNo').text();
-			let empCode = '';
-			let partempContent = '';
-			$('#teamEmpTable tbody tr').each(function(){
-				empCode = $(this).find('td:first-child').text();
-				partempContent = $(this).find('td:nth-child(4)').text();
-				});
-			
-			
-			$.ajax({
-				url : '/project/addProjectPartemp.do',
-				type : 'post',
-				data : {'projectNo' : projectNo,
-						'empCode' 	: empCode,
-						'partempContent' : partempContent
-						},
-	            success : function(res){
-	            	console.log(res);
-	            	if(res > 0){
-	                       swal({
-	                          title : "완료",
-	                          text : "팀원이 추가 되었습니다.",
-	                          icon : "success"
-	                       }).then(function(){
-	                          pageMove('/project/list.do');
-	                       });
-	                    }else{
-	                       swal({
-	                          title : "오류",
-	                          text : "팀원 추가 중 오류가 발생하였습니다.",
-	                          icon : "error"
-	                       }).then(function(){
-	                          pageMove('/project/list.do');
-	                       });
-	                    }
-	            },
-	            error : function(){
-	            	console.log('ajax 오류');
-	            }
-				
-			});
+
+		    // 📌 팀원 추가 버튼 클릭 이벤트 (동적 요소 적용)
+		    $(document).on('click', '#addPartEmp', function () {
+		        let projectNo = $('#projectNo').text();
+		        let empCode = $(this).closest('tr').find('td:first-child').text().trim();
+		        let partempContent = $(this).closest('tr').find('td:nth-child(4) textarea').val().trim();
+
+		        console.log("✅ 추가할 팀원:", { projectNo, empCode, partempContent });
+
+		        $.ajax({
+		            url: '/project/addProjectPartemp.do',
+		            type: 'POST',
+		            data: {
+		                projectNo: projectNo,
+		                empCode: empCode,
+		                partempContent: partempContent
+		            },
+		            success: function (res) {
+		                console.log("✅ 서버 응답:", res);
+		                if (res > 0) {
+		                    alert("팀원이 추가되었습니다.");
+		                    location.reload(); // 페이지 새로고침
+		                } else {
+		                    alert("팀원 추가 중 오류 발생");
+		                }
+		            },
+		            error: function () {
+		                console.error("⚠️ Ajax 오류 발생");
+		            }
+		        });
+		    });
+
+		    // 📌 팀원 제거 버튼 클릭 이벤트 (동적 요소 적용)
+		    $(document).on('click', '#removeEmp', function () {
+		        let projectNo = $('#projectNo').text();
+		        let empCode = $(this).closest('tr').find('td:first-child').text().trim();
+
+		        console.log("✅ 제거할 팀원:", { projectNo, empCode });
+
+		        if (!confirm("정말 해당 팀원을 제거하시겠습니까?")) {
+		            return;
+		        }
+
+		        $.ajax({
+		            url: '/project/removeEmp.do',
+		            type: 'POST',
+		            data: {
+		                projectNo: projectNo,
+		                empCode: empCode
+		            },
+		            success: function (res) {
+		                console.log("✅ 서버 응답:", res);
+		                if (res > 0) {
+		                    alert("팀원이 제거되었습니다.");
+		                    location.reload();
+		                } else {
+		                    alert("팀원 제거 중 오류 발생");
+		                }
+		            },
+		            error: function () {
+		                console.error("⚠️ Ajax 오류 발생");
+		            }
+		        });
+		    });
 
 		});
-		
-		$('#removeEmp').on('click',function(){
-		let projectNo = $('#projectNo').text();
-		let empCode = '';
-			$('#pjBody tbody tr').each(function() {
-				empCode = $(this).find('td:first-child').text();
-			});
-			$.ajax({
-				url : '/project/removeEmp.do',
-				type : 'post',
-				data : {'projectNo' : projectNo,
-						'empCode'   : empCode
-					   },
-				success : function(res){
-					console.log(res);
-	            	if(res > 0){
-	                       swal({
-	                          title : "완료",
-	                          text : "팀원이 제거 되었습니다.",
-	                          icon : "success"
-	                       }).then(function(){
-	                          pageMove('/project/list.do');
-	                       });
-	                    }else{
-	                       swal({
-	                          title : "오류",
-	                          text : "팀원 제거 중 오류가 발생하였습니다.",
-	                          icon : "error"
-	                       }).then(function(){
-	                          pageMove('/project/list.do');
-	                       });
-	                    }
-	            },
-	            error : function(){
-	            	console.log('ajax 오류');
-	            }
-			});
-		});
+
 		
 		
 	</script>

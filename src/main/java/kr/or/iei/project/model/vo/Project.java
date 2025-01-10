@@ -19,6 +19,8 @@ public class Project {
 	private String teamLeader;
 	private ArrayList<ProjectPartemp> projectPartemp;
 	private ArrayList<ProjectTeam> projectTeam;
+	private String projectProgressRate;
+	private String teamProgressRate;
 	
 	
 	public Project() {
@@ -29,7 +31,8 @@ public class Project {
 
 	public Project(String projectNo, String documentTypeCode, String projectTitle, String projectContent,
 			String projectEnd, String empCode, String documentDate, ArrayList<Team> teamList, String empName,
-			String teamLeader, ArrayList<ProjectPartemp> projectPartemp) {
+			String teamLeader, ArrayList<ProjectPartemp> projectPartemp, ArrayList<ProjectTeam> projectTeam,
+			String projectProgressRate, String teamProgressRate) {
 		super();
 		this.projectNo = projectNo;
 		this.documentTypeCode = documentTypeCode;
@@ -42,6 +45,9 @@ public class Project {
 		this.empName = empName;
 		this.teamLeader = teamLeader;
 		this.projectPartemp = projectPartemp;
+		this.projectTeam = projectTeam;
+		this.projectProgressRate = projectProgressRate;
+		this.teamProgressRate = teamProgressRate;
 	}
 
 
@@ -155,21 +161,49 @@ public class Project {
 	}
 
 
+	public ArrayList<ProjectTeam> getProjectTeam() {
+		return projectTeam;
+	}
+
+
+	public void setProjectTeam(ArrayList<ProjectTeam> projectTeam) {
+		this.projectTeam = projectTeam;
+	}
+
+
+	public String getProjectProgressRate() {
+		return projectProgressRate;
+	}
+
+
+	public void setProjectProgressRate(String projectProgressRate) {
+		this.projectProgressRate = projectProgressRate;
+	}
+
+
+	public String getTeamProgressRate() {
+		return teamProgressRate;
+	}
+
+
+	public void setTeamProgressRate(String teamProgressRate) {
+		this.teamProgressRate = teamProgressRate;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Project [projectNo=" + projectNo + ", documentTypeCode=" + documentTypeCode + ", projectTitle="
 				+ projectTitle + ", projectContent=" + projectContent + ", projectEnd=" + projectEnd + ", empCode="
 				+ empCode + ", documentDate=" + documentDate + ", teamList=" + teamList + ", empName=" + empName
-				+ ", teamLeader=" + teamLeader + ", projectPartemp=" + projectPartemp + "]";
+				+ ", teamLeader=" + teamLeader + ", projectPartemp=" + projectPartemp + ", projectTeam=" + projectTeam
+				+ ", projectProgressRate=" + projectProgressRate + ", teamProgressRate=" + teamProgressRate + "]";
 	}
 
 
 	
 
 
-	
-
-	
 	
 	
 }

@@ -259,5 +259,50 @@
 	<select id="teamLeader" parameterType="map" resultType="int">
 		select count(*) from tbl_team_leader where emp_code = #{empCode}  and team_code = #{teamCode}
 	</select>
+	
+	<select id="teamOneprogressRate" parameterType="string" resultType="project">
+<![CDATA[
+WITH Team_Members AS (
+    SELECT 
+        pp.project_no, 
+        e.team_code, 
+        COUNT(DISTINCT pp.emp_code) AS totalTeamEmp
+    FROM tbl_project_partemp pp
+    JOIN tbl_emp e ON pp.emp_code = e.emp_code
+    GROUP BY pp.project_no, e.team_code
+),
+Project_Members AS (
+    SELECT 
+        project_no,
+        SUM(totalTeamEmp) AS totalProjectEmp 
+    FROM Team_Members
+    GROUP BY project_no
+)
+SELECT
+    p.project_no,
+    p.project_title,
+    tm.team_code,
+    (TO_DATE(p.project_end, 'YYYYMMDD') - TO_DATE(p.project_start, 'YYYYMMDD') + 1) AS totalDays,
+    CASE 
+        WHEN SYSDATE < TO_DATE(p.project_start, 'YYYYMMDD') THEN 0
+        WHEN SYSDATE > TO_DATE(p.project_end, 'YYYYMMDD') THEN 100
+        ELSE ROUND(
+            ((SYSDATE - TO_DATE(p.project_start, 'YYYYMMDD')) /
+            (TO_DATE(p.project_end, 'YYYYMMDD') - TO_DATE(p.project_start, 'YYYYMMDD'))) * 100, 
+            2
+        )
+    END AS projectProgressRate, 
+    tm.totalTeamEmp,
+    ROUND(
+        ((tm.totalTeamEmp / pm.totalProjectEmp) * 100),
+        2
+    ) AS teamProgressRate
+FROM 
+    tbl_project p
+JOIN Team_Members tm ON p.project_no = tm.project_no
+JOIN Project_Members pm ON p.project_no = pm.project_no
+    WHERE p.project_no = #{projectNo}
+    ]]>
+	</select>
 
 </mapper>

@@ -79,7 +79,10 @@ public class ProjectController {
 	    //script에서 출력 해줄 teamList
 	    String teamListJsion = new Gson().toJson(projectTeam);
 	    request.setAttribute("teamListJson", teamListJsion);
-	    
+	    //script에 공정률 불러올 변수
+	    ArrayList<Project> progressRate = service.teamOneprogressRate(projectNo);
+	    String progressRateJson = new Gson().toJson(progressRate);
+	    request.setAttribute("progressRate", progressRateJson);
 		Project project = service.projectView(projectNo,projectTeam);
 		List<Emp> addProjectEmp = service.addProjectEmp(teamCode, projectNo);
 		ArrayList<ProjectPartemp> projectPartempList = service.projectEmpList(projectNo);

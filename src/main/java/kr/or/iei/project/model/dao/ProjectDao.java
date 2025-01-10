@@ -115,6 +115,11 @@ public class ProjectDao {
 		
 		return sqlSession.selectOne("project.teamLeader",params);
 	}
+
+	public List<Project> teamOneprogressRate(String projectNo) {
+		
+		return sqlSession.selectList("project.teamOneprogressRate", projectNo);
+	}
 	
 
 

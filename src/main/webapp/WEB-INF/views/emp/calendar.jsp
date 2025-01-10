@@ -6,11 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
 <style>
-/* 전체 레이아웃 스타일 */
-/* 전체 레이아웃 스타일 */
+
+
 .calDiv {
     display: flex;
     justify-content: center;

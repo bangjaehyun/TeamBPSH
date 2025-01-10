@@ -141,6 +141,11 @@ public class ProjectService {
 		return (ArrayList<Team>) dao.projectTeamList(projectNo);
 	}
 
+	public ArrayList<Project> teamOneprogressRate(String projectNo) {
+		
+		return (ArrayList<Project>) dao.teamOneprogressRate(projectNo);
+	}
+
 
 
 	
