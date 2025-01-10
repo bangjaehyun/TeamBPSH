@@ -20,10 +20,9 @@
 }
 
 .board{
-   margin-left:300px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .container {
@@ -243,24 +242,25 @@
       <div class="header">
          <h1>휴가 신청서</h1>
 
-         <div class="main-container">
-            <form action="/doc/writeVacation.do" method="post" enctype="multipart/form-data">
-               <div class="doc-title">
-                   <input id="title" type="text"name="title" placeholder="제목 입력" />
-               </div>
-               <div class="ref">
-                  <button type="button" onclick="searchMan('sign')">결재자 검색</button>
-                  <%--결재자 목록 --%>
-                  <div id="sign" class="sign">
-                  
-                  </div>
-               </div>
-               <div class="ref">
-                  <button type="button" onclick="searchMan('ref')">참조자 검색</button>
-                  <div id="ref" class="reference">
-                  
-                  </div>
-               </div>
+
+			<div class="main-container">
+				
+					<div class="doc-title">
+						 <input id="title" type="text"name="title" placeholder="제목 입력" />
+					</div>
+					<div class="ref">
+						<button type="button" onclick="searchMan('sign')">결재자 검색</button>
+						<%--결재자 목록 --%>
+						<div id="sign" class="sign">
+						
+						</div>
+					</div>
+					<div class="ref">
+						<button type="button" onclick="searchMan('ref')">참조자 검색</button>
+						<div id="ref" class="reference">
+						
+						</div>
+					</div>
 
                <div>
                   <label for="half">반차 신청 여부</label> <input type="checkbox"
@@ -294,24 +294,26 @@
                   </div>
                </div>
 
-               <div>
-                  <label for="vac-content">내용</label>
-                  <textarea  id="summernote" class="vac-content">
-                     
-                  </textarea>
-               </div>
-               <div class="insert-file">
-                  <input type="file" name="files" multiple>
-               </div>
-            </form>
-            <div class="buttons">
-               <button class="submit" type="button" onclick="writeDocument()">작성</button>
-               <button class="cancel" type="button" onclick="cancel()">취소</button>
-            </div>
-         </div>
-      </div>
-   </div>
-   </div>
+
+					<div>
+						<label for="vac-content">내용</label>
+						<textarea  id="summernote" class="vac-content">
+							
+						</textarea>
+					</div>
+					<div class="insert-file">
+						<input type="file" name="files" multiple>
+					</div>
+				
+				<div class="buttons">
+					<button class="submit" type="button" onclick="writeDocument()">작성</button>
+					<button class="cancel" type="button" onclick="cancel()">취소</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
 <script src="/resources/summernote/summernote-lite.js"></script>
 <script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
 

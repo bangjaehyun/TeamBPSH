@@ -23,7 +23,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-left:300px;
+	
 }
 
 .container {
@@ -87,26 +87,32 @@ button:hover{
 		font-size: 18px;
 	}
 
+/* 결재자 및 참조자 버튼 스타일 */
 .ref {
 	display: flex;
-}
-.ref>button{
-	padding: 7px 4px;
-	border-radius: 4px;
-	background-color:gray;
-	border:none;
-	color:white;
-	
-	
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 15px;
 }
 
-.ref>button:hover{
-	scale:1.1;
+.ref > button {
+	padding: 8px 12px;
+	border-radius: 6px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
+	transition: all 0.3s;
 }
 
-.ref>button:active{
-	scale:1;
-	background-color:black;
+.ref > button:hover {
+	background-color: #0056b3;
+	transform: scale(1.05);
+}
+
+.ref > button:active {
+	background-color: #003f80;
+	transform: scale(1);
 }
 
 .sign {
@@ -132,6 +138,14 @@ button:hover{
 	
 	form * {
 		margin-bottom: 5px;
+	}
+	
+	.work-days{
+		width:400px;
+	}
+	.work-days input{
+		width:250px;
+		font-size:16px;
 	}
 	
 	label {
@@ -254,29 +268,41 @@ button:hover{
 		resize: none;
 	}
 	
-	.buttons {
-		display: flex;
-		justify-content: flex-end;
-		gap: 20px;
-		margin-right: 3%;
-	}
-	
-	.buttons button {
-		padding: 10px 20px;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		font-size: 14px;
-	}
-	
-	.buttons .submit {
-		background-color: gray;
-		color: white;
-	}
-	
-	.buttons .cancel {
-		background-color: gray;
-		color: white;
+/* 버튼 스타일 */
+.buttons {
+	display: flex;
+	justify-content: flex-end;
+	gap: 15px;
+	margin-top: 20px;
+}
+
+.buttons button {
+	padding: 10px 20px;
+	border: none;
+	border-radius: 6px;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.buttons .submit {
+	background-color: #28a745;
+	color: white;
+}
+
+.buttons .submit:hover {
+	background-color: #218838;
+	transform: scale(1.05);
+}
+
+.buttons .cancel {
+	background-color: #dc3545;
+	color: white;
+}
+
+.buttons .cancel:hover {
+	background-color: #c82333;
+	transform: scale(1.05);
 }
 </style>
 </head>
@@ -287,7 +313,7 @@ button:hover{
 			<h1>견적서</h1>
 
 			<div class="main-container">
-				<form action="/doc/writeVacation.do" method="post" enctype="multipart/form-data">
+				
 					<div class="doc-title">
 						 <input id="title" type="text"name="title" placeholder="제목 입력" />
 					</div>
@@ -309,7 +335,7 @@ button:hover{
              
              	<div class="work-days">
 					<label>총 진행일 수</label>
-                	<input type="number" id="days"onchange="selectprice(event)" placeholder="총 작업일수를 먼저 입력하시오.">
+                	<input type="number" id="days" min="1" onchange="selectprice(event)" placeholder="총 작업일수를 먼저 입력하시오.">
                	</div>
                	
 				<div class="content-title">
@@ -350,7 +376,7 @@ button:hover{
                            		<input  type="text" name="price" readonly>
                            </div>
                             <div class="days">
-                                <input  type="number" name="people" onchange="selectprice(event)">
+                                <input  type="number" min="1" name="people" onchange="selectprice(event)">
                             </div>
                            <div></div>
 						</div>
@@ -377,7 +403,7 @@ button:hover{
 					<div class="insert-file">
 						<input type="file" name="files" multiple>
 					</div>
-				</form>
+				
 				<div class="buttons">
 					<button class="submit" type="button" onclick="writeDocument()">작성</button>
 					<button class="cancel" type="button" onclick="cancel()">취소</button>
@@ -390,7 +416,17 @@ button:hover{
 <script src="/resources/summernote/summernote-lite.js"></script>
 <script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
 <script>
-const priceList = [
+
+
+var checkDocument={
+		"docTitle":	false,
+		"sign":		false,
+		"workDate": false
+		
+};
+
+
+var priceList = [
     <c:forEach var="price" items="${priceList}" varStatus="status">
         {
             teamCode: "${price.teamCode}",
@@ -402,39 +438,59 @@ const priceList = [
     </c:forEach>
 ];
 
+
+
 	const total=$('#totalPrice');
 //가격 출력
 function selectprice(event) {
-        const row = event.target.closest('.column-row');
-        if (!row) return;
+    const chkCombinationList = []; // 팀 코드와 직급 코드의 조합을 저장
+    const row = event.target.closest('.column-row');
+    if (!row) return;
 
-        const team = row.querySelector('.team');
-        const rank = row.querySelector('.rank');
-        const priceInput = row.querySelector('input[name="price"]');
-        const daysInput = document.getElementById('days');
-		const peopleInput=row.querySelector('input[name="people"]');
-				
-        if (!team || !rank || !priceInput || !daysInput||!peopleInput) return;
+    const team = row.querySelector('.team');
+    const rank = row.querySelector('.rank');
+    const priceInput = row.querySelector('input[name="price"]');
+    const daysInput = document.getElementById('days');
+    const peopleInput = row.querySelector('input[name="people"]');
 
-        const selectedTeam = team.value;
-        const selectedRank = rank.value;
-        const days = parseInt(daysInput.value);
-		const people=parseInt(peopleInput.value);
-        const matchedPrice = priceList.find(
-            price => price.teamCode === selectedTeam && price.rankCode === selectedRank
-        );
+    // 중복된 팀 코드와 직급 코드 조합을 체크하여 행 제거
+    document.querySelectorAll('.column-row').forEach(row => {
+        const chkTeam = row.querySelector('.team');
+        const chkRank = row.querySelector('.rank');
+        const teamCode = chkTeam.value;
+        const rankCode = chkRank.value;
+        const combination = teamCode+rankCode; // 팀 코드와 직급 코드의 조합
 
-        if (matchedPrice) {
-            
-            priceInput.value = (matchedPrice.price*1.1).toFixed(0);
+        if (chkCombinationList.includes(combination)&&teamCode!=""&&rankCode!="") {
+            // 중복된 조합이 이미 존재한다면 해당 행을 삭제
+            row.remove();
         } else {
-            
-            priceInput.value = '해당하는 인원이 없습니다..';
+            // 중복되지 않았다면 조합을 리스트에 추가
+            chkCombinationList.push(combination);
         }
+    });
 
-        // 합계 계산
-        calculateTotal();
+    if (!team || !rank || !priceInput || !daysInput || !peopleInput) return;
+
+    const selectedTeam = team.value;
+    const selectedRank = rank.value;
+    const days = parseInt(daysInput.value);
+    const people = parseInt(peopleInput.value);
+
+    // 선택된 팀 코드와 직급 코드에 맞는 가격 찾기
+    const matchedPrice = priceList.find(
+        price => price.teamCode === selectedTeam && price.rankCode === selectedRank
+    );
+
+    if (matchedPrice) {
+        priceInput.value = (matchedPrice.price * 1.1).toFixed(0);
+    } else {
+        priceInput.value = '해당하는 인원이 없습니다.';
     }
+
+    // 합계 계산
+    calculateTotal();
+}
 
     // 합계 계산
     function calculateTotal() {
@@ -472,8 +528,9 @@ function selectprice(event) {
         const daysInput = document.getElementById('days');
         if (!isNaN(price) && !isNaN(days)&&!isNaN(people)) {
             const valueToSubtract = price * people * days;
-            // 총합에서 해당 값을 빼기
-            updateTotal(valueToSubtract);
+          
+        }else{
+        	 
         }
 
         // 해당 행 삭제
@@ -483,15 +540,7 @@ function selectprice(event) {
         calculateTotal();
     }
 
-    // 총합 갱신 함수
-    function updateTotal(valueToSubtract) {
-        const totalElement = document.getElementById('totalPrice');
-        let currentTotal = parseFloat(totalElement.textContent);
-        if (isNaN(currentTotal)) currentTotal = 0; 
 
-        currentTotal -= valueToSubtract;  // 값 빼기
-        totalElement.textContent = currentTotal.toFixed(0); 
-    }
 
 
 
@@ -521,19 +570,14 @@ function addInput() {
         <input  type="text" name="price" readonly>
         </div>
         <div>
-        <input  type="number" name="people" onchange="selectprice(event)">
+        <input  type="text" name="people" onchange="selectprice(event)">
         </div>
         <button type="button" class="add-btn" onclick="deleteInput(event)">삭제</button>
     `;
     column.appendChild(newRow);
 }
 
-var checkDocument={
-		"docTitle":	false,
-		"sign":		false,
-		"workDate": false,
-		"list":		true
-};
+
 
 
 
@@ -579,23 +623,6 @@ function msg(title, text, icon, callback){
 	
 }
 
-
-
-
-//     function deleteInput(event) {
-//         // 삭제 버튼이 클릭된 이벤트 객체를 통해 버튼이 속한 div 요소를 찾아서 삭제
-//         const row = event.target.closest('.column-row'); // .column-row 부모 요소 찾기
-//         if (row) {
-//             row.remove(); // 해당 div 삭제
-//         }
-//     }
-    
-    
-
-
-
-
-//const checkDocument=null;
 
 //섬머노트 테스트
 //     $(document).ready(function() {
@@ -754,14 +781,15 @@ $('#title').on('input',function(){
 	
 	
 	function writeDocument() {
-		checkDocuemnt.list=true;
+		
+		checkDocument.list=true;
 	    const sign = $('#sign');
 	    const ref=$('#ref');
 	    const days = $('#days').val();
 	    if(days.length>0){
-			checkDocument.days=true;
+			checkDocument.workDate=true;
 		}else{
-			checkDocument.days=false;
+			checkDocument.workDate=false;
 		}
 	    
 	    const list = sign.children().length;
@@ -771,7 +799,7 @@ $('#title').on('input',function(){
 	        checkDocument.sign = false;
 	    }
 	    
-	   
+	  
 	    
 	    
 	    const projectMem=$('#projectMem');
@@ -781,18 +809,19 @@ $('#title').on('input',function(){
 	    	let estimate='';
 	    	 const price = $(this).find('input[name="price"]').val();
 	         const people = $(this).find('input[name="people"]').val();
-	        
 	         const team = $(this).find('.team').val();
 	         const rank = $(this).find('.rank').val();
-	         if(price.length==0||team.length==0||price.length==0||people.length==0){
-	        	 checkDocument.list=false;
-	         }
+	        if(people<1||days<1){
+	        	alert("작업일수 및 인원수는 최소 1 이상입니다.");
+	        	return;
+	        }
 	         estimate+= team +' '+rank+' '+price+' '+people+' '+days;
 	         
 	         estimateList.push(estimate);
 	    });
 	    
-	    
+	    console.log("확인2");
+	  
 
 	    // 제목, 결재자, 날짜 검증
 	    for (let check in checkDocument) {
@@ -800,8 +829,8 @@ $('#title').on('input',function(){
 	            switch (check) {
 	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
 	                case "sign": msg("알림","최소1명의 결재자가 필요합니다.","error","0"); break;
-	                case "days": msg("알림","날짜가 입력되지 않았습니다.","error","0");break;
-	                case "list": msg("알림","인원의 팀과직급,투입인원수를 넣어주세요.","0");break;
+	                case "workDate": msg("알림","날짜가 입력되지 않았습니다.","error","0");break;
+	                
 	                //중복체크는 확인시 다시 값 초기화
 	                
 	               
@@ -809,6 +838,7 @@ $('#title').on('input',function(){
 	            return;
 	        }
 	    }
+	    console.log("확인4");
 	    
 	    const formData = new FormData();
 	    formData.append("documentTitle", $('#title').val());
@@ -836,13 +866,8 @@ $('#title').on('input',function(){
 	    formData.append("refEmpList", refsList);
 	   
 	   
-	    // 파일 처리
-// 	    const files = $('input[name="files"]')[0].files;
-// 	    console.log(files);
-// 		for (let i = 0; i < files.length; i++) {
-// 		    formData.append("files", files[i]);
-// 		    console.log(files[i]);
-// 		}
+	   
+	 
 		
 		//파일 전송
 		if (selectedFiles.length > 0) {
@@ -852,6 +877,7 @@ $('#title').on('input',function(){
 		        }
 		    }
 		
+		console.log(formData);
 	
 	    
 	    $.ajax({

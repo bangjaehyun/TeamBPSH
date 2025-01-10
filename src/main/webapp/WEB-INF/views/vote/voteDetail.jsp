@@ -113,6 +113,7 @@
 .btn-div {
 	display: flex;
 	justify-content: center;
+	gap : 10px;
 }
 
 .voteList-box {
@@ -193,6 +194,9 @@
 				<c:if test="${empty vote.voteListNo}">
 					<button type="button"  class="vote-btn" onclick="voting()">투표</button>
 				</c:if>
+				<c:if test="${vote.empCode eq loginEmp.empCode}">
+					<button type="button"  class="vote-btn" onclick="update()">수정</button>
+				</c:if>
 			</div>
 		</form>
 	</div>
@@ -237,6 +241,12 @@
 			}
 		});
 		
+	}
+	
+	function update(){
+		let data = {"voteNo" : '${vote.voteNo}',
+				   "empCode" : '${loginEmp.empCode}'}; 
+		pageMoveParam("/vote/updateVoteFrm.do",data);
 	}
 	</script>
 </body>

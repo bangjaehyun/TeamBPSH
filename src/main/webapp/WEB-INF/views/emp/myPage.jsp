@@ -145,6 +145,23 @@
 	text-transform: scale(1.1);
 }
 
+.salary-btn {
+	width: 180px;
+	height: 35px;
+	border-radius: 15px;
+	border: none;
+	background: #a9d51a;
+	font-weight: bold;
+	color: white;
+	font-size: 20px;
+}
+
+.salary-btn:hover {
+	background: #c5de71;
+	transform: scale(1.1);
+	text-transform: scale(1.1);
+}
+
 </style>
 </head>
 <body>
@@ -160,6 +177,9 @@
 					</div>
 					<div class="offWork">
 						<button class="work-btn" type="button" onclick="offWork('${loginEmp.empCode}')">퇴근</button>
+					</div>
+					<div>
+						<button class="salary-btn" onclick="history()">연봉 변경 이력</button>
 					</div>
 				</div>
 			</div>
@@ -212,6 +232,36 @@
 	</div>
 
 	<script>
+	function history(){
+		
+		let empCode = '${loginEmp.empCode}';
+
+			let popupWidth = 800;
+			let popupHeight = 750;
+
+			let top = (window.innerHeight - popupHeight) / 2 + window.screenY;
+			let left = (window.innerWidth - popupWidth) / 2 + window.screenX;
+
+			let popupWindow = window.open("", "windowName", "width="
+					+ popupWidth + ", height=" + popupHeight + ", top=" + top
+					+ ", left=" + left + ",resizable=0");
+			popupWindow.resizeTo(800, 750);
+			let f = document.createElement('form');
+			f.setAttribute('method', 'post');
+			f.setAttribute('action', '/emp/salesHistory.do');
+
+			let inputEl = popupWindow.document.createElement('input');
+			inputEl.setAttribute('type', 'hidden');
+			inputEl.setAttribute('name', 'empCode');
+			inputEl.setAttribute('value', empCode); // empCode는 미리 정의되어 있어야 함
+
+			f.appendChild(inputEl);
+
+			popupWindow.document.body.appendChild(f);
+			f.submit();
+		}
+	
+	
 	function updatePw(){
 		let popupWidth = 500;
 		let popupHeight = 440;
@@ -242,7 +292,7 @@
 	
 	
 	$(document).ready(function(){
-		let chk = false;
+		var chk = false;
 		if(${!empty commute.onWork}){
 			let spanEl = $('<span>');
 		 	let str = '${commute.onWork}';

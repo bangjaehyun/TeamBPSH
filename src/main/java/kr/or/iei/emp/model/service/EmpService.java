@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +25,11 @@ import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.DevelopPrice;
+import kr.or.iei.emp.model.vo.Disciplinary;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Leader;
 import kr.or.iei.emp.model.vo.Rank;
+import kr.or.iei.emp.model.vo.Salary;
 import kr.or.iei.emp.model.vo.SalesSpending;
 import kr.or.iei.emp.model.vo.Team;
 
@@ -35,6 +39,34 @@ public class EmpService {
 	@Autowired
 	@Qualifier("empDao")
 	private EmpDao dao;
+	
+	
+	//매일 자정에 로직 수행
+	@Scheduled(cron = "0 0 0 * * *")
+//	@Scheduled(fixedRate = 1000)
+	@Transactional
+	public void disciplinaryCheckSchelduler() {
+		//징게 목록에서 완료가 되지 않은 사원의 리스트
+	    ArrayList<Disciplinary> list = (ArrayList<Disciplinary>)dao.selectDisciplinaryCheck();
+	    
+	    
+	    for(Disciplinary disciplinary : list) {
+	    	//징계 받기전 salary 가져오기
+	    	String salary = dao.selectSalaryCheck(disciplinary.getEmpCode());
+	    	
+	    	HashMap<String, String> map = new HashMap<String, String>();
+	    	map.put("empCode", disciplinary.getEmpCode());
+	    	map.put("salary", salary);
+	    	
+	    	//징계받기전 salary로 변경
+	    	int result = dao.returnDisciplinarySalary(map);
+	    	
+	    	if(result > 0) {
+	    		//징계 완료 처리
+	    		result = dao.updateComplateDisciplinary(disciplinary);
+	    	}
+	    }
+	}
 
 	public Emp login(Emp emp) {
 		Emp loginEmp = dao.login(emp);
@@ -410,6 +442,65 @@ public class EmpService {
 		salesSpending.setSpendingList(spendingList);
 		
 		return salesSpending;
+	}
+
+	public ArrayList<Salary> selectSalaryHisotry(String empCode) {
+		return (ArrayList<Salary>)dao.selectSalaryHisotry(empCode);
+	}
+
+	public ArrayList<HashMap<String, String>> selectDisciplinary() {
+		return (ArrayList<HashMap<String, String>>)dao.selectDisciplinary();
+	}
+	
+	@Transactional
+	public int doDisciplinary(Disciplinary disciplinary) {
+		int result = 0;
+		
+		switch (disciplinary.getTypeCode()) {
+			case "su":
+				result = dao.insertDisciplinarySu(disciplinary);
+				
+				int totalDay = Integer.parseInt(disciplinary.getValue());
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+				Date day = new Date();
+				for(int i = 1; i < totalDay; i++) {
+					day = DateUtils.addDays(day, 1);
+					String dayValue = sdf.format(day);
+					
+					HashMap<String, String> map = new HashMap<String, String>();
+					map.put("empCode", disciplinary.getEmpCode());
+					map.put("day", dayValue);
+					map.put("value", "정직");
+					
+					result = dao.insertCheckDisciplinary(map);
+					if(result < 0) {
+						break;
+					}
+				}
+				break;
+	
+			case "cu":
+				result = dao.insertDisciplinaryCu(disciplinary);
+				
+				if(result > 0) {
+					result = dao.updateDisciplinarySalary(disciplinary);
+				}
+				
+				break;
+	
+			case "di":
+				result = dao.insertDisciplinaryDi(disciplinary);
+				
+				if(result > 0) {
+					result = dao.updateEmpDi(disciplinary.getEmpCode());
+				}
+				break;
+
+		default:
+			break;
+		}
+		
+		return result;
 	}
 
 }

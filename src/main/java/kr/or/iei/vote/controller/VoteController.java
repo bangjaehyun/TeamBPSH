@@ -94,4 +94,21 @@ public class VoteController {
 		return new Gson().toJson(voteNavi.getVoteList());
 	}
 	
+	@PostMapping(value="updateVoteFrm.do", produces="text/html; charset=utf-8")
+	public String updateVoteFrm(Vote vote, Model model) {
+		Vote selectVote = service.updateFrmVote(vote);
+		
+		model.addAttribute("vote",selectVote);
+		
+		return "vote/updateVote";
+	}
+	
+	@PostMapping(value="updateVote.do", produces="application/json; charset=utf-8")
+	@ResponseBody
+	public String updateVote(Vote vote, @RequestParam(name= "voteVal")List<String> voteList) {
+		int result = service.updateVote(vote, voteList);
+		
+		
+		return String.valueOf(result);
+	}
 }

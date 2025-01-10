@@ -22,7 +22,7 @@
  		   dept_code as deptCode
  	  from tbl_emp
  	  join tbl_team using(team_code) 
- 	 where emp_id = #{empId} 
+ 	 where emp_id = #{empId} and emp_retire = 'n'
  	    
  	</select>
  	
@@ -151,7 +151,7 @@
  	</insert>
  	
 	<select id="filterEmp"
-	parameterType="string"
+	parameterType="map"
 	resultType="emp">
 		select emp_code as empCode,
  		   team_code as teamCode,
@@ -165,7 +165,8 @@
  		   rank_name as rankName
  	  from tbl_emp
  	  join tbl_rank using(rank_code) 
- 	 where team_code = #{_string} 
+ 	 where team_code = #{teamCode}
+
 	</select>
  	
  	 <select id="chatEmpList"
@@ -301,9 +302,10 @@
  	
  	<update id="updateSalary"
  	parameterType="emp">
- 	update tbl_salary
- 	   set salary = #{salary}
- 	 where emp_code = #{empCode} 
+ 	  update tbl_salary
+        set salary = #{salary},
+            salary_type = 1
+      where emp_code = #{empCode}
  	</update>
  	
  	<update id="updateVacation"
@@ -726,4 +728,173 @@
        from tbl_spending where spending_day like #{yearMonth} || '%' order by spending_day
      </select>
 
+	<select id="selectSalaryHistory"
+	parameterType="string"
+	resultType="salary">
+	select TO_CHAR(s.update_day, 'YYYY-MM-DD') as day,
+       	   s.salary as salary,
+       	   s.salary_type as salaryType,
+       	   e.emp_name as empName,
+           (
+           select rank_name 
+             from tbl_rank 
+            where rank_code = e.rank_code
+           ) as rankName
+  	  from tbl_salary_man s 
+  	  join tbl_emp e using(emp_code)
+ 	 where emp_code = #{empCode}
+ 	 order by update_day
+	</select>
+	
+	<select id="selectDisciplinary"
+	resultType="hashmap">
+	select type_name as name,
+		   type_code as code
+	  from tbl_disciplinary_type
+	</select>
+	
+	<insert id="insertDisciplinaryDi"
+	parameterType="disciplinary">
+	insert into tbl_disciplinary
+	(
+		disciplinary_no,
+		type_code,
+		emp_code,
+		dis_reason,
+		dis_start,
+		dis_end
+	)
+	values
+	(
+		TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_disciplinary.NEXTVAL, 4, '0'),
+		#{typeCode},
+		#{empCode},
+		#{disReason},
+		sysdate,
+		sysdate
+	)
+	</insert>
+	
+	<update id="updateEmpDi"
+	parameterType="string">
+	update tbl_emp
+	   set emp_retire = 'y'
+	 where emp_code = #{empCode}
+	</update>
+	
+	<insert id="insertDisciplinaryCu"
+	parameterType="disciplinary">
+	insert into tbl_disciplinary
+	(
+		disciplinary_no,
+		type_code,
+		emp_code,
+		dis_reason,
+		dis_start,
+		dis_end,
+		reduce_salary
+	)
+	values
+	(
+		TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_disciplinary.NEXTVAL, 4, '0'),
+		#{typeCode},
+		#{empCode},
+		#{disReason},
+		sysdate,
+		#{disEnd},
+		#{value}
+	)
+	</insert>
+	
+	<update id="updateDisciplinarySalary"
+	parameterType="disciplinary">
+	update tbl_salary
+	   set salary = trunc(salary - (salary * #{value} / 100)),
+	       salary_type = 2
+	 where emp_code = #{empCode}
+	</update>
+	
+	<insert id="insertDisciplinarySu"
+	parameterType="disciplinary">
+	insert into tbl_disciplinary
+	(
+		disciplinary_no,
+		type_code,
+		emp_code,
+		dis_reason,
+		dis_start,
+		dis_end,
+		dis_date
+	)
+	values
+	(
+		TO_CHAR(SYSDATE, 'YYYYMMDD') || LPAD(seq_disciplinary.NEXTVAL, 4, '0'),
+		#{typeCode},
+		#{empCode},
+		#{disReason},
+		sysdate,
+		sysdate + #{value},
+		#{value}
+	)
+	</insert>
+	
+	<insert id="insertCheckDisciplinary"
+	parameterType="map">
+	insert into tbl_check
+	(
+		att_date,
+		emp_code,
+		check_note
+	)
+	values
+	(
+		#{day},
+		#{empCode},
+		#{value}
+	)
+	</insert>
+	
+	<select id="selectDisciplinaryCheck"
+	resultType="disciplinary">
+	select disciplinary_no as disciplinaryNo,
+		   emp_code as empCode
+	  from tbl_disciplinary 
+	 where to_char(dis_end,'yyyyMMdd') &lt;= to_char(sysdate,'yyyyMMdd')
+	   and dis_check = 'n'
+	</select>
+	
+	<select id="selectSalaryCheck"
+	parameterType="string"
+	resultType="string">
+	select salary 
+	  from
+	      (
+	       select rownum as num, 
+	              s.* 
+	         from 
+	             (
+	              select * 
+	                from tbl_salary_man 
+	               where emp_code = #{empCode} 
+	               order by update_day desc
+	               ) s
+	       ) 
+	  where num = 2
+	</select>
+	
+	<update id="returnDisciplinarySalary"
+	parameterType="string">
+	update tbl_salary
+	   set salary = #{salary},
+	       salary_type = 4
+	 where emp_code = #{empCode}
+	</update>
+	
+	<update id="updateComplateDisciplinary"
+	parameterType="disciplinary">
+	update tbl_disciplinary
+	   set dis_check = 'y'
+	 where disciplinary_no = #{disciplinaryNo}
+	</update>
+ 
 </mapper>

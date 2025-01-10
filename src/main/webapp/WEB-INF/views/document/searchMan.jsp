@@ -249,7 +249,8 @@
 		 $.ajax({
 		        url: "/doc/srchEmp.do",
 		        type: "post",
-		        data: {"teamCode": e},
+		        data: {"teamCode": e,
+		        		"empCode":${loginEmp.empCode}},
 		        success: function(res) {
 		            console.log(res);
 		            res.forEach(function(empData) {

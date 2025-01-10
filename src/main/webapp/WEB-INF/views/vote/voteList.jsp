@@ -114,10 +114,11 @@
 	</div>
 	
 	<script>
+	var voteTotalCount = ${voteTotalCount != null ? voteTotalCount : 0};
 	var startCount = 16;
 	$(document).ready(function(){
 		
-		if(${voteTotalCount} < startCount){
+		if(voteTotalCount < startCount){
 			$('.seeMore').css('display','none');
 		}
 		
@@ -144,7 +145,7 @@
 				addVoteList(res);
 				startCount += 15;
 				
-				if(${voteTotalCount} < startCount){
+				if(voteTotalCount < startCount){
 					$('.seeMore').css('display','none');
 				}
 			},

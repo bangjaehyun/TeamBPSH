@@ -7,14 +7,19 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+
 <style>
+	*{
+		box-sizing: border-box;
+	}
 	.container{
-		 min-height: 900px;
-		 height:800px;
+		 width:100%;
+		 height: calc(100vh - 50px);
+		 
 	}
 	.list-content{
-		height:100%;
-		
+		height:80%;
+		display: flex;
 	}
 	
 	.head-title{
@@ -23,7 +28,7 @@
 		align-items: center;
 	}
 	.head-title h1{
-		font-size:30px;
+		font-size:46px;
 	}
 
 
@@ -33,6 +38,7 @@
   		color:white;
 	}
 	.filter-container{
+	margin-top:1%;
 		width:100%;
 		display: flex;
 		justify-content: center;
@@ -42,8 +48,10 @@
 		justify-content: space-around;
 		width:60%;
 	}
-	.type-filter button{
-		padding:2px 3px;
+	.filter-btn{
+		width:90px;
+		height:50px;
+		
 		border-radius: 5px;
 		background-color: gray;
 		color:white;
@@ -58,11 +66,13 @@
 	
 	#grid{
 		width: 1200px;
- 		height:60%;  
+ 		  
+ 		margin: 30px auto;
+ 		height:600px;
     	 
    		
 	}
-	::-webkit-scrollbar{
+	#grid ::-webkit-scrollbar{
 	 width: 0;  /* remove scrollbar space */
      background: transparent;
 	}
@@ -78,9 +88,9 @@
 	</div>
 	<div class="filter-container">
 	<div class="type-filter">
-		<button type="button" onclick="typeFilter('all')" value="all">전체</button>
+		<button class="filter-btn" type="button" onclick="typeFilter('all')" value="all">전체</button>
 		<c:forEach var="type" items="${docTypeList }">
-			<button type="button" onclick="typeFilter('${type.documentTypeCode }')" value="${type.documentTypeCode }">${type.documentTypeName }</button>
+			<button class="filter-btn" type="button" onclick="typeFilter('${type.documentTypeCode }')" value="${type.documentTypeCode }">${type.documentTypeName }</button>
 		</c:forEach>
 	</div>
 	</div>
@@ -108,14 +118,14 @@ $(document).ready(function(){
         };
         obj.push(rowData);
     </c:forEach>
-
+    
     const gridOption = {
         rowData: obj,
         pagention:true,
         rowSelection:"single",
-        enableRangeSelection: true,//이거 수정 예정
+       
         suppressRowClickSelection: false,
-        
+        suppressNoRowsOverlay:true,
         onRowDoubleClicked : function(event){
         	viewOneDoc(event.data);
         	console.log(event.data);

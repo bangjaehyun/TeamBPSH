@@ -43,6 +43,8 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,8 +73,10 @@ import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.DevelopPrice;
+import kr.or.iei.emp.model.vo.Disciplinary;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Leader;
+import kr.or.iei.emp.model.vo.Salary;
 import kr.or.iei.emp.model.vo.SalesSpending;
 
 
@@ -1093,4 +1097,36 @@ public class EmpController {
 
 			}
 		}
+      
+      
+      @PostMapping(value="salesHistory.do")
+      public String salesHistory(String empCode, Model model) {
+    	  ArrayList<Salary> salaryList = service.selectSalaryHisotry(empCode);
+    	  
+    	  model.addAttribute("salaryList", salaryList);
+    	  return "emp/salesHistory";
+      }
+      
+      @PostMapping(value="disciplinary.do")
+      public String disciplinary(Emp emp, Model model) {
+    	  ArrayList<HashMap<String, String>> typeList = service.selectDisciplinary();
+    	  
+    	  model.addAttribute("typeList", typeList);
+    	  model.addAttribute("empCode", emp.getEmpCode());
+    	  model.addAttribute("empName", emp.getEmpName());
+    	  
+    	  return "emp/disciplinary";
+      }
+      
+      @PostMapping(value="doDisciplinary.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String doDisciplinary(Disciplinary disciplinary) {
+    	  System.out.println(disciplinary.toString());
+    	  
+    	  int result = service.doDisciplinary(disciplinary);
+    	  
+    	  return String.valueOf(result);
+      }
+      
+     
 }

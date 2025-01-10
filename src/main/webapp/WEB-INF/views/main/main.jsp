@@ -212,7 +212,11 @@ table tr:hover {
 					empCode : empCode
 				},
 				success : function(res) {
-					docList(res); // 데이터를 HTML로 출력하는 함수 호출
+				    if(res.loc == null){
+						docList(res); // 데이터를 HTML로 출력하는 함수 호출
+	                }else{
+	                    callbackMsg(res.title, res.msg,res.icon, res.loc);
+	                }
 				},
 				error : function() {
 					console.log('ajax 오류');

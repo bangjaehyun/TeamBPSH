@@ -75,4 +75,12 @@ public class VoteDao {
 		return sqlSession.selectOne("vote.selectVoteListCount");
 	}
 
+	public int updateVote(Vote vote) {
+		return sqlSession.update("vote.updateVote", vote);
+	}
+
+	public int deleteVoteValList(String voteNo) {
+		return sqlSession.delete("vote.deleteVoteValList",voteNo);
+	}
+
 }

@@ -20,8 +20,10 @@ import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DailyReport;
 import kr.or.iei.emp.model.vo.Dept;
 import kr.or.iei.emp.model.vo.DevelopPrice;
+import kr.or.iei.emp.model.vo.Disciplinary;
 import kr.or.iei.emp.model.vo.Emp;
 import kr.or.iei.emp.model.vo.Rank;
+import kr.or.iei.emp.model.vo.Salary;
 import kr.or.iei.emp.model.vo.Team;
 
 @Repository("empDao")
@@ -275,6 +277,54 @@ public class EmpDao {
 
 	public String selectAdminEmpCode() {
 		return sqlSession.selectOne("emp.selectAdminEmpCode");
+	}
+
+	public List<Salary> selectSalaryHisotry(String empCode) {
+		return sqlSession.selectList("emp.selectSalaryHistory", empCode);
+	}
+
+	public List<HashMap<String, String>> selectDisciplinary() {
+		return sqlSession.selectList("emp.selectDisciplinary");
+	}
+
+	public int insertDisciplinaryDi(Disciplinary disciplinary) {
+		return sqlSession.insert("emp.insertDisciplinaryDi", disciplinary);
+	}
+
+	public int updateEmpDi(String empCode) {
+		return sqlSession.update("emp.updateEmpDi", empCode);
+	}
+
+	public int insertDisciplinaryCu(Disciplinary disciplinary) {
+		return sqlSession.insert("emp.insertDisciplinaryCu", disciplinary);
+	}
+
+	public int insertCheckDisciplinary(HashMap<String, String> map) {
+		return sqlSession.insert("emp.insertCheckDisciplinary", map);
+	}
+
+	public int updateDisciplinarySalary(Disciplinary disciplinary) {
+		return sqlSession.update("emp.updateDisciplinarySalary", disciplinary);
+	}
+
+	public int insertDisciplinarySu(Disciplinary disciplinary) {
+		return sqlSession.insert("emp.insertDisciplinarySu",disciplinary);
+	}
+
+	public List<Disciplinary> selectDisciplinaryCheck() {
+		return sqlSession.selectList("emp.selectDisciplinaryCheck");
+	}
+
+	public String selectSalaryCheck(String empCode) {
+		return sqlSession.selectOne("emp.selectSalaryCheck", empCode);
+	}
+
+	public int returnDisciplinarySalary(HashMap<String, String> map) {
+		return sqlSession.update("emp.returnDisciplinarySalary", map);
+	}
+
+	public int updateComplateDisciplinary(Disciplinary disciplinary) {
+		return sqlSession.update("emp.updateComplateDisciplinary", disciplinary);
 	}
 
 }
