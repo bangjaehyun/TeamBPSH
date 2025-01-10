@@ -9,7 +9,9 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-
+* {
+	box-sizing: border-box;
+}
 textarea {
 	resize: none;
 }
@@ -20,6 +22,8 @@ textarea {
 	gap: 10px;
 	background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
 	border-radius: 10px;
+	overflow:auto;
+	
 }
 
 #pjHeader, #pjBody {
@@ -222,7 +226,7 @@ th {
 		</table>
 		<%-- 세션에서 teamCode 가져오기 --%>
 		 
-		 
+		 <c:if test="${teamLeader eq '1'}">
 		<div class="teamEmps">
 			<h2>추가 가능한 팀원 목록</h2>
 			<table id="teamEmpTable">
@@ -240,7 +244,7 @@ th {
 						<tr>
 							<td>${addProjectEmp.empCode}</td>
 							<td>${addProjectEmp.empName}</td>
-							<td>${addProjectEmp.rankCode}</td>
+							<td>${addProjectEmp.rankName}</td>
 							<td><textarea>test값</textarea>
 							<td><button id="addPartEmp">추가</button></td>
 						</tr>
@@ -248,6 +252,7 @@ th {
 				</tbody>
 			</table>
 		</div>
+		</c:if>
 		<!-- 참여 사원 리스트 -->
 		<div class="participants">
 			<h2>참여 사원 리스트</h2>
@@ -258,7 +263,9 @@ th {
 						<th>이름</th>
 						<th>직급</th>
 						<th>역할</th>
+						<c:if test="${teamLeader eq '1'}">
 						<th>삭제</th>
+						</c:if>
 					</tr>
 				</thead>
 				<tbody>
@@ -266,11 +273,13 @@ th {
 						<tr>
 							<td>${projectPartempList.empCode}</td>
 							<td>${projectPartempList.empName}</td>
-							<td>${projectPartempList.rankCode}</td>
+							<td>${projectPartempList.rankName}</td>
 							<td>${projectPartempList.partempContent}</td>
+							<c:if test="${teamLeader eq '1'}">
 							<td>
                     			<button id="removeEmp">삭제</button>
                				</td>
+               				</c:if>
 						</tr>
 					</c:forEach>
 
@@ -317,7 +326,7 @@ th {
 				
 					
 				
-				<%--<c:if test="${!user.hasCommentPermission}">  --%>
+				
 				<p>댓글을 작성할 권한이 없습니다.</p>
 				
 
@@ -328,7 +337,7 @@ th {
 	<script>
 		function loadComment(){
 			let projectNo = $('input[name="projectNo"]').val();
-			
+			var empCode = $('input[name="empCode"]').val();
 			$.ajax({
 				url : '/project/commList.do',
 				type : 'post',
@@ -336,7 +345,6 @@ th {
 				dataType: "json",
 				success : function(comments){
 		            let commentHtml = "";
-					
 		            if (comments.length > 0) {
 		                comments.forEach(function(comment,index) {
 		                    commentHtml += 
@@ -349,7 +357,8 @@ th {
 		                    	commentHtml += '<br> 첨부파일 : <a href="javascript:void(0);" onclick="downloadFile(\'' + comment.filePath + '\', \'' + comment.fileName + '\')">' + comment.fileName + '</a>';
 		                        
 		                    }
-		                    
+		                    if (empCode === comment.empCode) { 
+		                    	
 		                    	 commentHtml += '<div class="comment-buttons">';
 		                         commentHtml += '<button type="button" class="edit-btn" onclick="editComment(\'' 
 		                             + comment.commNo + '\', \'' 
@@ -360,6 +369,7 @@ th {
 
 		                             commentHtml += '<button type="button" class="delete-btn" onclick="deleteComment(\'' + comment.commNo + '\')">삭제</button>'
 		                             commentHtml += '</div>';
+		                    }
 							
 		                    commentHtml += '</li>';
 		                });
@@ -410,7 +420,7 @@ th {
 		    } else {
 		        commGb = "0"; // 기존 파일이 없으면 commGb를 0으로 설정
 		    }
-
+			
 		    editFormHtml += '<button type="button" class="save-edit-btn">저장</button>';
 		    editFormHtml += '<button type="button" class="cancel-edit-btn">취소</button>';
 
@@ -463,7 +473,7 @@ th {
 		        formData.append("newFile", newFile);
 		        formData.append("commGb", "1"); // 새 파일 업로드 시 commGb = 1
 		    }
-
+			
 		    $.ajax({
 		        url: "/project/updateComment.do",
 		        type: "POST",
@@ -527,9 +537,10 @@ th {
 // 		    loadEmployeeList(); // 참여 사원 리스트 불러오기
 
 		    // 📌 프로젝트 진행률 차트
-		    const labels = ['Module 1', 'Module 2', 'Module 3'];
+		    const labels = ${teamListJson};
+		    console.log(labels);
 		    const progressData = [75, 50, 90];
-
+			
 		    if (!labels.length || !progressData.length) {
 		        console.error("차트 데이터가 비어 있습니다.");
 		    }
@@ -607,8 +618,6 @@ th {
 			$('#teamEmpTable tbody tr').each(function(){
 				empCode = $(this).find('td:first-child').text();
 				partempContent = $(this).find('td:nth-child(4)').text();
-				
-				
 				});
 			
 			

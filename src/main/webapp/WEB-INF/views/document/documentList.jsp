@@ -118,6 +118,7 @@ $(document).ready(function(){
         
         onRowDoubleClicked : function(event){
         	viewOneDoc(event.data);
+        	console.log(event.data);
         },
         
         pagination: true,
@@ -177,11 +178,6 @@ function typeFilter(e){
 	});
 }
 
-
-
-
-
-
 <%--상세페이지 이동--%>
 function viewOneDoc(e){
 	
@@ -224,7 +220,6 @@ function viewOneDoc(e){
 		type:"post",
 		data:{"documentCode":e.documentCode},
 		success:function(res){
-			console.log(res);
 			$('.page').html(res);
 		},
 		error:function(){

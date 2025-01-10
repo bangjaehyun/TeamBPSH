@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -35,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Team;
 import kr.or.iei.project.model.service.ProjectService;
 import kr.or.iei.project.model.vo.Comment;
 import kr.or.iei.project.model.vo.Project;
@@ -68,16 +70,24 @@ public class ProjectController {
 	}
 	
 	@PostMapping("view.do")
-	public String projectView(HttpSession session, Model model, String projectNo, String teamCode) {
+	public String projectView(HttpSession session, Model model, String projectNo, String teamCode, HttpServletRequest request) {
 		
+		Emp emp = (Emp) session.getAttribute("loginEmp");  
+	    String empCode = emp != null ? emp.getEmpCode() : null;
 		
-		Project project = service.projectView(projectNo);
+	    ArrayList<Team> projectTeam = service.projectTeamList(projectNo);
+	    //script에서 출력 해줄 teamList
+	    String teamListJsion = new Gson().toJson(projectTeam);
+	    request.setAttribute("teamListJson", teamListJsion);
+	    
+		Project project = service.projectView(projectNo,projectTeam);
 		List<Emp> addProjectEmp = service.addProjectEmp(teamCode, projectNo);
 		ArrayList<ProjectPartemp> projectPartempList = service.projectEmpList(projectNo);
 	    model.addAttribute("addProjectEmp", addProjectEmp);
 		model.addAttribute("project", project);
 		model.addAttribute("projectPartempList",projectPartempList);
-	     
+		int teamLeader = service.teamLeader(empCode, teamCode);
+		session.setAttribute("teamLeader", teamLeader);
 	    return "project/projectView";
 	}
 
@@ -348,6 +358,8 @@ public class ProjectController {
     	int result = service.removeEmp(projectNo, empCode);
     	return String.valueOf(result);
     }
+    
+    
 }
     
 		

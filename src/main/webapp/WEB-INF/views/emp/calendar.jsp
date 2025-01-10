@@ -328,7 +328,55 @@
 										        const empCode = info.event.extendedProps.empCode;
 										        const documentTypeCode = info.event.extendedProps.documentTypeCode;
 										        const documentCode = info.event.extendedProps.documentCode;
-
+										        <%--상세페이지 이동--%>
+										        	var type= documentTypeCode;
+										        	var urls="/doc/";
+										        	
+										        	switch(type){
+										        	case 'va':{
+										        		urls+="selectOneVa.do";
+										        		break;
+										        	}
+										        	case 'sp':{
+										        		urls+="selectOneSp.do";
+										        		break;
+										        	}
+										        	
+										        	case 'co':{
+										        		urls+="selectOneCo.do";
+										        		break;
+										        	}
+										        	case 'es':{
+										        		urls+="selectOneEs.do";
+										        		break;
+										        	}
+										        	case 'bt':{
+										        		urls+="selectOneBt.do";
+										        		break;
+										        	}
+										        	
+										        	case 'pt':{
+										        		urls+="selectOnePt.do";
+										        		break;
+										        	}
+										        	
+										        	}
+										        	
+										        	
+										        	$.ajax({
+										        		url:urls,
+										        		type:"post",
+										        		data:{"documentCode": documentCode},
+										        		success:function(res){
+										        			
+										        			$('.page').html(res);
+										        		},
+										        		error:function(){
+										        			console.log("오류");
+										        		}
+										        	});
+										        
+										        /*
 										        if (empCode && documentCode) {
 										            // URL과 파라미터 준비
 										            const targetUrl = '/doc/viewDocOne.do';
@@ -343,6 +391,7 @@
 										        } else {
 										            alert('필요한 정보가 없습니다.');
 										        }
+												*/
 										    }
 										});
 
@@ -431,9 +480,6 @@
 		        $('#dailyReport').blur(); // 닫기 시 포커스 제거
 		    });
 		});
-		    
-		
-
 	</script>
 </body>
 </html>

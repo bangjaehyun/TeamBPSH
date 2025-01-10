@@ -111,7 +111,7 @@
 					</div>
 					<div>
 					<label>마감일</label> 
-					<input type="text" name="projectEnd">
+					<input type="date" name="projectEnd">
 					<div>
 					<label>내용</label> 
 					<textarea id="summernote" name="projectContent"></textarea>
@@ -139,7 +139,7 @@
              processData: false,
            success : function(res){
               console.log(res);
-              if(res > "1"){
+              if(res > "0"){
                        swal({
                           title : "완료",
                           text : "프로젝트 생성이 완료되었습니다.",

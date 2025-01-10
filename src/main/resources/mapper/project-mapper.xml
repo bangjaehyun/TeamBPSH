@@ -72,12 +72,14 @@
 		empName,
 		tbl_project_partemp.partemp_content as partempContent,
 		tbl_emp.team_code as teamCode,
-		tbl_emp.rank_code as rankCode
+		tbl_emp.rank_code as rankCode,
+		tbl_rank.rank_name as rankName
 		from
 		tbl_project_partemp
 		join tbl_emp
 		on tbl_project_partemp.emp_code =
 		tbl_emp.emp_code
+		join tbl_rank on tbl_emp.rank_code = tbl_rank.rank_code
 		where tbl_project_partemp.project_no = #{projectNo}
 	</select>
 
@@ -95,7 +97,8 @@
 		emp_code,
 		project_title,
 		project_content,
-		project_end
+		project_end,
+		project_start
 		)
 		values
 		(
@@ -104,7 +107,8 @@
 		#{empCode},
 		#{projectTitle},
 		#{projectContent},
-		#{projectEnd}
+		to_char(to_date(#{projectEnd}, 'yyyy-MM-dd'),'yyyyMMdd'),
+		to_char(sysdate, 'yyyyMMdd')
 		)
 	</insert>
 
@@ -216,11 +220,13 @@
 
 	<select id="addProjectList" parameterType="map" resultType="emp">
 	SELECT
-		e.emp_code AS empCode,
+	e.emp_code AS empCode,
 	e.emp_name AS empName,
 	e.rank_code AS rankCode,
-	e.team_code AS teamCode
+	e.team_code AS teamCode,
+	r.rank_name AS rankName
 	FROM tbl_emp e
+	JOIN tbl_rank r ON e.rank_code = r.rank_code
 	WHERE e.team_code = #{teamCode} 
 	AND e.emp_code NOT IN (
 	SELECT p.emp_code FROM tbl_project_partemp p
@@ -229,26 +235,29 @@
 	</select>
 
 	<insert id="addProjectPartemp" parameterType="map">
-		insert into
-		tbl_project_partemp
-		(
-		PROTEMP_NO,
-		project_no,
-		emp_code,
-		partemp_content
-		)
-		values
-		(
-		(('PT' || TO_CHAR(SYSDATE, 'yymm')) || lpad(SEQ_PROJECT_PARTEMP.NEXTVAL, 4, '0')),
-		#{projectNo},
-		#{empCode},
-		#{partempContent}
-		)
+		  INSERT INTO tbl_project_partemp
+    (
+        PROTEMP_NO,
+        project_no,
+        emp_code,
+        partemp_content
+    )
+    VALUES
+    (
+        ('PT' || TO_CHAR(SYSDATE, 'YYMMDD')) || LPAD(SEQ_PROJECT_PARTEMP.NEXTVAL, 4, '0'),
+        #{projectNo},
+        #{empCode},
+        #{partempContent}
+    )
 	</insert>
 	
 	<delete id="removeEmp" parameterType="map">
 		delete tbl_project_partemp
 		where emp_code = #{empCode} and project_no = #{projectNo}
 	</delete>
+	
+	<select id="teamLeader" parameterType="map" resultType="int">
+		select count(*) from tbl_team_leader where emp_code = #{empCode}  and team_code = #{teamCode}
+	</select>
 
 </mapper>

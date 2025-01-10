@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,9 +38,9 @@ public class ProjectService {
 		return  (ArrayList<Project>)dao.projectList();
 	}
 
-	public Project projectView(String projectNo) {
+	public Project projectView(String projectNo, ArrayList<Team> projectTeam) {
 		 Project project =  dao.projectView(projectNo);
-		 ArrayList<Team> projectTeam = (ArrayList<Team>) dao.projectTeamLit(projectNo);
+		 
 		 project.setTeamList(projectTeam);
 		 
 		 
@@ -127,6 +127,18 @@ public class ProjectService {
 		params.put("empCode", empCode);
 		
 		return dao.removeEmp(params);
+	}
+
+	public int teamLeader(String empCode,String teamCode) {
+		HashMap<String, Object> params = new HashMap<String, Object>();
+		params.put("empCode", empCode);
+		params.put("teamCode", teamCode);
+		return dao.teamLeader(params);
+	}
+
+	public ArrayList<Team> projectTeamList(String projectNo) {
+		
+		return (ArrayList<Team>) dao.projectTeamList(projectNo);
 	}
 
 

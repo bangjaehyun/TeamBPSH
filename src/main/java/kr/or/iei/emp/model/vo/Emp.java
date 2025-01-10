@@ -23,7 +23,8 @@ public class Emp {
 	private int readCount; // 읽지않은 채팅 갯수
 	private int alarmCount;// 읽지 않은 알람 갯수
 	private String teamName;
-
+	
+	private int teamLeader; // 1이면 true, 0 이면 false
 	private ArrayList<Check> checkList;
 
 	public Emp() {
@@ -34,7 +35,7 @@ public class Emp {
 	public Emp(String empCode, String teamCode, String rankCode, String deptCode, String empId, String empPw,
 			String empName, String empPhone, String empRetire, String empDate, String rankName, String deptName,
 			String salary, String vacationTotal, String vacationUse, boolean admin, boolean login, int readCount,
-			int alarmCount, String teamName, ArrayList<Check> checkList) {
+			int alarmCount, String teamName, int teamLeader, ArrayList<Check> checkList) {
 		super();
 		this.empCode = empCode;
 		this.teamCode = teamCode;
@@ -56,6 +57,7 @@ public class Emp {
 		this.readCount = readCount;
 		this.alarmCount = alarmCount;
 		this.teamName = teamName;
+		this.teamLeader = teamLeader;
 		this.checkList = checkList;
 	}
 
@@ -219,6 +221,14 @@ public class Emp {
 		this.teamName = teamName;
 	}
 
+	public int getTeamLeader() {
+		return teamLeader;
+	}
+
+	public void setTeamLeader(int teamLeader) {
+		this.teamLeader = teamLeader;
+	}
+
 	public ArrayList<Check> getCheckList() {
 		return checkList;
 	}
@@ -234,13 +244,20 @@ public class Emp {
 				+ ", empRetire=" + empRetire + ", empDate=" + empDate + ", rankName=" + rankName + ", deptName="
 				+ deptName + ", salary=" + salary + ", vacationTotal=" + vacationTotal + ", vacationUse=" + vacationUse
 				+ ", admin=" + admin + ", login=" + login + ", readCount=" + readCount + ", alarmCount=" + alarmCount
-				+ ", teamName=" + teamName + ", checkList=" + checkList + "]";
+				+ ", teamName=" + teamName + ", teamLeader=" + teamLeader + ", checkList=" + checkList
+				+ ", getEmpCode()=" + getEmpCode() + ", getTeamCode()=" + getTeamCode() + ", getRankCode()="
+				+ getRankCode() + ", getDeptCode()=" + getDeptCode() + ", getEmpId()=" + getEmpId() + ", getEmpPw()="
+				+ getEmpPw() + ", getEmpName()=" + getEmpName() + ", getEmpPhone()=" + getEmpPhone()
+				+ ", getEmpRetire()=" + getEmpRetire() + ", getEmpDate()=" + getEmpDate() + ", getRankName()="
+				+ getRankName() + ", getDeptName()=" + getDeptName() + ", getSalary()=" + getSalary()
+				+ ", getVacationTotal()=" + getVacationTotal() + ", getVacationUse()=" + getVacationUse()
+				+ ", isAdmin()=" + isAdmin() + ", isLogin()=" + isLogin() + ", getReadCount()=" + getReadCount()
+				+ ", getAlarmCount()=" + getAlarmCount() + ", getTeamName()=" + getTeamName() + ", getTeamLeader()="
+				+ getTeamLeader() + ", getCheckList()=" + getCheckList() + ", getClass()=" + getClass()
+				+ ", hashCode()=" + hashCode() + ", toString()=" + super.toString() + "]";
 	}
-	
-	
-	
-	
 
+	
 	
 
 }

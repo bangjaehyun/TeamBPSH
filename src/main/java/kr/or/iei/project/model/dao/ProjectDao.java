@@ -91,7 +91,7 @@ public class ProjectDao {
 		return sqlSession.delete("project.deleteComment",commNo);
 	}
 
-	public List<Team> projectTeamLit(String projectNo) {
+	public List<Team> projectTeamList(String projectNo) {
 		
 		return sqlSession.selectList("project.projectTeamList",projectNo);
 	}
@@ -109,6 +109,11 @@ public class ProjectDao {
 	public int removeEmp(HashMap<String, Object> params) {
 		
 		return sqlSession.delete("project.removeEmp", params);
+	}
+
+	public int teamLeader(HashMap<String, Object> params) {
+		
+		return sqlSession.selectOne("project.teamLeader",params);
 	}
 	
 

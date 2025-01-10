@@ -160,9 +160,9 @@
 						</tr>
 						<c:forEach var="sales" items="${salesSpendingList.salesList}">
 							<tr>
-								<td>${sales.spendingDay}</td>
-								<td>${sales.spendingCost} 원</td>
-								<td>${sales.spendingContent}</td>
+								<td>${sales.salesDay}</td>
+								<td>${sales.salesCost} 원</td>
+								<td>${sales.salesContent}</td>
 							</tr>
 						</c:forEach>
 					</table>

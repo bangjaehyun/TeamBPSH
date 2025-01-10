@@ -4,7 +4,7 @@ public class Spending {
 	private String spendingCode;
 	private String spendingDay;
 	private String documentCode;
-	private int spendingCost;
+	private String spendingCost;
 	private String spendingContent;
 
 	public Spending() {
@@ -12,7 +12,7 @@ public class Spending {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Spending(String spendingCode, String spendingDay, String documentCode, int spendingCost,
+	public Spending(String spendingCode, String spendingDay, String documentCode, String spendingCost,
 			String spendingContent) {
 		super();
 		this.spendingCode = spendingCode;
@@ -46,11 +46,11 @@ public class Spending {
 		this.documentCode = documentCode;
 	}
 
-	public int getSpendingCost() {
+	public String getSpendingCost() {
 		return spendingCost;
 	}
 
-	public void setSpendingCost(int spendingCost) {
+	public void setSpendingCost(String spendingCost) {
 		this.spendingCost = spendingCost;
 	}
 

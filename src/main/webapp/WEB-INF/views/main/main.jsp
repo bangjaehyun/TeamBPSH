@@ -154,11 +154,7 @@ table tr:hover {
 	background-color: #e6f7ff;
 }
 
-@media ( max-width : 768px) {
-	.doc {
-		flex: 1 1 100%; /* 한 행에 하나씩 */
-	}
-}
+
 </style>
 </head>
 <body>
@@ -296,9 +292,62 @@ table tr:hover {
 		}
 		
 		
-		
 		//문서 클릭 이벤트 
 		$(document).on('click', '.viewDoc', function() {
+			var documentCode = $(this).attr('data-documentCode'); // 문서 코드 읽기
+	        var documentTypeCode = $(this).attr('data-documentTypeCode'); // 문서 타입 코드 읽기
+	        var empCode = $('input[name="empCode"]').val();
+			
+			
+				
+				var type=documentTypeCode;
+				var urls="/doc/";
+				
+				switch(type){
+				case 'va':{
+					urls+="selectOneVa.do";
+					break;
+				}
+				case 'sp':{
+					urls+="selectOneSp.do";
+					break;
+				}
+				
+				case 'co':{
+					urls+="selectOneCo.do";
+					break;
+				}
+				case 'es':{
+					urls+="selectOneEs.do";
+					break;
+				}
+				case 'bt':{
+					urls+="selectOneBt.do";
+					break;
+				}
+				
+				case 'pt':{
+					urls+="selectOnePt.do";
+					break;
+				}
+				
+				}
+				
+				console.log(type);
+				$.ajax({
+					url:urls,
+					type:"post",
+					data:{"documentCode":documentCode},
+					success:function(res){
+						console.log(res);
+						$('.page').html(res);
+					},
+					error:function(){
+						console.log("오류");
+					}
+				});
+			
+		/*
 	        var documentCode = $(this).attr('data-documentCode'); // 문서 코드 읽기
 	        var documentTypeCode = $(this).attr('data-documentTypeCode'); // 문서 타입 코드 읽기
 	        var empCode = $('input[name="empCode"]').val();
@@ -306,7 +355,7 @@ table tr:hover {
 	        								   	 documentTypeCode: documentTypeCode,
 	        								   	 empCode : empCode
 	        								   });
-
+		*/
 	    });
 		
 		
