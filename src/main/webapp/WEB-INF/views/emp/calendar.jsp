@@ -8,13 +8,14 @@
 <title>Insert title here</title>
 
 <style>
-
+* {
+	padding:0;
+	margin:0;
+}
 
 .calDiv {
     display: flex;
-    justify-content: center;
-    margin-left: 50px;
-    width:100%;
+    margin-left:10px;
     height: calc(100vh - 50px);
     gap: 10px;
 }
@@ -24,18 +25,24 @@
     width: 1300px;
 }
 
+
 /* 사이드바 스타일 */
 .divEl {
     display: flex;
     flex-direction: column; /* 세로 정렬 */
     gap: 15px; /* 항목 간 간격 */
-    width: 250px; /* 고정된 너비 */
+    width:220px;
     background-color: #fff; /* 사이드바 배경색 */
     color: white;
-    padding: 20px;
+    margin-top:15px;
+    padding-left:9px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
     font-size: 18px;
     color: #ffffff;
+}
+
+#result {
+	width:100%;
 }
 
 /* 공통 버튼 및 label 스타일 */
@@ -44,8 +51,6 @@
     display: block; /* 세로 배치 */
     padding: 10px 20px; /* 버튼 및 label의 패딩 */
     margin: 0; /* 기본 마진 제거 */
-    background-color: #cf91e0; /* 기본 배경색 */
-    color: #007bff; /* 기본 글자색 */
     border-radius: 10px;
     font-size: 14px; /* 글자 크기 */
     font-weight: bold; /* 글자 굵기 */
@@ -53,11 +58,31 @@
     cursor: pointer; /* 마우스 커서 스타일 */
     box-sizing: border-box; /* 크기 계산 방식 */
     transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 효과 */
+    margin-top: 10px;
 }
 
-/* 버튼 및 label 간 간격 */
-.button-style + .button-style {
-    margin-top: 10px;
+
+#dailyReport {
+	background-color: #222222
+}
+
+label[for="va"].button-style {
+background-color : #ffcccc;
+}
+label[for="co"].button-style {
+background-color : #ccccff;
+}
+label[for="es"].button-style {
+background-color : #ccffcc;
+}
+label[for="bt"].button-style {
+background-color : #ffccff;
+}
+label[for="sp"].button-style {
+background-color : #ddccff;
+}
+label[for="pj"].button-style {
+background-color : #ddccff;
 }
 
 /* 호버 상태 */
@@ -184,8 +209,7 @@
 	
 	<script>
 		
-		$(document).ready(function() {
-			
+		$(document).ready(function() {			
 			$.ajax({
 		        url: '/doc/apiPageDocType',
 		        type: 'POST',

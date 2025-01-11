@@ -54,6 +54,7 @@ public class ProjectService {
 		project.setProjectNo(projectNo);
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("projectNo", projectNo);
+		
 		map.put("teamCode", teamCode);
 		
 		

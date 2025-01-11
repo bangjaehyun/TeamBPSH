@@ -14,6 +14,7 @@
 <!-- 공통 css -->
 <link rel="stylesheet" href="/resources/css/default.css" />
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet"
    href="https://fonts.googleapis.com/icon?family=Material+Icons"
    type="text/css;" />

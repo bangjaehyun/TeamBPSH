@@ -8,91 +8,86 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 <style>
-        #con {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            font-family: 'Arial', sans-serif;
-        }
+#con {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
 
-        /* 폼 컨테이너 */
-        .projectForm {
-            
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+/* 폼 컨테이너 */
+.projectForm {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 80%;
+    max-width: 700px;
+}
 
-        /* 제목 입력란 */
-        .projectForm input[type="text"],
-        .projectForm textarea {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+/* 제목 입력란 */
+.projectForm input[type="text"],
+.projectForm input[type="date"],
+.projectForm textarea {
+    width: calc(100% - 20px);
+    padding: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 18px;
+}
 
-        /* 마감일 + 팀 목록 컨테이너 */
-        .deadline-team {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+/* 팀 목록 스타일 */
+.team {
+    text-align: left;
+    margin-bottom: 20px;
+}
 
-        /* 마감일 스타일 */
-        .deadline {
-            width: 30%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-        }
+.team label {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 16px;
+}
 
-        /* 팀 목록 스타일 */
-        .team-list {
-            width: 65%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
-            background: #f9f9f9;
-        }
+.team input[type="checkbox"] {
+    margin-left: 5px;
+}
 
-        /* 내용 입력란 */
-        textarea {
-            width: calc(100% - 20px);
-            height: 150px;
-            padding: 10px;
-            resize: none;
-        }
+/* 마감일 스타일 */
+.deadline {
+    margin-bottom: 20px;
+}
 
-        /* 작성 버튼 */
-        .submit-btn {
-            display: block;
-            width: 50%;
-            padding: 12px;
-            margin: 20px auto 0;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+/* 내용 입력란 */
+textarea {
+    width: calc(100% - 20px);
+    height: 180px;
+    padding: 15px;
+    resize: none;
+    font-size: 18px;
+}
 
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
+/* 작성 버튼 */
+#btn {
+    display: block;
+    width: 60%;
+    padding: 15px;
+    margin: 30px auto 0;
+    background-color: #28a745; /* 버튼 색상 (녹색) */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#btn:hover {
+    background-color: #218838; /* 버튼 호버 색상 (어두운 녹색) */
+}
 </style>
 </head>
 <body>
@@ -122,8 +117,6 @@
 			
 		</div>
 	</div>
-<script src="/resources/summernote/summernote-lite.js"></script>
-<script src="/resources/summernote/lang/summernote-ko-KR.js"></script>
 	<script>
 	$('#btn').on('click',function(){
         
