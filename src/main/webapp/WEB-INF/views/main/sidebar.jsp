@@ -145,7 +145,8 @@
 					<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="teamLeaderApPoint()">팀장 관리</a></li>
 					<li><a href="javascript:void(0)" onclick="empCheck()">출퇴근 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="salesManager()">매출관리</a></li>
+					<li><a href="javascript:void(0)" onclick="salesManager()">매출 관리</a></li>
+					<li><a href="javascript:void(0)" onclick="salarySend()">월급 전송</a></li>
 				</ul>
 			</li>
 		</ul>
@@ -154,6 +155,12 @@
 	$(document).ready(function(){
 		$('#mainPage').addClass('div-color');
 	});
+	
+	<%-- 월급 전송(메시지) --%>
+	function salarySend(){
+		pageMove('/emp/salarySendFrm.do');
+	}	
+	
     <%-- 부서장 관리 --%>
     function deptLeaderApPoint(){
     	pageMove("/emp/deptLeaderApPoint.do");	

@@ -332,4 +332,8 @@ public class EmpDao {
 		return sqlSession.selectOne("emp.selectAlarmListTotalCount", empCode);
 	}
 
+	public List<Emp> selectEmpSalaryList() {
+		return sqlSession.selectList("emp.selectEmpSalaryList");
+	}
+
 }

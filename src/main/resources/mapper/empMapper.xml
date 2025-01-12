@@ -905,4 +905,27 @@
 	 where emp_code = #{empCode}
 	</select>
  
+ 	<select id="selectEmpSalaryList"
+ 	resultType="emp">
+ 	select emp_code as empCode,
+     		emp_name as empName,
+     		team_name as teamName,
+     		(
+     		select rank_name 
+     		  from tbl_rank 
+     		 where rank_code = e.rank_code 
+     		) as rankName,
+        	(
+        	select dept_name 
+        	  from tbl_dept 
+        	 where dept_code = t.dept_code
+        	)as deptName,
+        	emp_date as empDate,
+           (select salary
+             from tbl_salary
+             where emp_code = e.emp_code) as salary,
+             e.emp_phone as empPhone
+       from tbl_emp e
+       join tbl_team t using(team_code)
+ 	</select>
 </mapper>

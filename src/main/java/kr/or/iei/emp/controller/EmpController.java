@@ -1129,5 +1129,26 @@ public class EmpController {
     	  return String.valueOf(result);
       }
       
+      @PostMapping(value="salarySendFrm.do", produces="text/html; charset=utf-8")
+      @AdminChk
+      public String salarySendFrm(Model model) {
+    	  ArrayList<Emp> list = service.selectEmpSalaryList();
+    	  
+    	  System.out.println(list.toString());
+    	  
+    	  model.addAttribute("empList", list);
+    	  
+    	  return "emp/salarySend";
+      }
+      
+      
+      @PostMapping(value="sendSalry.do", produces="application/json; charset=utf-8")
+      @ResponseBody
+      public String sendSalary(Emp emp) {
+    	  int result = service.sendMsg(emp);
+    	  
+    	  return String.valueOf(result);
+      }
+      
      
 }

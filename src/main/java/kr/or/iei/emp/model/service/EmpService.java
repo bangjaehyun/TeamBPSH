@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.or.iei.common.SMS;
 import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.Sales;
 import kr.or.iei.document.model.vo.Spending;
@@ -33,6 +34,10 @@ import kr.or.iei.emp.model.vo.Rank;
 import kr.or.iei.emp.model.vo.Salary;
 import kr.or.iei.emp.model.vo.SalesSpending;
 import kr.or.iei.emp.model.vo.Team;
+import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
+import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.service.DefaultMessageService;
 
 @Service("empService")
 public class EmpService {
@@ -512,6 +517,38 @@ public class EmpService {
 
 		default:
 			break;
+		}
+		
+		return result;
+	}
+
+	public ArrayList<Emp> selectEmpSalaryList() {
+		return (ArrayList<Emp>) dao.selectEmpSalaryList();
+	}
+
+	public int sendMsg(Emp emp) {
+		int result = 0;
+		
+		DefaultMessageService messageService =  NurigoApp.INSTANCE.initialize(SMS.apiKey, SMS.apiSecretKey, SMS.smsUrl);
+		
+		Message message = new Message();
+		message.setFrom(SMS.SendPhone);
+		message.setTo(emp.getEmpPhone());
+		
+		String msg = emp.getEmpName() + "님 월급 " +emp.getSalary() + "원이 입금 되었습니다";
+		
+		message.setText(msg);
+		
+		try {
+		  // send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+		  messageService.send(message);
+		  result = 1;
+		} catch (NurigoMessageNotReceivedException exception) {
+		  // 발송에 실패한 메시지 목록을 확인할 수 있습니다!
+		  System.out.println(exception.getFailedMessageList());
+		  System.out.println(exception.getMessage());
+		} catch (Exception exception) {
+		  System.out.println(exception.getMessage());
 		}
 		
 		return result;
