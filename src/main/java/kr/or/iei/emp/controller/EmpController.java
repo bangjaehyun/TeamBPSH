@@ -316,6 +316,26 @@ public class EmpController {
     	
     	return "main/empManager";
     }
+    
+    //급여 변경
+    @PostMapping("updateSalary.do")
+    public String updateSalary(Emp emp, Model model) {
+    	
+    	int result = service.updateSalary(emp);
+    	
+    	 if(result < 1) {
+             CommonException ex = new CommonException("사원 급여 수정중 오류 발생");
+             ex.setErrorCode("SE001");
+             Object msgParam[] = {"급여"};
+             ex.setUserMsg(message.getMessage(ex.getErrorCode(), msgParam, Locale.KOREA));
+             throw ex;
+         }
+    	
+    	 ArrayList<Emp> empList = service.empManagerList();
+  		model.addAttribute("empList", empList);
+    	
+    	return "main/empManager";
+    }
 
     //업무일지 창 
     @PostMapping("dailyReportWrite.do")

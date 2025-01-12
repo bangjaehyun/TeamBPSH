@@ -244,12 +244,8 @@ public class EmpService {
 		int result = dao.adminUpdateEmp(emp);
 		System.out.println(result);
 		if(result > 0) {
-			result = dao.updateSalary(emp);
+			result = dao.updateVacation(emp);
 			System.out.println(result);
-			if(result > 0) {
-				result = dao.updateVacation(emp);
-				System.out.println(result);
-			}
 		}
 		
 		return result;
@@ -552,6 +548,10 @@ public class EmpService {
 		}
 		
 		return result;
+	}
+
+	public int updateSalary(Emp emp) {
+		return dao.updateSalary(emp);
 	}
 
 }
