@@ -14,7 +14,7 @@
         }
         .side-bar{
         	z-index : 9999;
-            height: calc(100vh - 50px);
+            height: 100%;
             width: 55px;
             background-color: #CCCCCC;
             bottom : 0;

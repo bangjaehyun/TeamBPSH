@@ -14,14 +14,13 @@
 }
 
 .leader-wrap {
-	width: width: 100%;
-	height: calc(100vh - 50px);
-	overflow: auto;
+	width: 100%;
+	height: 100%;
 	padding: 50px;
 }
 
 .leader-tbl {
-	min-width: 100%;
+/* 	min-width: 100%; */
 	width: 100%;
 	border-spacing: 0;
 }

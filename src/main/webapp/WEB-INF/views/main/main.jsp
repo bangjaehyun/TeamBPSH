@@ -19,6 +19,7 @@
 	display: flex;
 	flex-wrap: wrap;
 	width: 100%;
+	min-height: calc(100vh - 50px);
 	gap: 20px; /* 상단 이메일 테이블과 문서 타입 테이블 간격 */
 	padding: 20px;
 }
