@@ -67,6 +67,7 @@ import kr.or.iei.document.model.vo.Sales;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.service.EmpService;
 import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.AlarmPaging;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Check;
@@ -493,9 +494,9 @@ public class EmpController {
 
       @PostMapping(value="loadAlarmList.do", produces="application/json; charset=utf-8")
       @ResponseBody
-      public String loadAlarmList(String empCode) {
-    	  ArrayList<Alarm> alarmList = service.loadAlarmList(empCode);
-    	  return new Gson().toJson(alarmList);
+      public String loadAlarmList(AlarmPaging alarmNavi) {
+    	  AlarmPaging alarmPaging = service.loadAlarmList(alarmNavi);
+    	  return new Gson().toJson(alarmPaging);
       }
       
       @PostMapping(value="alarmRead.do", produces="application/json; charset=utf-8")

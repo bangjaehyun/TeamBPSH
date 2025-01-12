@@ -18,6 +18,7 @@ import kr.or.iei.document.model.vo.Sales;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.dao.EmpDao;
 import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.AlarmPaging;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.ChatGroup;
 import kr.or.iei.emp.model.vo.Check;
@@ -274,8 +275,21 @@ public class EmpService {
 		return dao.dailyReportUpd(dailyReport);
 	}
 
-	public ArrayList<Alarm> loadAlarmList(String empCode) {
-		return (ArrayList<Alarm>)dao.loadAlarmList(empCode);
+	public AlarmPaging loadAlarmList(AlarmPaging alarmNavi) {
+		
+		AlarmPaging paging = new AlarmPaging();
+		
+		int totalCount = dao.selectAlarmListTotalCount(alarmNavi.getEmpCode());
+		paging.setTotalCount(totalCount);
+		
+		if(totalCount > 0) {
+			ArrayList<Alarm> list = (ArrayList<Alarm>)dao.loadAlarmList(alarmNavi);
+			paging.setAlarmList(list);
+			paging.setStartCount(alarmNavi.getStartCount());
+			paging.setEndCount(alarmNavi.getEndCount());
+		}
+		
+		return paging;
 	}
 
 	public int readAlarm(String alarmNo) {

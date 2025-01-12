@@ -41,10 +41,16 @@
         	text-decoration: none;
         	color: black;
         	margin: 0px;
+        	width: 100%;
+        	display: block;
         }
         
         .side-sub > li:hover{
-        	background: red;
+        	background: #adadad;
+        }
+        
+        .side-sub > li:hover > a{
+        	color: white;
         }
         
         .side-bar>ul>li{

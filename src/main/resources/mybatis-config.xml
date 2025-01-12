@@ -10,6 +10,7 @@
 		<typeAlias type="kr.or.iei.emp.model.vo.Team" alias="team"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.Rank" alias="rank"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.Alarm" alias="alarm"/>
+		<typeAlias type="kr.or.iei.emp.model.vo.AlarmPaging" alias="alarmPaging"/>
 		<typeAlias type="kr.or.iei.project.model.vo.Project" alias="project"/>
 		<typeAlias type="kr.or.iei.emp.model.vo.Commute" alias="commute"/>
 		<typeAlias type="kr.or.iei.project.model.vo.ProjectPartemp" alias="projectPartemp"/>

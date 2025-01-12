@@ -49,6 +49,7 @@
     		opacity: 0;
     		display: flex;
     		justify-content: center;
+    		z-index: 9998;
   		}
   		
   		.myPage>ul{
@@ -72,7 +73,7 @@
   		}
   		
   		
-  		.alarm{
+  		.alarm-wrap{
   			visibility : hidden;
   			position : absolute;
          	width : 300px;
@@ -85,9 +86,23 @@
     		color: black;
     		text-align: center;
     		transition: .5s;
-    		overflow: hidden;
+    		overflow: auto;
+    		z-index: 9998;
   		}
-  		
+
+		.alarmMore{
+			width: 100%;
+			display: none;
+		}
+		
+		.alarmMore>button{
+			width: 100%;
+			font-size : 15px;
+			color: white;
+			background: #9fd1fe;
+			border: none;
+		}
+
   		
 </style>
 </head>
@@ -104,9 +119,13 @@
 				<jsp:include page="/WEB-INF/views/main/main.jsp"></jsp:include>
 			</div>
 			<div>
-				<div class="alarm">
-					
+				<div class="alarm-wrap">
+					<div class="alarm">
 				</div>
+				<div class="alarmMore">
+			<button onclick="alamrMore()">더보기</button>
+		</div>
+			</div>
 			</div>
 			 <div class="myPage">
             	 	<ul>

@@ -14,6 +14,7 @@ import kr.or.iei.document.model.vo.Document;
 import kr.or.iei.document.model.vo.Sales;
 import kr.or.iei.document.model.vo.Spending;
 import kr.or.iei.emp.model.vo.Alarm;
+import kr.or.iei.emp.model.vo.AlarmPaging;
 import kr.or.iei.emp.model.vo.Chat;
 import kr.or.iei.emp.model.vo.Check;
 import kr.or.iei.emp.model.vo.Commute;
@@ -165,8 +166,8 @@ public class EmpDao {
 		return sqlSession.update("emp.dailyReportUpdate", dailyReport);
 	}
 
-	public List<Alarm> loadAlarmList(String empCode) {
-		return sqlSession.selectList("emp.loadAlarmList", empCode);
+	public List<Alarm> loadAlarmList(AlarmPaging alarmPaging) {
+		return sqlSession.selectList("emp.loadAlarmList", alarmPaging);
 	}
 
 	public int readAlarm(String alarmNo) {
@@ -325,6 +326,10 @@ public class EmpDao {
 
 	public int updateComplateDisciplinary(Disciplinary disciplinary) {
 		return sqlSession.update("emp.updateComplateDisciplinary", disciplinary);
+	}
+
+	public int selectAlarmListTotalCount(String empCode) {
+		return sqlSession.selectOne("emp.selectAlarmListTotalCount", empCode);
 	}
 
 }

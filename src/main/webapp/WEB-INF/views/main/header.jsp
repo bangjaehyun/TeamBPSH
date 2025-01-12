@@ -93,6 +93,7 @@
        		text-decoration: none;
        		color : black;
        		font-size: 15px;	
+       		margin: auto 5px;
        }
        
        .alarmDiv{
@@ -100,7 +101,7 @@
        		display: flex;
        		justify-content: flex-start;
        		border-bottom: 1px solid black;
-       		margin : 0 5px;
+/*        		margin : 0 5px; */
        }
     </style>
 </head>
@@ -156,29 +157,38 @@
 		}else{
 			$('.myPage').addClass('act');
 			
-			if($('.alarm').hasClass('alarmAct')){
-				$('.alarm').removeClass('alarmAct');
+			if($('.alarm-wrap').hasClass('alarmAct')){
+				$('.alarm-wrap').removeClass('alarmAct');
 				$('.alarm').children().remove();
 			}
 		}
 	});
 	
+	let alarmStartCount = 1;
+	let alarmEndCount = 5;
+	
 	$('.header-notification').on('click',function(){
-		if($('.alarm').hasClass('alarmAct')){
-			$('.alarm').removeClass('alarmAct');
+		startCount = 1;
+		endCount = 5;
+		
+		if($('.alarm-wrap').hasClass('alarmAct')){
+			$('.alarm-wrap').removeClass('alarmAct');
 			$('.alarm').children().remove();
 		}else{
 			if($('.myPage').hasClass('act')){
 				$('.myPage').removeClass('act');
 			}
-			$('.alarm').addClass('alarmAct');
+			$('.alarm-wrap').addClass('alarmAct');
 			$.ajax({
 				url : "/emp/loadAlarmList.do",
 				type : "post",
-				data : {"empCode" : "${loginEmp.empCode}"},
+				data : {"empCode" : "${loginEmp.empCode}",
+						"startCount" : startCount,
+						"endCount" : endCount},
 				success : function(res){
-					for(let i in res){
-						let	data = res[i];
+					for(let i in res.alarmList){
+						
+						let	data = res.alarmList[i];
 						let divEl = $('<div></div>');
 						let aEl = $('<a href=javascript:void(0)></a>');
 						aEl.attr("onclick", "alarmMove("+"'"+data.alarmNo+"','"+data.refUrl+"','"+data.urlParam+"','" + data.alarmRead +"')");
@@ -195,6 +205,14 @@
 						
 						$('.alarm').append(divEl);
 					}
+					
+					if(endCount < res.totalCount){
+						$('.alarmMore').css('display','block');
+						startCount += 5
+						endCount += 5;
+					}else{
+						$('.alarmMore').css('display','none');
+					}
 				},
 				error : function(){
 					console.log("ajax 오류");
@@ -203,9 +221,54 @@
 		}
 	});
 	
+	
+	function alamrMore(){
+		$.ajax({
+			url : "/emp/loadAlarmList.do",
+			type : "post",
+			data : {"empCode" : "${loginEmp.empCode}",
+					"startCount" : startCount,
+					"endCount" : endCount},
+			success : function(res){
+				for(let i in res.alarmList){
+					
+					let	data = res.alarmList[i];
+					let divEl = $('<div></div>');
+					let aEl = $('<a href=javascript:void(0)></a>');
+					aEl.attr("onclick", "alarmMove("+"'"+data.alarmNo+"','"+data.refUrl+"','"+data.urlParam+"','" + data.alarmRead +"')");
+					 
+					
+					aEl.html(data.alarmComment);
+					aEl.attr('class', 'alarmMsg');
+					divEl.attr('class', 'alarmDiv');
+					divEl.attr('id',data.alarmNo);
+					if(data.alarmRead == "n"){
+						divEl.addClass("alarmNoRead");
+					}
+					divEl.append(aEl);
+					
+					$('.alarm').append(divEl);
+				}
+				
+				if(endCount < res.totalCount){
+					$('.alarmMore').css('display','block');
+					startCount += 5
+					endCount += 5;
+				}else{
+					$('.alarmMore').css('display','none');
+				}
+			},
+			error : function(){
+				console.log("ajax 오류");
+			}
+		});
+	}
+	
 	function alarmMove(alarmNo ,url, param, alarmRead){
-		$('.alarm').removeClass('alarmAct');
+		$('.alarm-wrap').removeClass('alarmAct');
 		$('.alarm').children().remove();
+		startCount = 1;
+		endCount = 5;
 		
 		if(alarmRead == 'n'){
 			alarmChangeRead(alarmNo);

@@ -379,7 +379,7 @@
      </update>
  
      <select id="loadAlarmList"
-     parameterType="string"
+     parameterType="alarmPaging"
      resultType="alarm">
       select alarm_no as alarmNo,
              alarm_comment as alarmComment,
@@ -398,7 +398,7 @@
                     order by alarm_date desc
                   ) a 
             )
-           where rnum between 1 and 10
+           where rnum between #{startCount} and #{endCount}
      </select>
      
      <update id="alarmRead"
@@ -896,5 +896,13 @@
 	   set dis_check = 'y'
 	 where disciplinary_no = #{disciplinaryNo}
 	</update>
+	
+	<select id="selectAlarmListTotalCount"
+	parameterType="string"
+	resultType="_int">
+	select count(*)
+	  from tbl_alarm
+	 where emp_code = #{empCode}
+	</select>
  
 </mapper>

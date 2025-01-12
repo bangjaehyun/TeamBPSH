@@ -63,7 +63,7 @@
 
 .voteList{
 	margin : 20px 0;
-	max-height: 300px;
+	max-height: 250px;
 	overflow: scroll;
 }
 
@@ -120,7 +120,7 @@
 }
 
 .voteList-box{
-	height: 300px;
+	height: 250px;
 }
 
 
