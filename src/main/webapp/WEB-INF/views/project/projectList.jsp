@@ -8,7 +8,9 @@
 <title>Insert title here</title>
 
 <style>
-
+*{
+	box-sizing: border-box;
+}
 
 /* 테이블 */
 
@@ -16,8 +18,7 @@
     justify-content: center;
     width:100%;
     gap: 10px;
-	
-	
+	height: calc(100vh - 50px);
 }
 #pjHead{
 	margin : 0 auto;

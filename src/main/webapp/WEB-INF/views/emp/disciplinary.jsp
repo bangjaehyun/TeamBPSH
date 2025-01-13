@@ -165,6 +165,7 @@
 					text : "징계 처리가 완료되었습니다.",
 					icon : "success"
 				}).then(function(){
+					opener.updatePage();
 					self.close();
 				});
 			},

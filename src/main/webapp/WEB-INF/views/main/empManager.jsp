@@ -103,7 +103,7 @@
 				<th>총 휴가</th>
 				<th>사용 휴가</th>
 				<th>변경</th>
-				<th>급여</th>
+				<th>연봉</th>
 				<th>징계</th>
 			</tr>
 			<c:forEach var="emp" items="${empList}">
@@ -165,6 +165,9 @@
 	</div>
 
 	<script>
+		function updatePage(){
+			pageMove("/emp/empManager.do");	
+		}
 		<%-- 징계 버튼 --%>
 		function disciplinary(obj){
 			let empCode = $(obj).parents('tr').find('#empCode').html();

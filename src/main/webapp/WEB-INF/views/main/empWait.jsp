@@ -75,7 +75,7 @@
 				<th>부서</th>
 				<th>팀</th>
 				<th>직급</th>
-				<th>급여</th>
+				<th>연봉</th>
 				<th>승인</th>
 			</tr>
 			<c:forEach var="empWait" items="${empWaitList}">
