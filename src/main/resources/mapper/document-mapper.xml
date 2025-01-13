@@ -318,7 +318,7 @@
    values(
       #{documentCode},
       #{businessTo},
-      #{businessPerpose},
+      #{businessPurpose},
       #{businessStart},
       #{businessEnd}
    )
@@ -329,7 +329,7 @@
       select
          document_code as documentCode,
          business_to as businessTo,
-         business_perpose as businessPerpose,
+         business_perpose as businessPurpose,
          business_start as businessStart,
          business_end as businessEnd
       from tbl_business_trip

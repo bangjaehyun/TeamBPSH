@@ -4,15 +4,15 @@ public class Business {
 
 	private String documentCode;
 	private String businessTo;
-	private String businessPerpose;
+	private String businessPurpose;
 	private String businessStart;
 	private String businessEnd;
-	public Business(String documentCode, String businessTo, String businessPerpose, String businessStart,
+	public Business(String documentCode, String businessTo, String businessPurpose, String businessStart,
 			String businessEnd) {
 		super();
 		this.documentCode = documentCode;
 		this.businessTo = businessTo;
-		this.businessPerpose = businessPerpose;
+		this.businessPurpose = businessPurpose;
 		this.businessStart = businessStart;
 		this.businessEnd = businessEnd;
 	}
@@ -32,11 +32,11 @@ public class Business {
 	public void setBusinessTo(String businessTo) {
 		this.businessTo = businessTo;
 	}
-	public String getBusinessPerpose() {
-		return businessPerpose;
+	public String getbusinessPurpose() {
+		return businessPurpose;
 	}
-	public void setBusinessPerpose(String businessPerpose) {
-		this.businessPerpose = businessPerpose;
+	public void setbusinessPurpose(String businessPurpose) {
+		this.businessPurpose = businessPurpose;
 	}
 	public String getBusinessStart() {
 		return businessStart;
@@ -52,8 +52,8 @@ public class Business {
 	}
 	@Override
 	public String toString() {
-		return "Business [documentCode=" + documentCode + ", businessTo=" + businessTo + ", businessPerpose="
-				+ businessPerpose + ", businessStart=" + businessStart + ", businessEnd=" + businessEnd + "]";
+		return "Business [documentCode=" + documentCode + ", businessTo=" + businessTo + ", businessPurpose="
+				+ businessPurpose + ", businessStart=" + businessStart + ", businessEnd=" + businessEnd + "]";
 	}
 	
 	

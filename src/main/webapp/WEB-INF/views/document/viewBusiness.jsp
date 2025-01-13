@@ -218,7 +218,7 @@
                 </div>
                 <div class="form">
                     <span class="span-title">출장목적</span>
-                    <span>${doc.documentTitle }</span>
+                    <span>${business.businessPurpose }</span>
                 </div>
             </div>
             <div>

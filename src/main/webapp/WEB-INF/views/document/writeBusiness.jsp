@@ -261,7 +261,7 @@
                 <div class="content">
                     <div class="type">출장목적</div>
                     <div class="title">
-                    <input id="perpose" type="text" name="purpose" placeholder="출장 목적 입력" />
+                    <input id="purpose" type="text" name="purpose" placeholder="출장 목적 입력" />
                     </div>
                 </div>
             </div>
@@ -320,7 +320,9 @@
     var checkDocument={
     		"docTitle":	false,
     		"sign":		false,
-    		"date":		false,	
+    		"date":		false,
+    		"place":	false,
+    		"purpose":	false
     };
     
    
@@ -443,17 +445,38 @@
             });
          }
 
+        
+    	
+        $('#place').on('input',function(){
+        let place=$('#place').val();
 
+    	if(place.length>0){
+    		checkDocument.place=true;
+    	}else{
+    		checkDocument.place=false;
+    	}
+        	
+        });
 
 
     $('#title').on('input',function(){
     	let title=$('#title').val();
+    	
     	if(title.length>0){
     		checkDocument.docTitle=true;
     	}else{
     		checkDocument.docTitle=false;
     	}
     });
+        $('#purpose').on('input',function(){
+        	let purpose=$('#purpose').val();
+        	
+        	if(purpose.length>0){
+        		checkDocument.purpose=true;
+        	}else{
+        		checkDocument.purpose=false;
+        	}
+        });
 
 
     //결재자
@@ -605,7 +628,8 @@ function searchMan(e) {
 	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
 	                case "sign":msg("알림","결재자는 최소 1명 이상이어야 합니다.","error","0"); break;
 	                case "date":msg("알림","날짜형식이 잘못되었습니다.","error","0"); break;
-	            
+	                case "place": msg("알림","출장지를 작성하시오.","error","0"); break;
+	                case "purpose": msg("알림","출장목적을 작성하시오.","error","0"); break;
 	            }
 	            return;
 	        }
@@ -615,7 +639,7 @@ function searchMan(e) {
 	    formData.append("documentTitle", $('#title').val());
 	    formData.append("documentTypeCode","bt");
 	    formData.append("businessTo",$('#place').val());
-	    formData.append("businessPerpose",$('#perpose').val());
+	    formData.append("businessPurpose",$('#purpose').val());
 	    formData.append("businessStart", $('#btStart').val());
 	    formData.append("businessEnd", $('#btEnd').val());
 	    formData.append("documentContent",$('#summernote').val());
