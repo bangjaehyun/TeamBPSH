@@ -118,6 +118,7 @@ var obj=[];
 
 $(document).ready(function(){
 
+	//필저 적용한것 색 바꾸기
   var filterLists=$('.type-filter');
  
   filterLists.children().each(function(){

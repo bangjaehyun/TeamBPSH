@@ -128,6 +128,7 @@ public class DocumentController {
 			
 			ArrayList<Document> documentList=service.selectList(type);
 			ArrayList<DocumentType> docTypeList=service.selectDocType();
+			m.addAttribute("selType",type);
 			m.addAttribute("docList", documentList);
 			m.addAttribute("docTypeList",docTypeList);
 			return "document/documentList";
