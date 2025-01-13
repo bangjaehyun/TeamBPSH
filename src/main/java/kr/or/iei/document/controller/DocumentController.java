@@ -977,7 +977,7 @@ public class DocumentController {
 			model.addAttribute("vacType",vacType);
 			try {
 				System.out.println(doc.getDocumentDate());
-				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREAN);
+				SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 				//Date 형 format할 때 기존 입력 방식과 같이 해야한다. yyyy-MM-dd 형식이면 값도 yyyy-MM-dd, yyyyMMdd로 저장시 yyyyMMdd로 형식이 균일하게 저장해야 파싱이 된다.
 				String writeDate=format.format(writeDay);
