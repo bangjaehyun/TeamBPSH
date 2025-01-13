@@ -944,4 +944,27 @@
        		from tbl_emp e
        		join tbl_team t using(team_code)
  	</select>
+ 	
+ 	<select id="phoneSelectEmp"
+ 	parameterType="string"
+ 	resultType="string">
+ 	select emp_id as empId
+ 	  from tbl_emp
+ 	 where emp_phone = #{phone}
+ 	</select>
+ 	
+ 	<select id="selectChkId"
+ 	parameterType="string"
+ 	resultType="string">
+ 	select emp_phone
+ 	  from tbl_emp
+ 	 where emp_id = #{empId}
+ 	</select>
+ 	
+ 	<update id="changePw"
+ 	parameterType="map">
+ 	update tbl_emp
+ 	   set emp_pw = #{newPw}
+ 	 where emp_id = #{empId}
+ 	</update>
 </mapper>

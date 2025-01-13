@@ -2,7 +2,7 @@ package kr.or.iei.common;
 
 public class SMS {
 	public static String smsUrl = "https://api.coolsms.co.kr";
-	public static String apiKey = "NCS9161YKCMGSAEB";	
-	public static String apiSecretKey = "VIJXFGK19QDUIFDSQJYRD5AWPLHWRXCO";
-	public static String SendPhone = "01085508340";
+	public static String apiKey = "NCSMFYNZTG81ELGD";	
+	public static String apiSecretKey = "8NJM1VVFZ3YAJOUG9AMGGUN4MZSLR3SY";
+	public static String SendPhone = "01090897810";
 }

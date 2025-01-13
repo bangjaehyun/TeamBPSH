@@ -1,5 +1,6 @@
 package kr.or.iei.emp.model.service;
 
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -553,5 +554,117 @@ public class EmpService {
 	public int updateSalary(Emp emp) {
 		return dao.updateSalary(emp);
 	}
+
+	public int selectPhoneToId(String phone) {
+		
+		String empId = dao.phoneSelectEmp(phone);
+		System.out.println(empId);
+		int result = 0;
+		
+		if(empId != null) {
+			result = sendId(empId, phone);
+		}
+		
+		return result;
+	}
+
+	private int sendId(String empId, String phone) {
+		int result = 0;
+
+		DefaultMessageService messageService = NurigoApp.INSTANCE.initialize(SMS.apiKey, SMS.apiSecretKey, SMS.smsUrl);
+
+		Message message = new Message();
+		message.setFrom(SMS.SendPhone);
+		message.setTo(phone);
+
+		String msg = "아이디 : " + empId + "입니다.";
+
+		message.setText(msg);
+
+		try {
+			// send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+			messageService.send(message);
+			result = 1;
+		} catch (NurigoMessageNotReceivedException exception) {
+			// 발송에 실패한 메시지 목록을 확인할 수 있습니다!
+			System.out.println(exception.getFailedMessageList());
+			System.out.println(exception.getMessage());
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
+		}
+
+		return result;
+	}
+
+	public String chkIdSendCodeMsg(String empId) {
+		
+		String empPhone = dao.selectChkId(empId);
+		
+		String code = ""; 
+		if(empPhone != null) {
+			code = sendCode(empPhone);
+		}
+		
+		return code;
+	}
+
+	private String sendCode(String empPhone) {
+		String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";	//영문자 대문자
+		String lower = "abcdefghijklmnopqrstuvwxyz";	//영문자 소문자
+		String digit = "0123456789";					//숫자
+		String special = "~!@#$%^&*";						//특수문자
+		String allStr = upper + lower + digit + special;
+		
+		SecureRandom random = new SecureRandom();
+		StringBuilder ranPw = new StringBuilder();
+		
+		//나머지 6자리는 전체 문자열에서 임의의 값 추출
+		for (int i=0; i<6; i++) {
+			ranPw.append(allStr.charAt(random.nextInt(allStr.length())));
+		}
+		
+		DefaultMessageService messageService = NurigoApp.INSTANCE.initialize(SMS.apiKey, SMS.apiSecretKey, SMS.smsUrl);
+
+		Message message = new Message();
+		message.setFrom(SMS.SendPhone);
+		message.setTo(empPhone);
+
+		String msg = "인증번호 : " + ranPw.toString();
+
+		message.setText(msg);
+
+		try {
+			// send 메소드로 ArrayList<Message> 객체를 넣어도 동작합니다!
+			messageService.send(message);
+		} catch (NurigoMessageNotReceivedException exception) {
+			// 발송에 실패한 메시지 목록을 확인할 수 있습니다!
+			System.out.println(exception.getFailedMessageList());
+			System.out.println(exception.getMessage());
+			
+			//오류 낫을경우 초기화 시켜 retrun시 length 0으로 만들기 위함
+			ranPw = new StringBuilder();
+		} catch (Exception exception) {
+			System.out.println(exception.getMessage());
+			
+			//오류 낫을경우 초기화 시켜 retrun시 length 0으로 만들기 위함
+			ranPw = new StringBuilder();
+		}
+
+		return ranPw.toString();
+	}
+
+	public int changePw(String empId, String newPw) {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("empId", empId);
+		map.put("newPw", BCrypt.hashpw(newPw, BCrypt.gensalt()));
+		
+		int result = dao.changePw(map);
+		
+		return result;
+	}
+	
+	
+	
 
 }

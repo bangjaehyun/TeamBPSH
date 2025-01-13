@@ -336,4 +336,16 @@ public class EmpDao {
 		return sqlSession.selectList("emp.selectEmpSalaryList");
 	}
 
+	public String phoneSelectEmp(String phone) {
+		return sqlSession.selectOne("emp.phoneSelectEmp", phone);
+	}
+
+	public String selectChkId(String empId) {
+		return sqlSession.selectOne("emp.selectChkId",empId);
+	}
+
+	public int changePw(HashMap<String, String> map) {
+		return sqlSession.update("emp.changePw",map);
+	}
+
 }

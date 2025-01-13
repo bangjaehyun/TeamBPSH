@@ -166,7 +166,7 @@
 
 	<script>
 		function updatePage(){
-			pageMove("/emp/empManager.do");	
+			pageMove("/emp/empManager.do");
 		}
 		<%-- 징계 버튼 --%>
 		function disciplinary(obj){

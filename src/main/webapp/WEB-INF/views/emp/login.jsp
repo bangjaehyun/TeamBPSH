@@ -124,5 +124,46 @@ body {
 			</form>
 		</div>
 	</div>
+	
+	<script>
+	function findId(){
+		let popupWidth = 500;
+		let popupHeight = 500;
+
+		let top = (window.innerHeight - popupHeight) / 2 + window.screenY;
+		let left = (window.innerWidth - popupWidth) / 2 + window.screenX;
+
+		let popupWindow = window.open("", "windowName", "width="
+				+ popupWidth + ", height=" + popupHeight + ", top=" + top
+				+ ", left=" + left + ",resizable=0");
+		popupWindow.resizeTo(500, 500);
+		let f = document.createElement('form');
+		f.setAttribute('method', 'post');
+		f.setAttribute('action', '/emp/findIdFrm.do');
+
+		popupWindow.document.body.appendChild(f);
+		f.submit();
+	}
+	
+	function findPw(){
+		let popupWidth = 500;
+		let popupHeight = 500;
+
+		let top = (window.innerHeight - popupHeight) / 2 + window.screenY;
+		let left = (window.innerWidth - popupWidth) / 2 + window.screenX;
+
+		let popupWindow = window.open("", "windowName", "width="
+				+ popupWidth + ", height=" + popupHeight + ", top=" + top
+				+ ", left=" + left + ",resizable=0");
+		popupWindow.resizeTo(500, 500);
+		let f = document.createElement('form');
+		f.setAttribute('method', 'post');
+		f.setAttribute('action', '/emp/findPwFrm.do');
+
+		popupWindow.document.body.appendChild(f);
+		f.submit();
+	}
+	
+	</script>
 </body>
 </html>

@@ -1171,5 +1171,70 @@ public class EmpController {
     	  return String.valueOf(result);
       }
       
+      @PostMapping(value="findIdFrm.do")
+      @NoLoginChk
+      public String findIdFrm() {
+    	  
+    	  return "emp/findIdFrm";
+      }
+      
+      
+      @PostMapping(value="chkPhoneToId.do", produces="application/json; charset=utf-8")
+      @NoLoginChk
+      @ResponseBody
+      public String chkPhoneToId(String phone) {
+    	  int result = service.selectPhoneToId(phone);
+    	  
+    	  return String.valueOf(result);
+      }
+      
+      @PostMapping(value="findPwFrm.do")
+      @NoLoginChk
+      public String findPwFrm() {
+    	  
+    	  return "emp/findPwFrm";
+      }
+      
+      
+      @PostMapping(value="chkIdSendPhone.do", produces="application/json; charset=utf-8")
+      @NoLoginChk
+      @ResponseBody
+      public String chkIdSendPhone(String empId) {
+    	  
+    	  String resultCode = service.chkIdSendCodeMsg(empId);
+    	  
+    	  return new Gson().toJson(resultCode);
+      }
+      
+      
+      @PostMapping(value="codeChk.do")
+      @NoLoginChk
+      public String codeChk(String code, String empId, Model model) {
+    	  
+    	  model.addAttribute("code", code);
+    	  model.addAttribute("empId", empId);
+    	  
+    	  return "emp/codeChk";
+      }
+      
+      @PostMapping(value="changePwFrm.do")
+      @NoLoginChk
+      public String changePwFrm(String empId, Model model) {
+    	  
+    	  model.addAttribute("empId", empId);
+    	  return "emp/changePw";
+      }
+      
+      @PostMapping(value="changePw.do", produces="application/json; charset=utf-8")
+      @NoLoginChk
+      @ResponseBody
+      public String changePw(String empId, String newPw) {
+    	  int result = service.changePw(empId, newPw);
+    	  
+    	  
+    	  return String.valueOf(result);
+      }
+      
+      
      
 }
