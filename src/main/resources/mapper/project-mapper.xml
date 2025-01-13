@@ -139,26 +139,26 @@
 
 	<select id="selectProjectComm" parameterType="string"
 		resultType="comment">
-		select
-		pc.comm_no AS commNo,
-		pc.project_no AS projectNo,
-		pc.emp_code AS empCode,
-		e.emp_name AS empName,
-		r.rank_name AS rankName,
-		t.team_name AS teamName,
-		pc.comm_content AS commContent,
-		pc.file_name AS
-		fileName,
-		pc.file_path AS folePath,
-		pc.comm_date AS commDate
-		from
-		tbl_project_comm pc
-		join tbl_emp e on pc.emp_code = e.emp_code
-		join
-		tbl_rank r on e.rank_code = r.rank_code
-		join tbl_team t on e.team_code
-		= t.team_code
-		order by pc.comm_date desc
+		SELECT
+        pc.comm_no AS commNo,
+        pc.project_no AS projectNo,
+        pc.emp_code AS empCode,
+        e.emp_name AS empName,
+        r.rank_name AS rankName,
+        t.team_name AS teamName,
+        pc.comm_content AS commContent,
+        pc.file_name AS fileName,
+        pc.file_path AS filePath,
+        pc.comm_date AS commDate
+    FROM
+        tbl_project_comm pc
+    JOIN tbl_emp e ON pc.emp_code = e.emp_code
+    JOIN tbl_rank r ON e.rank_code = r.rank_code
+    JOIN tbl_team t ON e.team_code = t.team_code
+    WHERE 
+        pc.project_no = #{projectNo}
+    ORDER BY 
+        pc.comm_date DESC
 	</select>
 
 	<select id="selectCommNo" parameterType="string"

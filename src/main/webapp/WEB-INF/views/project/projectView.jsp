@@ -246,8 +246,12 @@ th {
          </tr>
       </table>
       <%-- 세션에서 teamCode 가져오기 --%>
-       
-       <c:if test="${teamLeader eq '1'}">
+		<c:forEach var="team" items="${project.teamList}">
+			<c:if test="${team.teamCode eq loginEmp.teamCode}">
+				<c:set var="isUserTeamInProject" value="true" />
+			</c:if>
+		</c:forEach>
+		<c:if test="${isUserTeamInProject eq 'true' and teamLeader eq '1'}">
       <div class="teamEmps">
          <h2>추가 가능한 팀원 목록</h2>
          <table id="teamEmpTable">
