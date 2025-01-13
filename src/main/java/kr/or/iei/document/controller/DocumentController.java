@@ -1006,7 +1006,7 @@ public class DocumentController {
 			model.addAttribute("vacType",vacType);
 			
 			try {
-				Date vacDate = new SimpleDateFormat("yyyyMMdd").parse(half.getVacDate());
+				Date vacDate = new SimpleDateFormat("yyyy-MM-dd").parse(half.getVacDate());
 				String VacDate=format.format(vacDate);
 				model.addAttribute("vacDate", VacDate);
 			} catch (ParseException e) {
