@@ -68,6 +68,7 @@
 	background-color: black;	
 	}
 	
+
 	
 	.detail{
 		display: flex;
@@ -98,9 +99,9 @@
 	</div>
 	<div class="filter-container">
 	<div class="type-filter">
-		<button class="filter-btn" type="button" onclick="typeFilter('all')" value="all">전체</button>
+		<button class="filter-btn" type="button" onclick="typeFilter('all')" value="all">전체</button>		
 		<c:forEach var="type" items="${docTypeList }">
-			<button class="filter-btn" type="button" onclick="typeFilter('${type.documentTypeCode }')" value="${type.documentTypeCode }">${type.documentTypeName }</button>
+				<button class="filter-btn" type="button" onclick="typeFilter('${type.documentTypeCode }')" value="${type.documentTypeCode }">${type.documentTypeName }</button>
 		</c:forEach>
 	</div>
 	</div>
@@ -115,9 +116,17 @@ var obj=[];
 
 
 
-
 $(document).ready(function(){
-  
+
+  var filterLists=$('.type-filter');
+ 
+  filterLists.children().each(function(){
+	 var filterBtn=$(this).val();
+	 if(filterBtn=='${selType}'){
+		 console.log(filterBtn);
+		 $(this).css('background-color', '#292929');
+	 }
+  });
 
     <c:forEach var="doc" items="${docList}">
         var rowData = {

@@ -606,7 +606,7 @@ $('#title').on('input',function(){
 	function writeDocument() {
 	    const sign = $('#sign');
 	    const ref=$('#ref');
-	    const spending=$('#spending')
+	    const spending=$('#spending');
 	    
 	    const list = sign.children().length;
 	    if (list > 0) {
