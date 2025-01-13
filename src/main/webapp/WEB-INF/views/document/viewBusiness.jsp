@@ -32,12 +32,13 @@
 			justify-content: right;
 			margin: 0px;
 			padding:0px;
+			width:100%;
+			display: inline-block;
 			
         }
 
         .sign-box {
-            display: flex;
-            flex-direction: column;
+            display: inline-block;
             align-items: center;
             border: 1px solid black;
             margin:0;
