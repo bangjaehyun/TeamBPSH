@@ -278,7 +278,11 @@
 	                    <div class="detail-cell">${spend.spendingContent }</div>
 	                </div>
                 </c:forEach>
-                
+                <div class="detail-body">
+	                    <div class="detail-cell"></div>
+	                    <div class="detail-cell">총합</div>
+	                    <div class="detail-cell">${total }</div>
+	                </div>
             </div>
         </section>
         <div>

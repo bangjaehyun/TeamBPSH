@@ -1052,20 +1052,19 @@ public class DocumentController {
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			
-			
-
-	        
-	        
-	        
-		
+	
 		}
+			int total=0;
+			for(int i=0;i<spendingList.size();i++) {
+				total+=Integer.parseInt(spendingList.get(i).getSpendingCost());
+			}
 		doc.setFileList(fileList);
 		model.addAttribute("documentCode",documentCode);
 		model.addAttribute("signableEmp",signableEmp);
 		model.addAttribute("doc",doc);
 		model.addAttribute("signList", signList);
 		model.addAttribute("spendingList",spendingList);
+		model.addAttribute("total",total);
 		//결재 정보 불러와야 함.
 		
 		return "document/viewSpending";

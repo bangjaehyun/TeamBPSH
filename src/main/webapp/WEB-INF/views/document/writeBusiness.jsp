@@ -75,6 +75,7 @@
         border: none;
         border: 1px solid #ccc;
         border-radius: 5px;
+        outline: none;
         
        }
 
