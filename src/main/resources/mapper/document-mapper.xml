@@ -214,7 +214,7 @@
       document_type_code as documentTypeCode,
       document_type_name as documentTypeName
       from
-      tbl_document_type
+      tbl_document_type where document_type_code != 'pj'
    </select>
    
    <select id="selectSignList"
