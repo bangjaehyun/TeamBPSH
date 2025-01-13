@@ -195,7 +195,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>지출결의서</h1>
+            <h1>휴가신청서</h1>
         </header>
        
         <div class="header">
