@@ -890,7 +890,7 @@ public class DocumentController {
 			Alarm alarm = new Alarm();
 			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
 			alarm.setEmpCode(signs.get(0).getEmpCode());
-			alarm.setRefUrl("/doc/selectOneSp.do");
+			alarm.setRefUrl("/doc/selectOneCo.do");
 			
 			JSONObject json=new JSONObject();
 			json.put("documentCode", documentCode);
@@ -907,7 +907,7 @@ public class DocumentController {
 				Alarm refAlarm=new Alarm();
 				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
 				refAlarm.setEmpCode(refs.get(i).getEmpCode());
-				refAlarm.setRefUrl("/doc/selectOneSp.do");
+				refAlarm.setRefUrl("/doc/selectOneCo.do");
 				JSONObject json2=new JSONObject();
 				json2.put("documentCode", documentCode);
 				refAlarm.setUrlParam(json2.toJSONString());
