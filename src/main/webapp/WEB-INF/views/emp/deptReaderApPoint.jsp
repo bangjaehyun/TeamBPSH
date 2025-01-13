@@ -62,7 +62,7 @@
 	<div class="leader-wrap">
 		<table class="leader-tbl">
 			<tr>
-				<th>팀</th>
+				<th>부서</th>
 				<th>사원</th>
 				<th>변경</th>
 			</tr>

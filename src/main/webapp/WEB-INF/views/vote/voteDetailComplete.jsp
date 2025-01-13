@@ -105,13 +105,24 @@
 /*       font-size: 12px; */
 /*    } */
 /* } */
+.vote-top {
+	text-align: center;
+	margin: 0 auto;
+}
 
+.vote-top>span {
+	font-size: 25px;
+	font-weight: bold;
+}
 
 </style>
 </head>
 <body>
 	<div class="complete-wrap">
 		<div class="voteList-box">
+			<div class="vote-top">
+				<span>${vote.voteTitle}</span>
+			</div>
 			<c:forEach var="voteList" items="${vote.voteList}">
 				<div class="item-box">
 					<div class="item-header">

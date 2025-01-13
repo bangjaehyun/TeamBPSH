@@ -121,14 +121,14 @@
 	
 	 <script>
 	 	function changeTeam(obj){
-	 		$('#teamCode').children().remove();
+	 		 $(obj).parents('tr').find('#teamCode').children().remove();
 	 		<c:forEach var="team" items="${teamList}">
 			if("${team.deptCode}" == $(obj).val()){
 				var option = $("<option></option>");
 				$(option).html('${team.teamName}');
 				$(option).val('${team.teamCode}');
 				
-				$('#teamCode').append(option);
+				 $(obj).parents('tr').find('#teamCode').append(option);
 			}
 		</c:forEach>
 	 	}

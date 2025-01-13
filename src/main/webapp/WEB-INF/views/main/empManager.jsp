@@ -262,18 +262,18 @@
 		}
 		
 
-		function changeTeam(obj) {
-			$('#teamCode').children().remove();
-			<c:forEach var="team" items="${teamList}">
-			if ("${team.deptCode}" == $(obj).val()) {
+		function changeTeam(obj){
+	 		 $(obj).parents('tr').find('#teamCode').children().remove();
+	 		<c:forEach var="team" items="${teamList}">
+			if("${team.deptCode}" == $(obj).val()){
 				var option = $("<option></option>");
 				$(option).html('${team.teamName}');
 				$(option).val('${team.teamCode}');
-
-				$('#teamCode').append(option);
+				
+				 $(obj).parents('tr').find('#teamCode').append(option);
 			}
-			</c:forEach>
-		}
+		</c:forEach>
+	 	}
 
 		function changeEmp(obj) {
 			let empCode = $(obj).parent().parent().find('#empCode').html();

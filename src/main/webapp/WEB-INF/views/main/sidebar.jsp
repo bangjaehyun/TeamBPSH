@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,7 +78,7 @@
         }
         .side-text{
         	color : #434343;
-        	font-size: 13px;
+        	font-size: 11px;
         }
         .img-div{
         	height: 30px;
@@ -133,22 +134,24 @@
 					<p class="side-text">투표</p>
 				</div>
 			</li>
-			<li class="side-li">
-				<div class="side-div">
-					<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
-					<p class="side-text">관리자</p>
-				</div>
-				<ul class="side-sub">
-					<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="teamLeaderApPoint()">팀장 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="empCheck()">출퇴근 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="salesManager()">매출 관리</a></li>
-					<li><a href="javascript:void(0)" onclick="salarySend()">월급 전송</a></li>
-				</ul>
-			</li>
+			<c:if test="${loginEmp.empId eq 'admin'}">
+				<li class="side-li">
+					<div class="side-div">
+						<div class="img-div"><img class="side-img" src="/resources/images/side-project.png" /></div>
+						<p class="side-text">관리자</p>
+					</div>
+					<ul class="side-sub">
+						<li><a href="javascript:void(0)" onclick="empWait()">신규 회원 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="empManager()">회원 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="empDevelopPrice()">개발 단가 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="deptLeaderApPoint()">부서장 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="teamLeaderApPoint()">팀장 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="empCheck()">출퇴근 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="salesManager()">매출 관리</a></li>
+						<li><a href="javascript:void(0)" onclick="salarySend()">월급 전송</a></li>
+					</ul>
+				</li>
+			</c:if>
 		</ul>
     </div>
     <script>
