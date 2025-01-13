@@ -726,7 +726,7 @@
              spending_cost as spendingCost,
              spending_content as spendingContent,
              approve as approve
-       from tbl_spending where spending_day like #{yearMonth} || '%'and approve=1 order by spending_day
+       from tbl_spending where spending_day like #{yearMonth} || '%' and approve=1 order by spending_day
      </select>
 
 	<select id="selectSalaryHistory"

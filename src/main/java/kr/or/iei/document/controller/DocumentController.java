@@ -976,9 +976,12 @@ public class DocumentController {
 			vacType="annual";
 			model.addAttribute("vacType",vacType);
 			try {
-				SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
-				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				System.out.println(doc.getDocumentDate());
+				SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일", Locale.KOREAN);
+				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
+				//Date 형 format할 때 기존 입력 방식과 같이 해야한다. yyyy-MM-dd 형식이면 값도 yyyy-MM-dd, yyyyMMdd로 저장시 yyyyMMdd로 형식이 균일하게 저장해야 파싱이 된다.
 				String writeDate=format.format(writeDay);
+				System.out.println(writeDate);
 				doc.setDocumentDate(writeDate);
 				Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
 				Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay());
@@ -1039,7 +1042,7 @@ public class DocumentController {
 	        
 			
 			try {
-				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 				
 				String writeDate=format.format(writeDay);
 				doc.setDocumentDate(writeDate);
@@ -1091,7 +1094,7 @@ public class DocumentController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 		
 		try {
-			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 			String writeDate=format.format(writeDay);
 			doc.setDocumentDate(writeDate);
 			Date startDay = new SimpleDateFormat("yyyyMMdd").parse(business.getBusinessStart());
@@ -1136,7 +1139,7 @@ public class DocumentController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 		
 		try {
-			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 			String writeDate=format.format(writeDay);
 			doc.setDocumentDate(writeDate);
 			
@@ -1164,7 +1167,7 @@ public class DocumentController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 		
 		try {
-			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 			String writeDate=format.format(writeDay);
 			doc.setDocumentDate(writeDate);
 			
@@ -1479,7 +1482,7 @@ public class DocumentController {
 				
 				try {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-					Date documentDate = new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+					Date documentDate = new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 					String writeDay = dateFormat.format(documentDate);
 					String content=doc.getDocumentContent();
 					long totalPrice=0;
