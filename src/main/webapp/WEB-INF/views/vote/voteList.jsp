@@ -37,7 +37,7 @@
 .voteTbl th {
   background-color: #f4fedc;
 }
-.voteTbl.voteTbl-hover tbody > tr:hover {
+.voteTbl tbody > tr:hover {
   cursor: pointer;
   background-color: rgba(0, 76, 161, 0.1);
 }
@@ -99,9 +99,9 @@
 				<th>마감일</th>
 			</tr>
 			<c:forEach var="vote" items="${voteList}">
-				<tr class="vote-tr">
+				<tr class="vote-tr" onclick="voteDetail('${vote.voteNo}')">
 					<td>${vote.empName}</td>
-					<td><a href="javascript:void(0)" onclick="voteDetail('${vote.voteNo}')">${vote.voteTitle}</a></td>
+					<td>${vote.voteTitle}</td>
 					<td>${vote.voteContent}</td>
 					<td>${vote.voteStart}</td>
 					<td>${vote.voteEnd}</td>

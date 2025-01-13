@@ -161,7 +161,7 @@
 <body>
 	<div class="vote-wrap">
 		<div class="vote-top">
-			<span>투표 작성</span>
+			<span>${vote.voteTitle}</span>
 		</div>
 		<form action="/vote/insertVote" method="post" class="vote-val">
 			<div class="vote-date">
@@ -169,9 +169,6 @@
 			</div>
 			<div class="vote-writer">
 				<span>작성자</span> <span>${vote.empName}</span>
-			</div>
-			<div class="vote-title">
-				<span>제목</span> <span>${vote.voteTitle}</span>
 			</div>
 			<div class="vote-content">
 				<span>내용</span>
