@@ -27,9 +27,8 @@
    
 
       .signs {
-      		margin-left:10px;
-            display: flex;
-			justify-content: right;
+      		
+            text-align:right;
 			margin: 0px;
 			padding:0px;
 			width:100%;
@@ -42,6 +41,7 @@
             align-items: center;
             border: 1px solid black;
             margin:0;
+        	
            
         }
 
