@@ -29,7 +29,7 @@
 	p.project_no AS projectNo,
 	p.project_title AS projectTitle,
 	p.project_content AS projectContent,
-	p.project_end AS projectEnd,
+	to_char(to_date(p.project_end, 'YYYYMMDD'),'YYYY/MM/DD') AS projectEnd,
 	(TO_DATE(p.project_end, 'YYYYMMDD') - TO_DATE(p.project_start, 'YYYYMMDD') + 1) AS totalDays,
 	CASE
 	WHEN SYSDATE &lt; TO_DATE(p.project_start, 'YYYYMMDD') THEN 0
@@ -50,13 +50,12 @@
 		project_title AS
 		projectTitle,
 		project_content AS projectContent,
-		project_end AS
+		to_char(to_date(project_end,'YYYYMMDD'),'YYYY/MM/DD') AS
 		projectEnd
 		FROM
 		tbl_project
 		where tbl_project.project_no =
 		#{projectNo}
-
 	</select>
 
 	<select id="projectPartempList" parameterType="string"

@@ -10,199 +10,216 @@
 
 <style>
 * {
-   box-sizing: border-box;
+	box-sizing: border-box;
 }
+
 textarea {
-   resize: none;
+	resize: none;
 }
+
 .pjSection {
-	width:1500px;
+	width: 1500px;
 }
+
 #mainContainer {
-   justify-content: center;
-   width: calc(100vw - 55px);
-   height: calc(100vh - 50px);
-   gap: 10px;
-   background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
-   border-radius: 10px;
-   overflow:auto;
-   
+	justify-content: center;
+	width: calc(100vw - 55px);
+	height: calc(100vh - 50px);
+	gap: 10px;
+	background-color: #f9f9f9; /* 배경색 추가 (선택 사항) */
+	border-radius: 10px;
+	overflow: auto;
 }
 
 #pjHeader, #pjBody {
-   gap: 10px;
-   width: 100%;
-   border-collapse: collapse;
-   margin-bottom: 20px;
-   min-width: 100%;
+	gap: 10px;
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+	min-width: 100%;
+}
+
+#pjHeader {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#pjHeader th, #pjHeader td {
+    width: 25%; /* 4개의 컬럼이므로 균등 분배 */
+    text-align: center; /* 텍스트 가운데 정렬 */
+    padding: 10px; /* 패딩 추가 */
+    word-wrap: break-word; /* 긴 텍스트 자동 줄바꿈 */
 }
 
 th, td {
-   border: 1px solid #ddd;
-   padding: 10px;
-   text-align: left;
+	border: 1px solid #ddd;
+	padding: 10px;
+	text-align: left;
 }
 
 th {
-   background-color: #8FCEFF; /* 헤더 배경: 진한 파랑 */
-   color: #fff; /* 헤더 텍스트: 흰색 */
-   font-weight: bold;
+	background-color: #8FCEFF; /* 헤더 배경: 진한 파랑 */
+	color: #fff; /* 헤더 텍스트: 흰색 */
+	font-weight: bold;
 }
 
 .pjSection {
-   display: flex;
-   margin-bottom: 20px;
+	display: flex;
+	margin-bottom: 20px;
 }
 
 .pjSection .box {
-   border: 1px solid #ddd;
-   width:100%;
-   padding: 20px;
-   flex: 1;
-   margin-right: 20px;
+	border: 1px solid #ddd;
+	width: 100%;
+	padding: 20px;
+	flex: 1;
+	margin-right: 20px;
 }
 
 .pjSection .box:last-child {
-   margin-right: 0;
+	margin-right: 0;
 }
 
 .participants, .details {
-   margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .footer {
-    border: 1px solid #ddd;
-    padding: 20px;
-    text-align: center;
-    background-color: #8FCEFF;
-    border-radius: 10px;
-    color: white;
+	border: 1px solid #ddd;
+	padding: 20px;
+	text-align: center;
+	background-color: #8FCEFF;
+	border-radius: 10px;
+	color: white;
 }
 /* 댓글 입력 폼 */
 #footerSec {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: left;
+	background-color: white;
+	padding: 20px;
+	border-radius: 10px;
+	text-align: left;
 }
 /* 댓글 입력란 스타일 */
 #comment {
-    width: 100%;
-    height: 100px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 5px;
+	width: 100%;
+	height: 100px;
+	border: 1px solid #ccc;
+	padding: 10px;
+	font-size: 14px;
+	border-radius: 5px;
 }
 /* 파일 업로드 스타일 */
 #fileUpload {
-    display: block;
-    margin-top: 10px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+	display: block;
+	margin-top: 10px;
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 /* 댓글 추가 버튼 스타일 */
 #submitComment {
-    background-color: #DDDDFF;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+	background-color: #DDDDFF;
+	color: white;
+	padding: 10px 20px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 10px;
 }
 
 #submitComment:hover {
-    background-color: #003d82;
+	background-color: #003d82;
 }
 
-#commentsContainer{
-   display:flex;
-   list-style-type: none;
-   flex-direction: column;
-    align-items: flex-start; /* 세로 정렬 */
-    margin-bottom:5px;
+#commentsContainer {
+	display: flex;
+	list-style-type: none;
+	flex-direction: column;
+	align-items: flex-start; /* 세로 정렬 */
+	margin-bottom: 5px;
 }
 /* 각 댓글 스타일 */
 #commentsContainer li {
-    background: #fff;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    border-radius: 5px;
-    font-size: 14px;
-    color:#000;
+	background: #fff;
+	padding: 10px;
+	border: 1px solid #ddd;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	font-size: 14px;
+	color: #000;
 }
 
 /* 댓글 내 텍스트 */
 #commentsContainer li p {
-    margin: 0;
-    font-weight: bold;
-    color: #000;
+	margin: 0;
+	font-weight: bold;
+	color: #000;
 }
 
 /* 첨부파일 다운로드 링크 */
 #commentsContainer li a {
-    color: #007bff;
-    text-decoration: none;
-    font-size: 14px;
-    margin-left: 5px;
+	color: #007bff;
+	text-decoration: none;
+	font-size: 14px;
+	margin-left: 5px;
 }
 
 #commentsContainer li a:hover {
-    text-decoration: underline;
+	text-decoration: underline;
 }
-.editContent{
-   width: 100%;
-    height: 100px;
+
+.editContent {
+	width: 100%;
+	height: 100px;
 }
 
 /* 공통 버튼 스타일 */
 .comment-buttons button {
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 5px 5px 0 0;
+	border: none;
+	padding: 8px 12px;
+	border-radius: 5px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin: 5px 5px 0 0;
 }
 
 /* 수정 버튼 스타일 */
 .comment-buttons .edit-btn {
-    background-color: #fc8383; 
-    color: white;
+	background-color: #fc8383;
+	color: white;
 }
 
 .comment-buttons .edit-btn:hover {
-    background-color: #f9cfcf; 
+	background-color: #f9cfcf;
 }
 
 /* 삭제 버튼 스타일 */
 .comment-buttons .delete-btn {
-    background-color: #a5a5ff; 
-    color: white;
+	background-color: #a5a5ff;
+	color: white;
 }
 
 .comment-buttons .delete-btn:hover {
-    background-color: #DDDDFF; 
+	background-color: #DDDDFF;
 }
 
 #teamEmpTable thead th, tbody td {
-   width:200px;
-}
-#teamEmpTable thead th:nth-child(4), tbody td:nth-child(4) {
-   width: 700px;
-}
-#teamEmpTable tbody td:nth-child(4) textarea {
-   width: 100%;
-   height:100%;
-}
-#teamEmpTable thead th:nth-child(5), tbody td:nth-child(5) {
-   width: 37px;
+	width: 200px;
 }
 
+#teamEmpTable thead th:nth-child(4), tbody td:nth-child(4) {
+	width: 700px;
+}
+
+#teamEmpTable tbody td:nth-child(4) textarea {
+	width: 100%;
+	height: 100%;
+}
+
+#teamEmpTable thead th:nth-child(5), tbody td:nth-child(5) {
+	width: 37px;
+}
 </style>
 </head>
 <body>
@@ -215,11 +232,11 @@ th {
             <th>프로젝트 번호</th>
             <td id="projectNo">${project.projectNo}</td>
             <th>프로젝트 이름</th>
-            <td>${project.projectTitle}</td>
+            <td id="projectTitle">${project.projectTitle}</td>
          </tr>
          <tr>
             <th>프로젝트 참가팀</th>
-            <td>
+            <td id="projectTeam">
             <c:forEach var="team" items="${project.teamList}" varStatus="status">
                  ${team.teamName} <c:if test="${!status.last}">, </c:if>
              </c:forEach>
@@ -249,7 +266,7 @@ th {
                      <td id="addProjectempCode">${addProjectEmp.empCode}</td>
                      <td>${addProjectEmp.empName}</td>
                      <td>${addProjectEmp.rankName}</td>
-                     <td id="addProjectContent"><textarea>test값</textarea>
+                     <td id="addProjectContent"><textarea placeholder="사원들의 업무를 상세하게 작성하세요"></textarea>
                      <c:if test="${teamLeader eq '1' and loginEmp.teamCode eq addProjectEmp.teamCode}">
                      <td><button id="addPartEmp">추가</button></td>
                      </c:if>

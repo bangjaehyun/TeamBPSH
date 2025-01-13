@@ -32,7 +32,7 @@
 }
 
 /* 텍스트 입력 */
-content-section>textarea {
+textarea {
     width: 100%;
     height:100%;
     border: none;

@@ -35,8 +35,8 @@
 /* 카드 스타일 */
 .doc {
 	flex: 1 1 calc(20% - 30px); /* 너비는 부모의 50%, 간격 포함 */
-	min-width: 400px; /* 최소 너비 설정 */
-	max-width: 600px; /* 최대 너비 설정 */
+	min-width: 500px; /* 최소 너비 설정 */
+	max-width: 700px; /* 최대 너비 설정 */
 	background-color: #f9f9f9;
 	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 	overflow: hidden;
@@ -162,39 +162,6 @@ table tr:hover {
 	<div class="content">
 		<input type="hidden" name="empCode" value="${loginEmp.empCode}">
 		<div class="docType">
-			<div class="doc">
-				<div class="docTitle">
-					<div class="docName">
-						<div>
-							이메일 &nbsp
-							<div>
-								<p>${loginEmp.empId}@도메인</p>
-							</div>
-						</div>
-						<div id="emailWrite">신규</div>
-					</div>
-					<div>
-						<table border="1">
-							<thead>
-								<tr class="docContent">
-									<th>글쓴이</th>
-									<th>제목</th>
-									<th>날짜</th>
-									<th>첨부파일</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr class="docList">
-									<td>이름</td>
-									<td>제목</td>
-									<td>발송날짜</td>
-									<td>갯수</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
 		</div>
 		<%--문서 타입별 출력될 div --%>
 	</div>
@@ -331,7 +298,7 @@ table tr:hover {
 					break;
 				}
 				
-				case 'pt':{
+				case 'pj':{
 					urls+="selectOnePt.do";
 					break;
 				}
