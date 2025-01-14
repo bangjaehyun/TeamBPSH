@@ -269,7 +269,7 @@
         <div>
             <div class="file">
                 <span>첨부파일</span>
-                <c:forEach var="file" items="${doc.fileList}">
+                <c:forEach var="file" items="${fileList}">
                     <a href="javascript:void(0)" onclick="fileDown('${file.fileName}', '${file.filePath}',)">${file.fileName} </a>
                 </c:forEach>
                 

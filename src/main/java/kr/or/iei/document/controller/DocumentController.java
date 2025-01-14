@@ -1543,7 +1543,7 @@ public class DocumentController {
 		return result;
 	}
 	
-	@GetMapping("fileDown.do")
+	@GetMapping("fileDown")
 	@ResponseBody
 	public int downloadFile(HttpServletRequest request, HttpServletResponse response, String fileName, String filePath) {
 	    String root = request.getSession().getServletContext().getRealPath("/resources/");
