@@ -243,7 +243,7 @@ table tr:hover {
 															+ '</td>' + '<td>'
 															+ doc.documentDate
 															+ '</td>'
-															+ '<td>갯수</td>';
+															+ '<td>' + doc.fileCount +'개</td>';
 															//결과에 따라 css 처리할려고
 													if (doc.progress === '결제 완료') {
 														row += '<td class="completedSign">결제완료</td>';

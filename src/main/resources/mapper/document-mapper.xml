@@ -29,10 +29,11 @@
          tbl_document.document_code as documentCode,
          tbl_document.document_type_code as documentTypeCode,
          tbl_document.document_title as documentTitle,
-         to_char(tbl_document.document_date, 'YYYYMMDD HH:MI') as documentDate,
+         to_char(tbl_document.document_date, 'YYYY-MM-DD HH:MI') as documentDate,
          tbl_emp.emp_name as empName,
          tbl_document_type.document_type_name as documentTypeName,
-            tbl_document_sign.sign_yn as progress
+            tbl_document_sign.sign_yn as progress,
+       (select count(*) from tbl_files where document_code = document_code) as fileCount
       from tbl_document 
       join tbl_emp
       on tbl_document.emp_code = tbl_emp.emp_code
