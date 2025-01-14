@@ -249,7 +249,7 @@ public class DocumentService {
 				String spendingCode=dao.getSpendingCode();
 				
 				   
-				        String[] details = spend.split(" "); // 세부 정보 분리
+				        String[] details = spend.split("#"); // 세부 정보 분리
 				        String spendingDay = details[0].replace("-", "");
 				        String spendingCost = details[1];
 				        String spendingContent = details[2];

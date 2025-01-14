@@ -626,7 +626,7 @@ $('#title').on('input',function(){
 	       checkDocument.spending=true;
 	        const spendingDay = $(this).find('input[name="spendingDay"]').val();
 	        const spendingCost = $(this).find('input[name="spendingCost"]').val();
-	        const spendingContent = $(this).find('input[name="spendingContent"]').val();
+	        const spendingContent = $(this).find('input[name="spendingContent"]').val().trim();
 	        const regExp = /^[0-9]*$/;
 	        
 	        if(spendingDay.length==0||spendingCost.length==0||spendingContent.length==0){
@@ -638,7 +638,8 @@ $('#title').on('input',function(){
 				checkDocument.cost=false;
 				return;
 			}
-	       const spend=spendingDay+' '+spendingCost+' '+spendingContent;
+	       const spend=spendingDay+"#"+spendingCost+"#"+spendingContent;
+	       console.log(spend);
 	        spendingList.push(spend);
 	        
 	    });
