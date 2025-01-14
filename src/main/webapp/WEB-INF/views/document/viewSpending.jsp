@@ -185,8 +185,8 @@
   
 	.sign-content{
 		margin-top:2%;
-		width:50%;
-		display: inline-block;
+		
+		
 	}
     .sign-text{
     	display:flex;

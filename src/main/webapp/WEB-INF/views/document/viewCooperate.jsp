@@ -130,7 +130,7 @@
 
    
     .detail-team{
-    	
+    	width:100%;
     	display: inline-block;
     }
 
