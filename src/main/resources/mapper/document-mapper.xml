@@ -11,13 +11,10 @@
       tbl_document.document_content as documentContent,
       tbl_document.emp_code as empCode,
       to_char(tbl_document.document_date, 'YYYYMMDD HH:MI') as documentDate,
-      tbl_document_type.document_type_name as documentTypeName,
-        tbl_document_sign.sign_yn as progress
+      tbl_document_type.document_type_name as documentTypeName
       from tbl_document 
       join tbl_document_type
       on tbl_document.document_type_code = tbl_document_type.document_type_code
-        join tbl_document_sign
-        on tbl_document_sign.emp_code = tbl_document.emp_code
         where tbl_document.document_type_code != 'pj' and tbl_document.emp_code = #{empCode}
       
    </select>
