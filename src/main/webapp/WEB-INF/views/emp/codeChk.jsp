@@ -1,10 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>BHP SYSTEM</title>
+<link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon"/>
+<link rel="icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon"/>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <style>
@@ -73,11 +76,8 @@
 	function success(){
 		
 		let inCode = $('input[name="inCode"]').val();
-		let code = '${code}';
 		
-		console.log(code);
-		
-		if(inCode != code){
+		if(inCode != '${code}'){
 			swal({
 				title : "확인",
 				text : "인증 번호가 일치하지 않습니다.",

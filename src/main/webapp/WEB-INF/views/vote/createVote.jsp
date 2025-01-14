@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>BHP SYSTEM</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" type="text/css;" />
 <style>
 * {
@@ -175,6 +175,12 @@
 		</form>
 	</div>
 	<script>
+	$(document).ready(function(){
+		let today = new Date();
+
+		$('#voteEnd').attr('min', today.toISOString().substring(0,10));
+	});
+	
 	function addVote(){
 		let divEl = $('<div>');
 		divEl.addClass('vote')

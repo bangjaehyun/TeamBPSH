@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>BHP SYSTEM</title>
 <style>
 	.total-wrap{
 		min-width: 1400px;

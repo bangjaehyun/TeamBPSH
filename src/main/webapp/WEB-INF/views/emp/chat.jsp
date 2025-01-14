@@ -5,7 +5,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>BHP SYSTEM</title>
+<link rel="shortcut icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon"/>
+<link rel="icon" href="<c:url value='/resources/images/favicon.ico'/>" type="image/x-icon"/>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <style>
@@ -250,7 +252,7 @@
 	let fn = {
 		init : function () {
 			<%-- 소켓 연결 --%>
-			ws = new WebSocket("ws://192.168.10.48/emp/doChat.do");
+			ws = new WebSocket("ws://192.168.10.6/emp/doChat.do");
 			
 			<%-- 연결 시, 이벤트 핸들러 --%>
 			ws.onopen = function(){

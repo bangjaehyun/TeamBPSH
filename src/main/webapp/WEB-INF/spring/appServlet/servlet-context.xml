@@ -26,6 +26,9 @@
 	<context:component-scan base-package="kr.or.iei" />
 	
 	<context:component-scan base-package="com.spring.test" />
+	
+	<resources location="/resorces/images" mapping="/resorces/**"></resources>
+	
     <task:annotation-driven/>
 	
 	

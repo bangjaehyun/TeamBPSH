@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>BHP SYSTEM</title>
 <style>
  .container {
     width: 100%; /* 부모 모달 창에 맞게 너비 조정 */

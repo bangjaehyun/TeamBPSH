@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>BHP SYSTEM</title>
 
 <link rel="stylesheet" href="/resources/summernote/summernote-lite.css"/>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
