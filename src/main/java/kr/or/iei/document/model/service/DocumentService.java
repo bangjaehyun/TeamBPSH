@@ -26,6 +26,7 @@ import kr.or.iei.emp.model.vo.Alarm;
 import kr.or.iei.emp.model.vo.Commute;
 import kr.or.iei.emp.model.vo.DevelopPrice;
 import kr.or.iei.emp.model.vo.Emp;
+import kr.or.iei.emp.model.vo.Team;
 
 @Service("documentService")
 public class DocumentService {
@@ -623,6 +624,11 @@ public class DocumentService {
 		// TODO Auto-generated method stub
 		
 		return dao.insertSales(map);
+	}
+
+	public ArrayList<Cooperate> selectCoopTeamList(String documentCode) {
+		// TODO Auto-generated method stub
+		return (ArrayList<Cooperate>)dao.selectCooperate(documentCode);
 	}
 
 	

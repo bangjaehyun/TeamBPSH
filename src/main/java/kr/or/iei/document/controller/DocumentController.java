@@ -1510,6 +1510,31 @@ public class DocumentController {
 				
 				break;
 			}
+			case "co":{
+				ArrayList<Cooperate>teamList=service.selectCoopTeamList(documentCode);
+				for(int i=0;i<teamList.size();i++) {
+					HashMap<String,String>empListMap=new HashMap<String, String>();
+					System.out.println(empListMap);
+					empListMap.put("teamCode", teamList.get(i).getTeamCode());
+					ArrayList<Emp>list=service.filterEmp(empListMap);
+					System.out.println(list);
+					for(int j=0;j<list.size();j++) {
+						
+						Alarm alarm2 = new Alarm();
+						alarm2.setAlarmComment("새로운 협조사항입니다.");
+						alarm2.setEmpCode(list.get(j).getEmpCode());
+						alarm2.setRefUrl("/doc/selectOneCo.do");
+						JSONObject json3=new JSONObject();
+						json3.put("documentCode", documentCode);
+						alarm2.setUrlParam(json3.toJSONString());
+						int res3=service.insertAlarm(alarm2);
+						if(res3>0) {
+							emitter.sendEvent(alarm2.getEmpCode(), alarm2.getAlarmComment());
+						}
+					}
+				}
+				
+			}
 			
 			
 			}
