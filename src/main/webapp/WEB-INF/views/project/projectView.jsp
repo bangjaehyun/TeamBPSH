@@ -246,11 +246,13 @@ th {
             <tbody>
                <c:forEach var="addProjectEmp" items="${addProjectEmp}">
                   <tr>
-                     <td>${addProjectEmp.empCode}</td>
+                     <td id="addProjectempCode">${addProjectEmp.empCode}</td>
                      <td>${addProjectEmp.empName}</td>
                      <td>${addProjectEmp.rankName}</td>
-                     <td><textarea>test값</textarea>
+                     <td id="addProjectContent"><textarea>test값</textarea>
+                     <c:if test="${teamLeader eq '1' and loginEmp.teamCode eq addProjectEmp.teamCode}">
                      <td><button id="addPartEmp">추가</button></td>
+                     </c:if>
                   </tr>
                </c:forEach>
             </tbody>
@@ -261,13 +263,14 @@ th {
       <div class="participants">
          <h2>참여 사원 리스트</h2>
          <table id="pjBody">
+         
             <thead>
                <tr>
                   <th>사원 번호</th>
                   <th>이름</th>
                   <th>직급</th>
                   <th>역할</th>
-                  <c:if test="${teamLeader eq '1'}">
+                  <c:if test="${teamLeader eq '1' }">
                   <th>삭제</th>
                   </c:if>
                </tr>
@@ -279,7 +282,7 @@ th {
                      <td>${projectPartempList.empName}</td>
                      <td>${projectPartempList.rankName}</td>
                      <td>${projectPartempList.partempContent}</td>
-                     <c:if test="${teamLeader eq '1'}">
+                     <c:if test="${teamLeader eq '1' and loginEmp.teamCode eq projectPartempList.teamCode}">
                      <td>
                              <button id="removeEmp">삭제</button>
                            </td>
@@ -477,6 +480,8 @@ th {
           if (newFile) {
               formData.append("newFile", newFile);
               formData.append("commGb", "1"); // 새 파일 업로드 시 commGb = 1
+          }else if(!deleteFileChecked) {
+        	  formData.append("commGb",commGb);
           }
          
           $.ajax({
@@ -487,8 +492,14 @@ th {
               contentType: false,
               success: function(response) {
                   if (response.success) {
-                      alert("댓글이 수정되었습니다.");
-                      loadComment(); 
+                	  swal({
+	                        title: "완료",
+	                        text: "댓글 수정이 완료되었습니다.",
+	                        icon: "success"
+	                    }).then(function() {
+	                    	loadComment(); 
+	                    });
+                      
                   } else {
                       alert("댓글 수정 실패");
                   }
@@ -506,12 +517,8 @@ th {
           loadComment(); // 댓글 목록 다시 불러와서 원래 내용으로 복구
       });
       
-      function deleteComment(commNo) {
-          if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) {
-              return;
-          }
 
-          console.log("🔴 삭제할 댓글 번호:", commNo);
+          
 
           $.ajax({
               url: "/project/deleteComment.do",
@@ -520,9 +527,13 @@ th {
               dataType: "json",
               success: function(response) {
                   if (response.success) {
-                      console.log("✅ 댓글 삭제 성공: ", commNo);
-                      alert("댓글이 삭제되었습니다.");
-                      loadComment(); // 삭제 후 댓글 목록 다시 로드
+                      swal({
+	                        title: "완료",
+	                        text: "댓글 삭제가 완료되었습니다.",
+	                        icon: "success"
+	                    }).then(function() {
+	                    	loadComment(); 
+	                    });
                   } else {
                       console.log("❌ 댓글 삭제 실패");
                       alert("댓글 삭제에 실패했습니다.");
@@ -543,27 +554,28 @@ th {
            // ✅ 프로젝트 진행률 차트
            try {
                // 📌 JSON 데이터 변환
+               
                const teamDataString = '<c:out value="${teamListJson}" escapeXml="false" />';
                const progressDataString = '<c:out value="${progressRate}" escapeXml="false" />';
-
+               
                console.log("원본 팀 데이터 (문자열):", teamDataString);
                console.log("원본 진행률 데이터 (문자열):", progressDataString);
 
                // JSON 파싱 후 배열로 변환
                const teamData = JSON.parse(teamDataString);
                const progressData = JSON.parse(progressDataString);
-
+               
                console.log("팀 데이터 (객체 변환):", teamData);
                console.log("진행률 데이터 (객체 변환):", progressData);
 
                // ⚠️ 데이터가 비어 있는 경우 예외 처리
                if (!teamData || !Array.isArray(teamData) || teamData.length === 0) {
                    console.error("⚠️ teamData가 비어 있습니다.");
-                   return;
+                   
                }
                if (!progressData || !Array.isArray(progressData) || progressData.length === 0) {
                    console.error("⚠️ progressData가 비어 있습니다.");
-                   return;
+                
                }
 
                // 📌 teamName 배열 변환 (팀별 진행률 차트)
@@ -609,7 +621,7 @@ th {
                                    tooltip: {
                                        callbacks: {
                                            label: function (tooltipItem) {
-                                               return `${tooltipItem.label}: ${tooltipItem.raw}%`;
+                                               return tooltipItem.raw + '%';
                                            }
                                        }
                                    }
@@ -650,7 +662,7 @@ th {
                                    tooltip: {
                                        callbacks: {
                                            label: function (tooltipItem) {
-                                               return `${tooltipItem.raw}%`;
+                                               return tooltipItem.raw + '%';
                                            }
                                        }
                                    }
@@ -709,12 +721,15 @@ th {
 
           // 📌 팀원 추가 버튼 클릭 이벤트 (동적 요소 적용)
           $(document).on('click', '#addPartEmp', function () {
-              let projectNo = $('#projectNo').text();
-              let empCode = $(this).closest('tr').find('td:first-child').text().trim();
-              let partempContent = $(this).closest('tr').find('td:nth-child(4) textarea').val().trim();
+        	  let projectNo = $('#projectNo').text();
+        	    let empCode = $(this).parents('tr').find('#addProjectempCode').text().trim();
+        	    let partempContent = $(this).parents('tr').find('#addProjectContent textarea').val().trim();
+              	
+        	    let button = $(this); // 클릭한 버튼 참조
+        	    if (button.prop('disabled')) return; // 이미 클릭한 경우 실행 방지
 
-              console.log("✅ 추가할 팀원:", { projectNo, empCode, partempContent });
-
+        	    button.prop('disabled', true); // 버튼 비활성화 (중복 클릭 방지)
+        	    
               $.ajax({
                   url: '/project/addProjectPartemp.do',
                   type: 'POST',
@@ -724,7 +739,7 @@ th {
                       partempContent: partempContent
                   },
                   success: function (res) {
-                      console.log("✅ 서버 응답:", res);
+                      
                       if (res > 0) {
                     	  swal({
                               title : "완료",
@@ -736,9 +751,9 @@ th {
                            });
                       } else {
                     	  swal({
-                              title : "완료",
-                              text : "프로젝트 생성이 완료되었습니다.",
-                              icon : "success"
+                              title : "실패",
+                              text : "팀원 추가 중 오류가 발생하였습니다.",
+                              icon : "error"
                            }).then(function(){
 
                               pageMove('/project/list.do');
@@ -754,14 +769,11 @@ th {
           // 📌 팀원 제거 버튼 클릭 이벤트 (동적 요소 적용)
           $(document).on('click', '#removeEmp', function () {
               let projectNo = $('#projectNo').text();
-              let empCode = $(this).closest('tr').find('td:first-child').text().trim();
+              let row = $(this).closest('tr'); // 클릭한 버튼이 속한 행 가져오기
+              let empCode = row.find('td:first-child').text().trim();
+              
 
-              console.log("✅ 제거할 팀원:", { projectNo, empCode });
-
-              if (!confirm("정말 해당 팀원을 제거하시겠습니까?")) {
-                  return;
-              }
-
+              
               $.ajax({
                   url: '/project/removeEmp.do',
                   type: 'POST',
@@ -770,16 +782,34 @@ th {
                       empCode: empCode
                   },
                   success: function (res) {
-                      console.log("✅ 서버 응답:", res);
-                      if (res > 0) {
-                          alert("팀원이 제거되었습니다.");
-                          location.reload();
+                      
+                      if (parseInt(res) > -1) {
+                    	  swal({
+                              title : "완료",
+                              text : "팀원 제거 되었습니다.",
+                              icon : "success"
+                           }).then(function(){
+                        	   row.remove();
+                        	   setTimeout(function () {
+                               }, 500);
+                              pageMove('/project/list.do');
+                           });
                       } else {
-                          alert("팀원 제거 중 오류 발생");
+                    	  swal({
+                              title : "실패",
+                              text : "팀원 제거 중 오류가 발생하였습니다.",
+                              icon : "error"
+                           }).then(function(){
+
+                              pageMove('/project/list.do');
+                           });
                       }
                   },
                   error: function () {
                       console.error("⚠️ Ajax 오류 발생");
+                  },
+                  complete: function () {
+                      button.prop('disabled', false); // ✅ AJAX 완료 후 버튼 다시 활성화
                   }
               });
           });

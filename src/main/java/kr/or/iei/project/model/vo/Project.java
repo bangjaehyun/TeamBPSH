@@ -11,7 +11,24 @@ public class Project {
 	private String projectContent;
 	private String projectEnd;
 	private String empCode;
+	private String projectStart;
 	
+	public String getProjectStart() {
+		return projectStart;
+	}
+
+
+	public void setProjectStart(String projectStart) {
+		this.projectStart = projectStart;
+	}
+
+
+	public Project(String projectStart) {
+		super();
+		this.projectStart = projectStart;
+	}
+
+
 	//종속 변수
 	private String documentDate;
 	private ArrayList<Team> teamList;
@@ -195,9 +212,10 @@ public class Project {
 	public String toString() {
 		return "Project [projectNo=" + projectNo + ", documentTypeCode=" + documentTypeCode + ", projectTitle="
 				+ projectTitle + ", projectContent=" + projectContent + ", projectEnd=" + projectEnd + ", empCode="
-				+ empCode + ", documentDate=" + documentDate + ", teamList=" + teamList + ", empName=" + empName
-				+ ", teamLeader=" + teamLeader + ", projectPartemp=" + projectPartemp + ", projectTeam=" + projectTeam
-				+ ", projectProgressRate=" + projectProgressRate + ", teamProgressRate=" + teamProgressRate + "]";
+				+ empCode + ", projectStart=" + projectStart + ", documentDate=" + documentDate + ", teamList="
+				+ teamList + ", empName=" + empName + ", teamLeader=" + teamLeader + ", projectPartemp="
+				+ projectPartemp + ", projectTeam=" + projectTeam + ", projectProgressRate=" + projectProgressRate
+				+ ", teamProgressRate=" + teamProgressRate + "]";
 	}
 
 

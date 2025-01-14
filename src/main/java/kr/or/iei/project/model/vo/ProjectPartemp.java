@@ -11,10 +11,33 @@ public class ProjectPartemp {
 	private String teamCode;
 	private String rankCode;
 	private String empName;
+	private String teamName;
 	
+	public ProjectPartemp(String partempNo, String projectNo, String empCode, String partempContent, String rankName,
+			String teamCode, String rankCode, String empName, String teamName) {
+		super();
+		this.partempNo = partempNo;
+		this.projectNo = projectNo;
+		this.empCode = empCode;
+		this.partempContent = partempContent;
+		this.rankName = rankName;
+		this.teamCode = teamCode;
+		this.rankCode = rankCode;
+		this.empName = empName;
+		this.teamName = teamName;
+	}
+
 	public ProjectPartemp() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
 	}
 
 	public ProjectPartemp(String partempNo, String projectNo, String empCode, String partempContent, String rankName,
@@ -98,7 +121,7 @@ public class ProjectPartemp {
 	public String toString() {
 		return "ProjectPartemp [partempNo=" + partempNo + ", projectNo=" + projectNo + ", empCode=" + empCode
 				+ ", partempContent=" + partempContent + ", rankName=" + rankName + ", teamCode=" + teamCode
-				+ ", rankCode=" + rankCode + ", empName=" + empName + "]";
+				+ ", rankCode=" + rankCode + ", empName=" + empName + ", teamName=" + teamName + "]";
 	}
 
 	

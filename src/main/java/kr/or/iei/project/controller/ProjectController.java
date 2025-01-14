@@ -58,6 +58,7 @@ public class ProjectController {
 	public String getProject(String teamCode){
 		
 		ArrayList<Project> project = service.getProjects(teamCode);
+		
 		 return new Gson().toJson(project); 
 	}
 	

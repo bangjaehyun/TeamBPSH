@@ -202,6 +202,7 @@ public class DocumentController {
 	@ResponseBody
 	public String apiDocumentList(String empCode) {
 		ArrayList<Document> list = service.apiDocumentList(empCode);
+		
 		return new Gson().toJson(list);
 	}
 

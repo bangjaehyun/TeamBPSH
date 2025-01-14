@@ -32,7 +32,7 @@
 }
 
 /* 텍스트 입력 */
-textarea {
+content-section>textarea {
     width: 100%;
     height:100%;
     border: none;
@@ -94,10 +94,23 @@ button {
                 dataType: 'json',
                 success: function (response) {
                     if (response.success) {
-                        alert(response.message);
-                        $('#controllerModal').removeClass('show');
+                    	swal({
+	                        title: "완료",
+	                        text: "일일 업무일지 작성이 완료되었습니다.",
+	                        icon: "success"
+	                    }).then(function() {
+	                    	$('#controllerModal').removeClass('show');
+	                    	pageMove('/emp/calendar.do');
+	                    });
+                        
                     } else {
-                        alert(response.message);
+                    	swal({
+	                        title: "실패",
+	                        text: "일일 업무일지 작성 중 오류가났습니다.",
+	                        icon: "error"
+	                    }).then(function() {
+	                    	
+	                    });
                     }
                 },
                 error: function () {

@@ -118,6 +118,7 @@ public class ProjectService {
 		params.put("projectNo", projectNo);
 		params.put("empCode", empCode);
 		params.put("partempContent", partempContent);
+		System.out.println(params);
 		return dao.addProjectPartemp(params);
 		
 	}

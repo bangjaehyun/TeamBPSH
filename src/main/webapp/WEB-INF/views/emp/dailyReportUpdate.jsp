@@ -28,7 +28,6 @@
     font-size: 14px;
     line-height: 1.6;
     box-sizing: border-box;
-    overflow-y: auto; /* 스크롤 가능 */
     padding: 10px; /* 여백 추가 */
 }
 
@@ -90,10 +89,22 @@ button {
                     dataType: 'json',
                     success: function (response) {
                         if (response.success) {
-                            alert(response.message);
-                            $('#controllerModal').removeClass('show');
+                        	swal({
+    	                        title: "완료",
+    	                        text: "일일 업무일지 수정이 완료되었습니다.",
+    	                        icon: "success"
+    	                    }).then(function() {
+    	                    	$('#controllerModal').removeClass('show');
+    	                    });
+                            
                         } else {
-                            alert(response.message);
+                        	swal({
+    	                        title: "실패",
+    	                        text: "일일 업무일지 수정 중 오류가났습니다.",
+    	                        icon: "error"
+    	                    }).then(function() {
+    	                    	$('#controllerModal').removeClass('show');
+    	                    });
                         }
                     },
                     error: function () {
