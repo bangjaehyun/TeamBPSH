@@ -87,6 +87,7 @@ button:hover{
 		width:550px;
 		border:none;
 		font-size: 18px;
+		outline: none;
 	}
 
 /* 결재자 및 참조자 버튼 스타일 */
@@ -428,7 +429,10 @@ button:hover{
 var checkDocument={
 		"docTitle":	false,
 		"sign":		false,
-		"workDate": false
+		"workDate": false,
+		"people":	false,
+		"list":		false,
+		"price":	false
 		
 };
 
@@ -492,7 +496,7 @@ function selectprice(event) {
     if (matchedPrice) {
         priceInput.value = (matchedPrice.price * 1.1).toFixed(0);
     } else {
-        priceInput.value = '해당하는 인원이 없습니다.';
+        priceInput.value = 0;
     }
 
     // 합계 계산
@@ -790,8 +794,9 @@ $('#title').on('input',function(){
 	
 	
 	function writeDocument() {
-		
+		checkDocument.people=true;
 		checkDocument.list=true;
+		checkDocument.price=true;
 	    const sign = $('#sign');
 	    const ref=$('#ref');
 	    const days = $('#days').val();
@@ -820,10 +825,17 @@ $('#title').on('input',function(){
 	         const people = $(this).find('input[name="people"]').val();
 	         const team = $(this).find('.team').val();
 	         const rank = $(this).find('.rank').val();
-	        if(people<1||days<1){
-	        	alert("작업일수 및 인원수는 최소 1 이상입니다.");
+	        if(people<1){
+	        	checkDocument.people=false;
 	        	return;
 	        }
+	       if(team.length==0||rank.length==0){
+	    	   checkDocument.list=false;
+	       }
+	       if(price==0){
+	    	   checkDocument.price=false;
+	    	   return;
+	       }
 	         estimate+= team +' '+rank+' '+price+' '+people+' '+days;
 	         
 	         estimateList.push(estimate);
@@ -839,7 +851,9 @@ $('#title').on('input',function(){
 	                case "docTitle": msg("알림","제목을 작성하시오.","error","0"); break;
 	                case "sign": msg("알림","최소1명의 결재자가 필요합니다.","error","0"); break;
 	                case "workDate": msg("알림","날짜가 입력되지 않았습니다.","error","0");break;
-	                
+	                case "people":msg("알림","인원수가 누락되었습니다.","error","0");break;
+	                case "list":msg("알림","팀과 직급을 확인해 주세요.","error","0");break;
+	                case "price":msg("알림","단가가 책정되지 않은 인원이 있는지 확인해 주세요.","error","0");break;
 	                //중복체크는 확인시 다시 값 초기화
 	                
 	               

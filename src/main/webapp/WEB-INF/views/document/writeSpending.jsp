@@ -82,6 +82,7 @@ button:hover{
 		width:550px;
 		border:none;
 		font-size: 18px;
+		outline: none;
 	}
 
 /* 결재자 및 참조자 버튼 스타일 */
@@ -605,7 +606,7 @@ $('#title').on('input',function(){
 	function writeDocument() {
 	    const sign = $('#sign');
 	    const ref=$('#ref');
-	    const spending=$('#spending')
+	    const spending=$('#spending');
 	    
 	    const list = sign.children().length;
 	    if (list > 0) {

@@ -128,6 +128,7 @@ public class DocumentController {
 			
 			ArrayList<Document> documentList=service.selectList(type);
 			ArrayList<DocumentType> docTypeList=service.selectDocType();
+			m.addAttribute("selType",type);
 			m.addAttribute("docList", documentList);
 			m.addAttribute("docTypeList",docTypeList);
 			return "document/documentList";
@@ -891,7 +892,7 @@ public class DocumentController {
 			Alarm alarm = new Alarm();
 			alarm.setAlarmComment(signs.get(0).getEmpName()+"님 결재할 차례입니다");
 			alarm.setEmpCode(signs.get(0).getEmpCode());
-			alarm.setRefUrl("/doc/selectOneSp.do");
+			alarm.setRefUrl("/doc/selectOneCo.do");
 			
 			JSONObject json=new JSONObject();
 			json.put("documentCode", documentCode);
@@ -908,7 +909,7 @@ public class DocumentController {
 				Alarm refAlarm=new Alarm();
 				refAlarm.setAlarmComment("참조할 문서가 있습니다.");
 				refAlarm.setEmpCode(refs.get(i).getEmpCode());
-				refAlarm.setRefUrl("/doc/selectOneSp.do");
+				refAlarm.setRefUrl("/doc/selectOneCo.do");
 				JSONObject json2=new JSONObject();
 				json2.put("documentCode", documentCode);
 				refAlarm.setUrlParam(json2.toJSONString());
@@ -977,9 +978,12 @@ public class DocumentController {
 			vacType="annual";
 			model.addAttribute("vacType",vacType);
 			try {
+				System.out.println(doc.getDocumentDate());
 				SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
-				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
+				//Date 형 format할 때 기존 입력 방식과 같이 해야한다. yyyy-MM-dd 형식이면 값도 yyyy-MM-dd, yyyyMMdd로 저장시 yyyyMMdd로 형식이 균일하게 저장해야 파싱이 된다.
 				String writeDate=format.format(writeDay);
+				System.out.println(writeDate);
 				doc.setDocumentDate(writeDate);
 				Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
 				Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay());
@@ -1040,7 +1044,7 @@ public class DocumentController {
 	        
 			
 			try {
-				Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 				
 				String writeDate=format.format(writeDay);
 				doc.setDocumentDate(writeDate);
@@ -1053,20 +1057,19 @@ public class DocumentController {
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			
-			
-
-	        
-	        
-	        
-		
+	
 		}
+			int total=0;
+			for(int i=0;i<spendingList.size();i++) {
+				total+=Integer.parseInt(spendingList.get(i).getSpendingCost());
+			}
 		doc.setFileList(fileList);
 		model.addAttribute("documentCode",documentCode);
 		model.addAttribute("signableEmp",signableEmp);
 		model.addAttribute("doc",doc);
 		model.addAttribute("signList", signList);
 		model.addAttribute("spendingList",spendingList);
+		model.addAttribute("total",total);
 		//결재 정보 불러와야 함.
 		
 		return "document/viewSpending";
@@ -1093,7 +1096,7 @@ public class DocumentController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 		
 		try {
-			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 			String writeDate=format.format(writeDay);
 			doc.setDocumentDate(writeDate);
 			Date startDay = new SimpleDateFormat("yyyyMMdd").parse(business.getBusinessStart());
@@ -1138,7 +1141,7 @@ public class DocumentController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 		
 		try {
-			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 			String writeDate=format.format(writeDay);
 			doc.setDocumentDate(writeDate);
 			
@@ -1166,7 +1169,7 @@ public class DocumentController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 		
 		try {
-			Date writeDay=new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+			Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 			String writeDate=format.format(writeDay);
 			doc.setDocumentDate(writeDate);
 			
@@ -1481,7 +1484,7 @@ public class DocumentController {
 				
 				try {
 					SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-					Date documentDate = new SimpleDateFormat("yyyyMMdd").parse(doc.getDocumentDate());
+					Date documentDate = new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
 					String writeDay = dateFormat.format(documentDate);
 					String content=doc.getDocumentContent();
 					long totalPrice=0;

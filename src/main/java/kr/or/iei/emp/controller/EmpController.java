@@ -919,6 +919,7 @@ public class EmpController {
       @PostMapping(value="salesManager", produces="text/html; charset=utf-8")
       @AdminChk
       public String salesManager(String yearMonth, Model model) {
+    	 
     	  SalesSpending list = service.selectSalesManager(yearMonth);
     	  
     	  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMM");

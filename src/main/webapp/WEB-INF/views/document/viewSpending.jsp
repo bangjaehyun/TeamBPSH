@@ -27,16 +27,17 @@
    
 
         .signs {
-            display: flex;
-			justify-content: right;
+        	
+            text-align:right;
 			margin: 0px;
 			padding:0px;
+			width:100%;
+			display: inline-block;
 			
         }
 
         .sign-box {
-            display: flex;
-            flex-direction: column;
+            display: inline-block;
             align-items: center;
             border: 1px solid black;
             margin:0;
@@ -184,6 +185,8 @@
   
 	.sign-content{
 		margin-top:2%;
+		width:50%;
+		display: inline-block;
 	}
     .sign-text{
     	display:flex;
@@ -278,7 +281,11 @@
 	                    <div class="detail-cell">${spend.spendingContent }</div>
 	                </div>
                 </c:forEach>
-                
+                <div class="detail-body">
+	                    <div class="detail-cell"></div>
+	                    <div class="detail-cell">총합</div>
+	                    <div class="detail-cell">${total }</div>
+	                </div>
             </div>
         </section>
         <div>
