@@ -981,16 +981,17 @@ public class DocumentController {
 				System.out.println(doc.getDocumentDate());
 				SimpleDateFormat format = new SimpleDateFormat("yyyy년 M월 d일", Locale.KOREAN);
 				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
-				//Date 형 format할 때 기존 입력 방식과 같이 해야한다. yyyy-MM-dd 형식이면 값도 yyyy-MM-dd, yyyyMMdd로 저장시 yyyyMMdd로 형식이 균일하게 저장해야 파싱이 된다.
+				
 				String writeDate=format.format(writeDay);
-				System.out.println(writeDate);
+				doc.setDocumentDate(writeDate);
+				
 				doc.setDocumentDate(writeDate);
 				Date startDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getStartDay());
 				Date endDay = new SimpleDateFormat("yyyyMMdd").parse(selDay.getEndDay());
-				String StartDay = format.format(startDay);
-				String EndDay = format.format(endDay);
-				model.addAttribute("endDay", EndDay);
-				model.addAttribute("startDay",StartDay);
+				String StartDate = format.format(startDay);
+				String EndDate = format.format(endDay);
+				model.addAttribute("endDay", EndDate);
+				model.addAttribute("startDay",StartDate);
 			} catch (ParseException e) {
 				
 				e.printStackTrace();
@@ -1006,8 +1007,12 @@ public class DocumentController {
 			model.addAttribute("vacType",vacType);
 			
 			try {
-				Date vacDate = new SimpleDateFormat("yyyy-MM-dd").parse(half.getVacDate());
+				Date writeDay=new SimpleDateFormat("yyyy-MM-dd").parse(doc.getDocumentDate());
+				String writeDate=format.format(writeDay);
+				doc.setDocumentDate(writeDate);
+				Date vacDate = new SimpleDateFormat("yyyyMMdd").parse(half.getVacDate());
 				String VacDate=format.format(vacDate);
+				
 				model.addAttribute("vacDate", VacDate);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
