@@ -448,40 +448,35 @@ th {
       }
          
       $(document).on('click', '.save-edit-btn', function() {
-          var commentElement = $(this).closest('li');
-          var commNo = commentElement.find('.comm-no').val().trim(); // 공백 제거
+    	  var commentElement = $(this).closest('li');
+          var commNo = commentElement.find('.comm-no').val().trim();
           var newContent = commentElement.find('.editContent').val();
           var newFile = commentElement.find('.editFile')[0].files[0];
           var commGb = commentElement.find('.editCommGb').val();
           var deleteFileChecked = commentElement.find('.deleteFile').is(':checked');
 
-          // 기본값 설정
-          commGb = commGb !== undefined && commGb !== "undefined" ? commGb : "0";
+          if (!commGb || commGb === "undefined") {
+              commGb = "0"; 
+          }
 
-          console.log("수정된 데이터:", {
-              commNo: commNo,
-              commContent: newContent,
-              commGb: commGb,
-              file: newFile ? newFile.name : "첨부파일 없음",
-              deleteFile: deleteFileChecked ? "1" : "0"
-          });
+          
 
           var formData = new FormData();
           formData.append("commNo", commNo);
           formData.append("commContent", newContent);
 
           if (deleteFileChecked) {
-              formData.append("deleteFile", "1"); 
-              formData.append("commGb", "0"); // 기존 파일 삭제 시 commGb = 0
+              formData.append("deleteFile", "1");
+              formData.append("commGb", "0"); 
           } else {
               formData.append("deleteFile", "0");
           }
 
           if (newFile) {
               formData.append("newFile", newFile);
-              formData.append("commGb", "1"); // 새 파일 업로드 시 commGb = 1
-          }else if(!deleteFileChecked) {
-        	  formData.append("commGb",commGb);
+              formData.append("commGb", "1"); 
+          } else if (!deleteFileChecked) {
+              formData.append("commGb", commGb);
           }
          
           $.ajax({
@@ -492,14 +487,13 @@ th {
               contentType: false,
               success: function(response) {
                   if (response.success) {
-                	  swal({
-	                        title: "완료",
-	                        text: "댓글 수정이 완료되었습니다.",
-	                        icon: "success"
-	                    }).then(function() {
-	                    	loadComment(); 
-	                    });
-                      
+                      swal({
+                          title: "완료",
+                          text: "댓글 수정이 완료되었습니다.",
+                          icon: "success"
+                      }).then(function() {
+                          loadComment();
+                      });
                   } else {
                       alert("댓글 수정 실패");
                   }
@@ -511,15 +505,10 @@ th {
       });
       
       $(document).on('click', '.cancel-edit-btn', function() {
-          var commentElement = $(this).closest('li'); // 클릭한 버튼이 속한 li 찾기
-          var commNo = commentElement.find('.comm-no').val(); // hidden input에서 commNo 가져오기
-
-          loadComment(); // 댓글 목록 다시 불러와서 원래 내용으로 복구
+          loadComment();
       });
-      
 
-          
-
+      function deleteComment(commNo) {
           $.ajax({
               url: "/project/deleteComment.do",
               type: "POST",
@@ -528,20 +517,18 @@ th {
               success: function(response) {
                   if (response.success) {
                       swal({
-	                        title: "완료",
-	                        text: "댓글 삭제가 완료되었습니다.",
-	                        icon: "success"
-	                    }).then(function() {
-	                    	loadComment(); 
-	                    });
+                          title: "완료",
+                          text: "댓글 삭제가 완료되었습니다.",
+                          icon: "success"
+                      }).then(function() {
+                          loadComment();
+                      });
                   } else {
-                      console.log("❌ 댓글 삭제 실패");
-                      alert("댓글 삭제에 실패했습니다.");
+                      alert("댓글 삭제 실패");
                   }
               },
               error: function() {
-                  console.log("❌ 서버 오류 발생");
-                  alert("서버 오류가 발생했습니다.");
+                  alert("서버 오류 발생");
               }
           });
       }
