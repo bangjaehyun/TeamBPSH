@@ -27,7 +27,7 @@
             justify-content: center;
             align-content: center;
             width: 800px;
-            height:800px;
+            height:812px;
             margin: 50px auto;
             background-color: rgba(255, 255, 255, 0.2);
             border: none;
@@ -347,12 +347,12 @@ if(empId.val().length < 1){
 	    	  
 	    	  if(!checkObj[key]){
 	              switch(key){//memberId or memberPw or memberName ......
-	              case"empId"            : alert("아이디 형식이 다릅니다"); break;
-        		 case"checkId"		: alert("아이디 중복체크를 해주세요"); break;
-	              case"empPw"            : alert("비밀번호 형식이 다릅니다."); break;
-	              case"empPwConfirm"      : alert("비밀번호가 일치하지 않습니다."); break;
-	              case"empName"         : alert("올바른 이름이 아닙니다.");     break;
-	              case"empPhone"         : alert("전화번호 형식이 다릅니다.");  break;
+	              case"empId"            : msg("알림", "아이디 형식이 다릅니다.", "error", "0"); break;
+        		 case"checkId"		: msg("알림", "아이디 중복체크를 해주세요.", "error", "0"); break;
+	              case"empPw"            : msg("알림", "비밀번호 형식이 다릅니다.", "error", "0"); break;
+	              case"empPwConfirm"      : msg("알림", "비밀번호가 일치하지 않습니다.", "error", "0"); break;
+	              case"empName"         : msg("알림", "올바른 이름형식이 아닙니다.", "error", "0");     break;
+	              case"empPhone"         : msg("알림", "전화번호 형식이 다릅니다.", "error", "0"); break;
 	              }
 	           
 	              return false;

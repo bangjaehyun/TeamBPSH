@@ -1323,7 +1323,7 @@ public class DocumentController {
 					emitter.sendEvent(signList.get(i).getEmpCode(), alarm.getAlarmComment());
 				}
 				
-				
+				break;
 			}
 		}
 		
