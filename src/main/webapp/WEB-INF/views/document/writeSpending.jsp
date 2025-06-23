@@ -309,7 +309,7 @@ button:hover{
                 <span class="content-title">지출내역</span>
                 <div class="form-content">
 						<div class="column-title">
-							<span>지출일</span>
+							<span>지출 예정일</span>
 						
 							<span>금액</span>
 						
@@ -411,7 +411,7 @@ function msg(title, text, icon, callback){
 	
 }
 
-//작성조건이 맞는가?
+//지출란 추가
 function addInput() {
         const column = document.querySelector('.form-column');
         const newRow = document.createElement('div');
@@ -552,7 +552,7 @@ $('#title').on('input',function(){
 });
 
 
-//날짜계산
+//결재자, 참조자 추가
 
 
 	function searchMan(e) {
@@ -666,10 +666,6 @@ $('#title').on('input',function(){
 	    const formData = new FormData();
 	    formData.append("documentTitle", $('#title').val());
 	    formData.append("documentTypeCode","sp");
-	    formData.append("half", $('#half').is(':checked') ? "true" : "false");
-	    formData.append("halfTime", $('input[name="select"]:checked').val());
-	    formData.append("start", $('#vacStart').val());
-	    formData.append("end", $('#vacEnd').val());
 	    formData.append("documentContent",$('#summernote').val());
 	   
 	    //현재 작성자

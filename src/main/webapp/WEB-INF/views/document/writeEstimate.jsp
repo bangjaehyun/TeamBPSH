@@ -861,7 +861,7 @@ $('#title').on('input',function(){
 	            return;
 	        }
 	    }
-	    console.log("확인4");
+	   
 	    
 	    const formData = new FormData();
 	    formData.append("documentTitle", $('#title').val());
