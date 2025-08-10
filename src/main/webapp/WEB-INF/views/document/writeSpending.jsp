@@ -172,7 +172,7 @@ button:hover{
 	}
 	
 	.column-title span{
-		background-color: white;
+		background-color: none;
 		border: none;
 		font-size:20px;
 	}       
@@ -309,7 +309,7 @@ button:hover{
                 <span class="content-title">지출내역</span>
                 <div class="form-content">
 						<div class="column-title">
-							<span>지출 예정일</span>
+							<span>지출일</span>
 						
 							<span>금액</span>
 						
